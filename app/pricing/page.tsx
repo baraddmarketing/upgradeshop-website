@@ -8,6 +8,8 @@ export const revalidate = 60;
 
 export default async function PricingPage() {
   // Fetch products directly from database
+  // During build, this will return empty array and fall back to static data
+  // At runtime, it will fetch real data from database
   const dbProducts = await fetchProductsFromDB();
 
   // Merge with static products (database prices override static prices)
