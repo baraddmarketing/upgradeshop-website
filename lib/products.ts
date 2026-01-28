@@ -23,6 +23,7 @@ export interface Product {
   price: number;
   pricePrefix?: string; // e.g., "Starting from"
   compareAtPrice?: number;
+  prices?: Record<string, number> | null; // Multi-currency prices from database
   billingCycle: "monthly" | "yearly";
   features: string[];
   isPopular?: boolean;
