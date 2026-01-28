@@ -1,4 +1,5 @@
-import { fetchProducts, mergeWithStaticProducts } from '@/lib/fetch-products';
+import { fetchProductsFromDB } from '@/lib/db-products';
+import { mergeWithStaticProducts } from '@/lib/fetch-products';
 import { modules, websiteAddons, landingPageProduct } from '@/lib/products';
 import PricingClient from './pricing-client';
 
@@ -6,8 +7,8 @@ import PricingClient from './pricing-client';
 export const revalidate = 60;
 
 export default async function PricingPage() {
-  // Fetch products from database
-  const dbProducts = await fetchProducts();
+  // Fetch products directly from database
+  const dbProducts = await fetchProductsFromDB();
 
   // Merge with static products (database prices override static prices)
   const mergedModules = mergeWithStaticProducts(
