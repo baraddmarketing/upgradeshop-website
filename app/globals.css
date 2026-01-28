@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* The Upgrade Shop - "Professionally Warm" Color Palette */
+    /* #1A1A1A - Deep Charcoal (pure neutral, not navy) */
+    /* #E8E4DC - Warm Sand (MAIN background) */
+    /* #C9A961 - Soft Gold (accents ONLY - use sparingly) */
+
+    /* Deep charcoal - for text and headers - #1A1A1A */
+    --foreground: 0 0% 10%;
+
+    /* Warm sand - MAIN background - #E8E4DC */
+    --background: 40 21% 89%;
+
+    /* Soft gold - accent/CTA color (use sparingly) - #C9A961 */
+    --gold: 42 49% 58%;
+    --gold-light: 42 49% 65%;
+    --gold-dark: 42 49% 50%;
+
+    /* Slightly lighter sand for alternating sections */
+    --sand: 40 18% 92%;
+    --sand-dark: 40 21% 89%;
+
+    /* Card styling - slightly lighter than background */
+    --card: 40 25% 95%;
+    --card-foreground: 0 0% 10%;
+
+    /* Popover/dropdown */
+    --popover: 40 25% 95%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Primary - deep charcoal (for primary buttons) */
+    --primary: 0 0% 10%;
+    --primary-foreground: 40 21% 89%;
+
+    /* Secondary - lighter sand */
+    --secondary: 40 18% 92%;
+    --secondary-foreground: 0 0% 10%;
+
+    /* Muted - subtle warm gray for less prominent text */
+    --muted: 40 15% 85%;
+    --muted-foreground: 0 0% 40%;
+
+    /* Accent - soft gold for highlights (use sparingly) */
+    --accent: 42 49% 58%;
+    --accent-foreground: 0 0% 10%;
+
+    /* Destructive - warm red */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 40 21% 89%;
+
+    /* Borders - subtle warm gray */
+    --border: 40 15% 82%;
+    --input: 40 15% 82%;
+    --ring: 42 49% 58%;
+
+    /* Generous rounded corners - approachable, not corporate */
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 40 20% 92%;
+    --card: 0 0% 13%;
+    --card-foreground: 40 20% 92%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 40 20% 92%;
+    --primary: 42 49% 58%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 40 20% 92%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 40 15% 60%;
+    --accent: 42 49% 58%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 40 20% 92%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 42 49% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Warm selection color */
+  ::selection {
+    @apply bg-accent/20 text-foreground;
+  }
+}
+
+/* Subtle noise texture utility */
+@layer utilities {
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+}

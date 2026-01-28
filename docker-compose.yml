@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: upgradeshop-ai
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    networks:
+      customer-websites:
+        ipv4_address: 172.23.1.19
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    env_file:
+      - .env.production
+
+    volumes:
+      - ./public/images:/app/public/images
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  customer-websites:
+    external: true
