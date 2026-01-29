@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, ShoppingBag, Sparkles } from "lucide-react";
+import { ArrowRight, Check, ShoppingBag, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import { useCurrency } from "@/lib/use-currency";
@@ -17,7 +18,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { addItem, isInCart, openCart } = useCart();
   const { getPriceDisplay } = useCurrency();
   const inCart = isInCart(product.id);
-  const priceDisplay = getPriceDisplay(product.price);
+  const priceDisplay = getPriceDisplay(product.price, product.prices);
 
   const handleAddToCart = () => {
     if (inCart) {
@@ -104,6 +105,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <ShoppingBag className="h-4 w-4 mr-2" />
         {inCart ? "View Cart" : "Add to Cart"}
       </Button>
+
+      {/* Learn More Link */}
+      <Link
+        href={`/products/${product.slug}`}
+        className="flex items-center justify-center gap-1.5 mt-4 text-sm text-foreground/50 hover:text-gold transition-colors"
+      >
+        Learn more
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
     </motion.div>
   );
 }
