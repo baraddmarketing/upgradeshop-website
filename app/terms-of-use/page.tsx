@@ -586,6 +586,8 @@ export default function TermsOfUsePage() {
                       >
                         https://upgradeshop.ai
                       </a>
+                      <br />
+                      Address: Tel Aviv, Israel
                     </p>
                   </div>
                 </section>

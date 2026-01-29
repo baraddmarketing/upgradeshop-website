@@ -440,6 +440,8 @@ export default function PrivacyPolicyPage() {
                       >
                         https://upgradeshop.ai
                       </a>
+                      <br />
+                      Address: Tel Aviv, Israel
                     </p>
                   </div>
                 </section>
