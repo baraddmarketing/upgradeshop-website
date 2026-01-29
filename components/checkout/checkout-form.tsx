@@ -181,6 +181,7 @@ export function CheckoutForm() {
   };
 
   const goToPreviousStep = () => {
+    console.log("[Checkout] goToPreviousStep called from step", currentStep);
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
@@ -305,7 +306,12 @@ export function CheckoutForm() {
                 {/* Step Circle */}
                 <button
                   type="button"
-                  onClick={() => isClickable && setCurrentStep(index)}
+                  onClick={() => {
+                    if (isClickable) {
+                      console.log("[Checkout] Step indicator clicked:", index, "from step", currentStep);
+                      setCurrentStep(index);
+                    }
+                  }}
                   disabled={!isClickable}
                   className={`
                     flex items-center justify-center w-10 h-10 rounded-full
@@ -328,7 +334,12 @@ export function CheckoutForm() {
 
                 {/* Step Label */}
                 <span
-                  onClick={() => isClickable && setCurrentStep(index)}
+                  onClick={() => {
+                    if (isClickable) {
+                      console.log("[Checkout] Step label clicked:", index, "from step", currentStep);
+                      setCurrentStep(index);
+                    }
+                  }}
                   className={`
                     ml-2 font-medium hidden sm:block
                     ${isActive ? "text-foreground" : "text-foreground/40"}
