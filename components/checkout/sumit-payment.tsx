@@ -142,12 +142,18 @@ export function SumitPayment({
       return;
     }
 
-    if (initializedRef.current) return;
+    if (initializedRef.current) {
+      console.log("[SUMIT] Already initialized, skipping");
+      return;
+    }
     initializedRef.current = true;
+
+    console.log("[SUMIT] Initializing payment system");
 
     try {
       // Initialize card number formatting
       window.OfficeGuy.Payments.InitEditors("#sumit-payment-form");
+      console.log("[SUMIT] Card editors initialized");
 
       // Bind form submission
       window.OfficeGuy.Payments.BindFormSubmit({
@@ -159,6 +165,7 @@ export function SumitPayment({
         ResponseLanguage: "he",
         ResponseCallback: handleTokenResponse,
       });
+      console.log("[SUMIT] Form binding complete");
 
       setSdkReady(true);
       setIsLoading(false);
@@ -171,9 +178,12 @@ export function SumitPayment({
   };
 
   const handleTokenResponse = async (response: SumitTokenResponse) => {
+    console.log("[SUMIT] Token response received:", response);
+
     if (response.Status !== 0) {
       // Error from SUMIT
       const errorMsg = response.UserErrorMessage || response.TechnicalErrorDetails || "Payment failed";
+      console.error("[SUMIT] Token error:", errorMsg);
       setError(errorMsg);
       setIsProcessing(false);
       onError?.(errorMsg);
@@ -221,15 +231,36 @@ export function SumitPayment({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("[SUMIT] Payment button clicked");
     setError(null);
     setIsProcessing(true);
 
     // The SUMIT SDK will intercept this and tokenize the card
     // Then call our ResponseCallback with the token
-    if (formRef.current) {
-      // Trigger SUMIT's form handling
-      window.jQuery?.(formRef.current).trigger("submit");
+    if (!formRef.current) {
+      console.error("[SUMIT] Form ref not found");
+      setError("Payment form not ready. Please refresh the page.");
+      setIsProcessing(false);
+      return;
     }
+
+    if (!window.jQuery) {
+      console.error("[SUMIT] jQuery not loaded");
+      setError("Payment system not ready. Please refresh the page.");
+      setIsProcessing(false);
+      return;
+    }
+
+    if (!window.OfficeGuy?.Payments) {
+      console.error("[SUMIT] SUMIT SDK not loaded");
+      setError("Payment system not loaded. Please refresh the page.");
+      setIsProcessing(false);
+      return;
+    }
+
+    console.log("[SUMIT] Triggering SUMIT form submission");
+    // Trigger SUMIT's form handling
+    window.jQuery(formRef.current).trigger("submit");
   };
 
   return (
