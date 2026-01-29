@@ -679,7 +679,12 @@ export function CheckoutForm() {
 
       {/* Step 4: Payment - Outside main form to avoid nested forms */}
       {currentStep === 3 && orderId && sumitConfig && (
-        <div>
+        <div onKeyDown={(e) => {
+          // Prevent Enter from navigating away
+          if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+            e.preventDefault();
+          }
+        }}>
           <motion.div
             key="payment"
             initial={{ opacity: 0, x: 20 }}
