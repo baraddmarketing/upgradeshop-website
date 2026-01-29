@@ -395,8 +395,8 @@ export function SumitPayment({
             </div>
           )}
 
-          {/* Error display for SUMIT */}
-          <div className="og-errors text-red-600 text-sm"></div>
+          {/* Error display for SUMIT - SDK injects errors here */}
+          <div className="og-errors text-red-600 text-sm font-medium min-h-[24px] p-2 bg-red-50 rounded-lg empty:hidden border border-red-200"></div>
 
           {/* Submit Button */}
           <button
