@@ -179,13 +179,16 @@ export function CheckoutForm() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
+    console.log("[Checkout] onSubmit called, currentStep:", currentStep);
+
     // Only create order on step 2 (review step)
     // For earlier steps, prevent submission (user should use Continue button)
-    if (currentStep < 2) {
-      console.log("[Checkout] Form submitted on step", currentStep, "- ignoring");
+    if (currentStep !== 2) {
+      console.log("[Checkout] Form submitted on step", currentStep, "- ignoring (must be on step 2)");
       return;
     }
 
+    console.log("[Checkout] Processing order on review step");
     setIsSubmitting(true);
     setError(null);
 
@@ -349,9 +352,9 @@ export function CheckoutForm() {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           onKeyDown={(e) => {
-            // Prevent Enter key from submitting form on steps 0 and 1
-            // Only allow submission on step 2 (review) via "Confirm Order" button
-            if (e.key === 'Enter' && currentStep < 2) {
+            // Prevent Enter key from submitting form on ALL steps
+            // User must explicitly click "Confirm Order" button on review step
+            if (e.key === 'Enter') {
               e.preventDefault();
             }
           }}
