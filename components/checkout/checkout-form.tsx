@@ -85,6 +85,12 @@ export function CheckoutForm() {
   const { items, total, clearCart } = useCart();
   const { getPriceDisplay, currency } = useCurrency();
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Calculate total in the correct currency
+  const displayTotal = items.reduce((sum, item) => {
+    const { amount } = getPriceDisplay(item.product.price, item.product.prices);
+    return sum + (amount * item.quantity);
+  }, 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -605,7 +611,7 @@ export function CheckoutForm() {
                       {currency === 'ILS' ? 'סכום חודשי' : 'Monthly Total'}
                     </span>
                     <span className="font-display text-xl font-bold text-gold">
-                      {getPriceDisplay(total, null).fullPrice}
+                      {currency === 'ILS' ? `₪${displayTotal}/חודש` : `$${displayTotal}/mo`}
                     </span>
                   </div>
                 </div>

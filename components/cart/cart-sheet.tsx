@@ -18,6 +18,12 @@ export function CartSheet() {
   const { items, total, isOpen, closeCart, removeItem, clearCart } = useCart();
   const { getPriceDisplay, currency } = useCurrency();
 
+  // Calculate total in the correct currency
+  const displayTotal = items.reduce((sum, item) => {
+    const { amount } = getPriceDisplay(item.product.price, item.product.prices);
+    return sum + (amount * item.quantity);
+  }, 0);
+
   const handleCheckout = () => {
     closeCart();
     router.push("/checkout");
@@ -91,7 +97,7 @@ export function CartSheet() {
                   {currency === 'ILS' ? 'סכום חודשי' : 'Monthly Total'}
                 </span>
                 <span className="font-display text-2xl font-bold text-foreground">
-                  {getPriceDisplay(total, null).fullPrice}
+                  {currency === 'ILS' ? `₪${displayTotal}/חודש` : `$${displayTotal}/mo`}
                 </span>
               </div>
 
