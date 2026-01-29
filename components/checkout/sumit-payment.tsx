@@ -229,38 +229,23 @@ export function SumitPayment({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("[SUMIT] Payment button clicked");
+  // SUMIT's BindFormSubmit handles form submission automatically.
+  // We just track the processing state via the submit button click.
+  const handlePayClick = () => {
+    console.log("[SUMIT] Pay button clicked, SUMIT SDK will handle form submission");
     setError(null);
     setIsProcessing(true);
 
-    // The SUMIT SDK will intercept this and tokenize the card
-    // Then call our ResponseCallback with the token
-    if (!formRef.current) {
-      console.error("[SUMIT] Form ref not found");
-      setError("Payment form not ready. Please refresh the page.");
-      setIsProcessing(false);
-      return;
-    }
-
-    if (!window.jQuery) {
-      console.error("[SUMIT] jQuery not loaded");
-      setError("Payment system not ready. Please refresh the page.");
-      setIsProcessing(false);
-      return;
-    }
-
-    if (!window.OfficeGuy?.Payments) {
-      console.error("[SUMIT] SUMIT SDK not loaded");
-      setError("Payment system not loaded. Please refresh the page.");
-      setIsProcessing(false);
-      return;
-    }
-
-    console.log("[SUMIT] Triggering SUMIT form submission");
-    // Trigger SUMIT's form handling
-    window.jQuery(formRef.current).trigger("submit");
+    // If SUMIT doesn't respond within 30 seconds, reset
+    setTimeout(() => {
+      setIsProcessing((current) => {
+        if (current) {
+          console.warn("[SUMIT] Payment timeout - no response received");
+          setError("Payment timed out. Please try again.");
+        }
+        return false;
+      });
+    }, 30000);
   };
 
   return (
@@ -284,13 +269,12 @@ export function SumitPayment({
         </div>
       )}
 
-      {/* Payment Form */}
+      {/* Payment Form - SUMIT SDK handles submission via BindFormSubmit */}
       {sdkReady && !isLoading && (
         <form
           ref={formRef}
           id="sumit-payment-form"
           data-og="form"
-          onSubmit={handleSubmit}
           className="space-y-6"
         >
           {/* Card Number */}
@@ -398,10 +382,11 @@ export function SumitPayment({
           {/* Error display for SUMIT - SDK injects errors here */}
           <div className="og-errors text-red-600 text-sm font-medium min-h-[24px] p-2 bg-red-50 rounded-lg empty:hidden border border-red-200"></div>
 
-          {/* Submit Button */}
+          {/* Submit Button - type="submit" triggers SUMIT's BindFormSubmit */}
           <button
             type="submit"
             disabled={isProcessing}
+            onClick={handlePayClick}
             className="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isProcessing ? (
