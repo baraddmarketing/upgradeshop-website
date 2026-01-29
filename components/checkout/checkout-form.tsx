@@ -705,12 +705,16 @@ export function CheckoutForm() {
                 email: form.watch("email"),
                 phone: form.watch("phone"),
               }}
-              items={items.map(item => ({
-                name: item.product.name,
-                price: item.product.price,
-                quantity: 1,
-              }))}
-              total={total}
+              items={items.map(item => {
+                const { amount } = getPriceDisplay(item.product.price, item.product.prices);
+                return {
+                  name: item.product.name,
+                  price: amount,
+                  quantity: 1,
+                };
+              })}
+              total={displayTotal}
+              currency={currency}
               country={form.watch("country")}
               onSuccess={(response) => {
                 console.log("[Checkout] Payment successful:", response);

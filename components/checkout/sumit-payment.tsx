@@ -53,6 +53,7 @@ interface SumitPaymentProps {
     quantity: number;
   }>;
   total: number;
+  currency?: string; // Currency code (e.g., "USD", "ILS")
   country: string; // ISO country code (e.g., "IL" for Israel)
   onSuccess: (response: { token: string; orderId: string }) => void;
   onCancel?: () => void;
@@ -67,6 +68,7 @@ export function SumitPayment({
   customer,
   items,
   total,
+  currency = "USD",
   country,
   onSuccess,
   onCancel,
@@ -195,6 +197,7 @@ export function SumitPayment({
           token,
           orderId,
           amount: total,
+          currency,
           customer,
           items,
         }),
@@ -378,7 +381,7 @@ export function SumitPayment({
             ) : (
               <>
                 <Lock className="h-5 w-5" />
-                Pay ${total.toFixed(2)}
+                Pay {currency === 'ILS' ? '₪' : '$'}{total.toFixed(currency === 'ILS' ? 0 : 2)}
               </>
             )}
           </button>

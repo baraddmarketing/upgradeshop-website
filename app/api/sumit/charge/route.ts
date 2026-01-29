@@ -7,6 +7,7 @@ interface ChargeRequest {
   token: string;
   orderId: string;
   amount: number;
+  currency?: string;
   customer: {
     name: string;
     email: string;
@@ -37,7 +38,7 @@ interface SumitChargeResponse {
 export async function POST(request: NextRequest) {
   try {
     const body: ChargeRequest = await request.json();
-    const { token, orderId, amount, customer, items } = body;
+    const { token, orderId, amount, currency = "USD", customer, items } = body;
 
     if (!token || !orderId || !amount) {
       return NextResponse.json(
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
         token,
         orderId,
         amount,
+        currency,
         customer,
         items,
         companyId: config.companyId,
