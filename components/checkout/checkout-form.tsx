@@ -347,21 +347,22 @@ export function CheckoutForm() {
         </div>
       </div>
 
-      {/* Form */}
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          onKeyDown={(e) => {
-            // Prevent Enter key from submitting form on ALL steps
-            // User must explicitly click "Confirm Order" button on review step
-            if (e.key === 'Enter') {
-              e.preventDefault();
-            }
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {/* Step 1: Contact Info */}
-            {currentStep === 0 && (
+      {/* Form - Only for steps 0-2 (not payment step which has its own form) */}
+      {currentStep < 3 && (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            onKeyDown={(e) => {
+              // Prevent Enter key from submitting form on ALL steps
+              // User must explicitly click "Confirm Order" button on review step
+              if (e.key === 'Enter') {
+                e.preventDefault();
+              }
+            }}
+          >
+            <AnimatePresence mode="wait">
+              {/* Step 1: Contact Info */}
+              {currentStep === 0 && (
               <motion.div
                 key="contact"
                 initial={{ opacity: 0, x: 20 }}
@@ -617,66 +618,10 @@ export function CheckoutForm() {
                 )}
               </motion.div>
             )}
+            </AnimatePresence>
 
-            {/* Step 4: Payment */}
-            {currentStep === 3 && orderId && sumitConfig && (
-              <motion.div
-                key="payment"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6"
-              >
-                <div className="text-center mb-8">
-                  <h2 className="font-display text-2xl font-bold text-foreground mb-2">
-                    Secure Payment
-                  </h2>
-                  <p className="text-foreground/60">
-                    Complete your purchase
-                  </p>
-                </div>
-
-                <SumitPayment
-                  companyId={sumitConfig.companyId}
-                  apiPublicKey={sumitConfig.apiPublicKey}
-                  orderId={orderId}
-                  customer={{
-                    name: `${form.watch("firstName")} ${form.watch("lastName")}`,
-                    email: form.watch("email"),
-                    phone: form.watch("phone"),
-                  }}
-                  items={items.map(item => ({
-                    name: item.product.name,
-                    price: item.product.price,
-                    quantity: 1,
-                  }))}
-                  total={total}
-                  country={form.watch("country")}
-                  onSuccess={(response) => {
-                    console.log("[Checkout] Payment successful:", response);
-                    clearCart();
-                    clearSavedCheckoutData();
-                    // Clear the processing flag
-                    if (typeof window !== "undefined") {
-                      sessionStorage.removeItem("checkout-processing");
-                    }
-                    router.push(`/checkout/success?orderId=${orderId}&orderNumber=${orderNumber}`);
-                  }}
-                  onCancel={() => {
-                    setError("Payment was cancelled. Please try again.");
-                  }}
-                  onError={(error) => {
-                    setError(error);
-                  }}
-                  isTest={sumitConfig.isTest}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-foreground/10">
+            {/* Navigation Buttons */}
+            <div className="flex justify-between mt-8 pt-6 border-t border-foreground/10">
             {currentStep > 0 ? (
               <Button
                 type="button"
@@ -691,7 +636,7 @@ export function CheckoutForm() {
               <div />
             )}
 
-            {currentStep < 2 ? (
+            {currentStep < 2 && (
               <Button
                 type="button"
                 onClick={goToNextStep}
@@ -700,7 +645,9 @@ export function CheckoutForm() {
                 Continue
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
-            ) : currentStep === 2 ? (
+            )}
+
+            {currentStep === 2 && (
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -718,12 +665,81 @@ export function CheckoutForm() {
                   </>
                 )}
               </Button>
-            ) : (
-              <div />
             )}
+            </div>
+          </form>
+        </Form>
+      )}
+
+      {/* Step 4: Payment - Outside main form to avoid nested forms */}
+      {currentStep === 3 && orderId && sumitConfig && (
+        <div>
+          <motion.div
+            key="payment"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <div className="text-center mb-8">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                Secure Payment
+              </h2>
+              <p className="text-foreground/60">
+                Complete your purchase
+              </p>
+            </div>
+
+            <SumitPayment
+              companyId={sumitConfig.companyId}
+              apiPublicKey={sumitConfig.apiPublicKey}
+              orderId={orderId}
+              customer={{
+                name: `${form.watch("firstName")} ${form.watch("lastName")}`,
+                email: form.watch("email"),
+                phone: form.watch("phone"),
+              }}
+              items={items.map(item => ({
+                name: item.product.name,
+                price: item.product.price,
+                quantity: 1,
+              }))}
+              total={total}
+              country={form.watch("country")}
+              onSuccess={(response) => {
+                console.log("[Checkout] Payment successful:", response);
+                clearCart();
+                clearSavedCheckoutData();
+                if (typeof window !== "undefined") {
+                  sessionStorage.removeItem("checkout-processing");
+                }
+                router.push(`/checkout/success?orderId=${orderId}&orderNumber=${orderNumber}`);
+              }}
+              onCancel={() => {
+                setError("Payment was cancelled. Please try again.");
+              }}
+              onError={(error) => {
+                setError(error);
+              }}
+              isTest={sumitConfig.isTest}
+            />
+          </motion.div>
+
+          {/* Back button for payment step */}
+          <div className="flex justify-between mt-8 pt-6 border-t border-foreground/10">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={goToPreviousStep}
+              className="text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <div />
           </div>
-        </form>
-      </Form>
+        </div>
+      )}
     </div>
   );
 }
