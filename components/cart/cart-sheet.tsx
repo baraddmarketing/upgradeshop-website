@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { useCurrency } from "@/lib/use-currency";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,6 +16,7 @@ import {
 export function CartSheet() {
   const router = useRouter();
   const { items, total, isOpen, closeCart, removeItem, clearCart } = useCart();
+  const { getPriceDisplay, currency } = useCurrency();
 
   const handleCheckout = () => {
     closeCart();
@@ -23,11 +25,14 @@ export function CartSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
-      <SheetContent className="flex flex-col bg-background border-l border-foreground/10">
+      <SheetContent
+        className="flex flex-col bg-background border-l border-foreground/10"
+        style={{ direction: currency === 'ILS' ? 'rtl' : 'ltr' }}
+      >
         <SheetHeader className="border-b border-foreground/10 pb-4">
           <SheetTitle className="font-display text-xl flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-gold" />
-            Your Cart
+            {currency === 'ILS' ? 'עגלת הקניות' : 'Your Cart'}
           </SheetTitle>
         </SheetHeader>
 
@@ -36,9 +41,13 @@ export function CartSheet() {
             <div className="h-16 w-16 rounded-full bg-foreground/5 flex items-center justify-center mb-4">
               <ShoppingBag className="h-8 w-8 text-foreground/30" />
             </div>
-            <p className="text-foreground/60 mb-2">Your cart is empty</p>
+            <p className="text-foreground/60 mb-2">
+              {currency === 'ILS' ? 'עגלת הקניות ריקה' : 'Your cart is empty'}
+            </p>
             <p className="text-foreground/40 text-sm">
-              Add products from the pricing page to get started.
+              {currency === 'ILS'
+                ? 'הוסף מוצרים מעמוד התמחור כדי להתחיל'
+                : 'Add products from the pricing page to get started.'}
             </p>
           </div>
         ) : (
@@ -59,7 +68,7 @@ export function CartSheet() {
                         {item.product.shortDescription}
                       </p>
                       <p className="text-gold font-medium mt-2">
-                        ${item.product.price}/mo
+                        {getPriceDisplay(item.product.price, item.product.prices).fullPrice}
                       </p>
                     </div>
                     <button
@@ -78,9 +87,11 @@ export function CartSheet() {
             <div className="border-t border-foreground/10 pt-6 space-y-6">
               {/* Total */}
               <div className="flex items-center justify-between px-1">
-                <span className="text-foreground/70 font-medium">Monthly Total</span>
+                <span className="text-foreground/70 font-medium">
+                  {currency === 'ILS' ? 'סכום חודשי' : 'Monthly Total'}
+                </span>
                 <span className="font-display text-2xl font-bold text-foreground">
-                  ${total}/mo
+                  {getPriceDisplay(total, null).fullPrice}
                 </span>
               </div>
 
@@ -90,7 +101,7 @@ export function CartSheet() {
                   onClick={handleCheckout}
                   className="w-full bg-gold hover:bg-gold-dark text-foreground py-6 text-base font-medium"
                 >
-                  Proceed to Checkout
+                  {currency === 'ILS' ? 'המשך לתשלום' : 'Proceed to Checkout'}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
                 <Button
@@ -98,13 +109,15 @@ export function CartSheet() {
                   variant="ghost"
                   className="w-full text-foreground/60 hover:text-foreground"
                 >
-                  Clear Cart
+                  {currency === 'ILS' ? 'נקה עגלה' : 'Clear Cart'}
                 </Button>
               </div>
 
               {/* Info text */}
               <p className="text-center text-foreground/50 text-xs leading-relaxed px-2">
-                You&apos;ll be able to review your order before confirming.
+                {currency === 'ILS'
+                  ? 'תוכל לסקור את ההזמנה שלך לפני האישור'
+                  : "You'll be able to review your order before confirming."}
               </p>
             </div>
           </>
