@@ -384,6 +384,52 @@ const productContent: Record<string, ProductPageContent> = {
     ],
     relatedSlugs: ["simple-store", "website", "crm"],
   },
+
+  "test-subscription-5ils": {
+    slug: "test-subscription-5ils",
+    tagline: "Test product for SUMIT payment gateway",
+    icon: "TestTube",
+    overviewTitle: "Monthly subscription test product",
+    overviewParagraphs: [
+      "This is a test product for SUMIT payment gateway integration. It charges 5 ILS per month as a recurring subscription.",
+      "Use this product to test subscription creation, recurring charges, subscription management (pause, resume, cancel), and auto-renewal behavior.",
+    ],
+    detailedFeatures: [
+      { icon: "RefreshCcw", title: "Recurring Charges", description: "Test monthly recurring billing at 5 ILS per month." },
+      { icon: "Settings", title: "Subscription Management", description: "Test pause, resume, and cancel functionality." },
+      { icon: "Calendar", title: "Auto-Renewal", description: "Verify automatic renewal after each billing cycle." },
+      { icon: "CreditCard", title: "SUMIT Integration", description: "End-to-end testing of SUMIT payment gateway." },
+    ],
+    useCases: [
+      { title: "QA Testing", description: "Quality assurance testing for subscription workflows." },
+      { title: "Gateway Integration", description: "Test SUMIT payment gateway integration." },
+      { title: "Billing Verification", description: "Verify recurring billing and subscription management." },
+    ],
+    relatedSlugs: ["test-onetime-10ils"],
+  },
+
+  "test-onetime-10ils": {
+    slug: "test-onetime-10ils",
+    tagline: "Test product for SUMIT payment gateway",
+    icon: "TestTube",
+    overviewTitle: "One-time purchase test product",
+    overviewParagraphs: [
+      "This is a test product for SUMIT payment gateway integration. It charges 10 ILS as a single one-time payment.",
+      "Use this product to test one-time payment processing, standard checkout flow, order completion, and receipt generation.",
+    ],
+    detailedFeatures: [
+      { icon: "CreditCard", title: "One-Time Payment", description: "Test single payment processing at 10 ILS." },
+      { icon: "ShoppingCart", title: "Checkout Flow", description: "Verify standard checkout process end-to-end." },
+      { icon: "CheckCircle", title: "Order Completion", description: "Test order creation and fulfillment workflow." },
+      { icon: "Receipt", title: "Receipt Generation", description: "Verify receipt and confirmation email delivery." },
+    ],
+    useCases: [
+      { title: "QA Testing", description: "Quality assurance testing for one-time purchase workflows." },
+      { title: "Gateway Integration", description: "Test SUMIT payment gateway integration." },
+      { title: "Order Verification", description: "Verify order processing and receipt generation." },
+    ],
+    relatedSlugs: ["test-subscription-5ils"],
+  },
 };
 
 export function getProductContent(slug: string): ProductPageContent | null {

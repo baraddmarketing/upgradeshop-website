@@ -4,7 +4,7 @@
  * Terminology:
  * - MODULES: Standalone products purchasable independently (CRM, AI Agents, Email Marketing, etc.)
  * - WEBSITE: Fully managed website SERVICE with tiered pricing by page count (NOT a builder)
- * - LANDING_PAGE: Separate product for single high-converting pages ($89/mo)
+ * - LANDING_PAGE: Separate product for single high-converting pages (price from database)
  * - ADDONS: Extensions for specific modules (e.g., Digital Courses for Website)
  * - FEATURES: Free toggles inside modules (no pricing, just visibility flags)
  *
@@ -52,6 +52,9 @@ export const PRODUCT_IDS = {
   eventsManagement: "759670a3-0b9c-4889-b9cb-4b97c61433e9",
   storeSimple: "21a9bff3-bf34-4f12-b873-b391b48cdccc",
   storeFull: "69c69a27-b911-4974-9d58-c2daef6b8b9e",
+  // Test Products (for SUMIT gateway testing)
+  testSubscription: "f0658690-01ee-4d08-aca1-421ba77cd42c",
+  testOneTime: "ec938382-a54f-452c-94a9-6dd85ce86c7d",
 } as const;
 
 // =============================================================================
@@ -168,6 +171,47 @@ export const modules: Product[] = [
       "Team collaboration",
       "Time tracking",
       "Comments & discussions",
+    ],
+  },
+];
+
+// =============================================================================
+// TEST PRODUCTS - For SUMIT payment gateway testing
+// =============================================================================
+
+export const testProducts: Product[] = [
+  {
+    id: PRODUCT_IDS.testSubscription,
+    slug: "test-subscription-5ils",
+    name: "Test Subscription - 5 ILS",
+    shortDescription: "Monthly subscription test - 5 ILS/month",
+    description: "Monthly subscription test product for SUMIT payment gateway integration testing. Charges 5 ILS per month.",
+    price: 1.5,
+    prices: { ILS: 5 },
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Test recurring charges",
+      "Test subscription management",
+      "Test auto-renewal",
+      "SUMIT gateway integration",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.testOneTime,
+    slug: "test-onetime-10ils",
+    name: "Test One-Time Product - 10 ILS",
+    shortDescription: "One-time purchase test - 10 ILS",
+    description: "One-time purchase test product for SUMIT payment gateway integration testing. Single payment of 10 ILS.",
+    price: 3.0,
+    prices: { ILS: 10 },
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Test one-time payments",
+      "Test checkout flow",
+      "Test order completion",
+      "SUMIT gateway integration",
     ],
   },
 ];
@@ -368,8 +412,8 @@ export const websiteAddons: Product[] = [
 // All products (modules + landing page, excluding website addons for now)
 export const products: Product[] = [...modules];
 
-// All products including addons
-export const allProducts: Product[] = [...modules, landingPageProduct, ...websiteAddons];
+// All products including addons and test products
+export const allProducts: Product[] = [...modules, landingPageProduct, ...websiteAddons, ...testProducts];
 
 // Helper to find product by ID
 export function getProductById(id: string): Product | undefined {

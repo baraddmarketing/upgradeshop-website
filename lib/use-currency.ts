@@ -44,6 +44,7 @@ export function useCurrency() {
     currency,
     isReady,
     formatPrice: (usdPrice: number) => formatPrice(usdPrice, currency),
-    getPriceDisplay: (usdPrice: number) => getPriceDisplayValues(usdPrice, currency),
+    getPriceDisplay: (usdPrice: number, dbPrices?: Record<string, number> | null) =>
+      getPriceDisplayValues(usdPrice, currency, dbPrices),
   };
 }

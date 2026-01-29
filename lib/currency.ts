@@ -77,10 +77,31 @@ export function formatPriceWithPeriod(usdPrice: number, currency: Currency): str
 
 /**
  * Price display component helper - returns all needed values
+ * If dbPrices contains the target currency, use it directly instead of converting
  */
-export function getPriceDisplayValues(usdPrice: number, currency: Currency) {
-  const { amount, symbol, formatted } = formatPrice(usdPrice, currency);
+export function getPriceDisplayValues(
+  usdPrice: number,
+  currency: Currency,
+  dbPrices?: Record<string, number> | null
+) {
+  const symbol = currency === 'ILS' ? '₪' : '$';
   const periodLabel = currency === 'ILS' ? '/חודש' : '/mo';
+
+  // Check if we have a database price for this currency
+  if (dbPrices && currency === 'ILS' && dbPrices.ILS) {
+    const amount = dbPrices.ILS;
+    const formatted = `${symbol}${amount.toLocaleString('he-IL')}`;
+    return {
+      amount,
+      symbol,
+      formatted,
+      periodLabel,
+      fullPrice: `${formatted}${periodLabel}`,
+    };
+  }
+
+  // Fall back to conversion
+  const { amount, formatted } = formatPrice(usdPrice, currency);
 
   return {
     amount,
