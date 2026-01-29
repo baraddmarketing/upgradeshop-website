@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { ScrollListener } from "@/components/scroll-listener";
+import { fetchWebsiteConfig } from "@/lib/analytics-api";
 
 // Body font - elegant, readable serif
 const newsreader = Newsreader({
@@ -20,28 +21,35 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "The Upgrade Shop | Your Digital Foundation, Handled",
-  description:
-    "Professional digital infrastructure for small businesses. We build it for you, manage it for you, and keep improving it. Focus on what you do best — we handle the rest.",
-  keywords: [
-    "digital infrastructure",
-    "small business",
-    "website builder",
-    "CRM",
-    "email marketing",
-    "WhatsApp business",
-    "managed services",
-  ],
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const websiteConfig = await fetchWebsiteConfig();
+
+  return {
     title: "The Upgrade Shop | Your Digital Foundation, Handled",
     description:
-      "Professional digital infrastructure for small businesses. Focus on what you do best — we handle the rest.",
-    url: "https://upgradeshop.ai",
-    siteName: "The Upgrade Shop",
-    type: "website",
-  },
-};
+      "Professional digital infrastructure for small businesses. We build it for you, manage it for you, and keep improving it. Focus on what you do best — we handle the rest.",
+    keywords: [
+      "digital infrastructure",
+      "small business",
+      "website builder",
+      "CRM",
+      "email marketing",
+      "WhatsApp business",
+      "managed services",
+    ],
+    verification: websiteConfig?.googleSiteVerification ? {
+      google: websiteConfig.googleSiteVerification,
+    } : undefined,
+    openGraph: {
+      title: "The Upgrade Shop | Your Digital Foundation, Handled",
+      description:
+        "Professional digital infrastructure for small businesses. Focus on what you do best — we handle the rest.",
+      url: "https://upgradeshop.ai",
+      siteName: "The Upgrade Shop",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({
   children,
