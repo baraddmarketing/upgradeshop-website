@@ -17,6 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { useCurrency } from "@/lib/use-currency";
 import { SumitPayment } from "@/components/checkout/sumit-payment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,6 +83,7 @@ const steps = [
 export function CheckoutForm() {
   const router = useRouter();
   const { items, total, clearCart } = useCart();
+  const { getPriceDisplay, currency } = useCurrency();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -509,17 +511,17 @@ export function CheckoutForm() {
               >
                 <div className="text-center mb-8">
                   <h2 className="font-display text-2xl font-bold text-foreground mb-2">
-                    Review Your Order
+                    {currency === 'ILS' ? 'סקור את ההזמנה שלך' : 'Review Your Order'}
                   </h2>
                   <p className="text-foreground/60">
-                    Almost there! Please review your details.
+                    {currency === 'ILS' ? 'כמעט שם! אנא בדוק את הפרטים שלך' : 'Almost there! Please review your details.'}
                   </p>
                 </div>
 
                 {/* Contact Summary */}
                 <div className="bg-card rounded-xl p-6">
                   <h3 className="font-display font-semibold text-foreground mb-4">
-                    Contact Details
+                    {currency === 'ILS' ? 'פרטי יצירת קשר' : 'Contact Details'}
                   </h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div>
@@ -561,7 +563,7 @@ export function CheckoutForm() {
                 {/* Order Summary */}
                 <div className="bg-card rounded-xl p-6">
                   <h3 className="font-display font-semibold text-foreground mb-4">
-                    Order Summary
+                    {currency === 'ILS' ? 'סיכום הזמנה' : 'Order Summary'}
                   </h3>
                   <ul className="space-y-3 mb-4">
                     {items.map((item) => (
@@ -573,17 +575,17 @@ export function CheckoutForm() {
                           {item.product.name}
                         </span>
                         <span className="text-foreground font-medium">
-                          ${item.product.price}/mo
+                          {getPriceDisplay(item.product.price, item.product.prices).fullPrice}
                         </span>
                       </li>
                     ))}
                   </ul>
                   <div className="border-t border-foreground/10 pt-4 flex justify-between">
                     <span className="font-display font-semibold text-foreground">
-                      Monthly Total
+                      {currency === 'ILS' ? 'סכום חודשי' : 'Monthly Total'}
                     </span>
                     <span className="font-display text-xl font-bold text-gold">
-                      ${total}/mo
+                      {getPriceDisplay(total, null).fullPrice}
                     </span>
                   </div>
                 </div>

@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { Container } from "@/components/layout/container";
 import { CheckoutForm } from "@/components/checkout/checkout-form";
 import { useCart } from "@/lib/cart-context";
+import { useCurrency } from "@/lib/use-currency";
 import { ShieldCheck, Lock } from "lucide-react";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, isHydrated } = useCart();
+  const { currency } = useCurrency();
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
 
   // Check if we're processing an order from sessionStorage
@@ -50,10 +52,12 @@ export default function CheckoutPage() {
           className="text-center mb-12"
         >
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Checkout
+            {currency === 'ILS' ? 'תשלום' : 'Checkout'}
           </h1>
           <p className="text-foreground/60 max-w-lg mx-auto">
-            Complete your order and we&apos;ll get you set up right away.
+            {currency === 'ILS'
+              ? 'השלם את ההזמנה שלך ונתחיל להגדיר אותך מיד'
+              : "Complete your order and we'll get you set up right away."}
           </p>
         </motion.div>
 
@@ -75,11 +79,11 @@ export default function CheckoutPage() {
         >
           <div className="flex items-center gap-2 text-sm">
             <Lock className="h-4 w-4" />
-            <span>Secure Checkout</span>
+            <span>{currency === 'ILS' ? 'תשלום מאובטח' : 'Secure Checkout'}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <ShieldCheck className="h-4 w-4" />
-            <span>Cancel Anytime</span>
+            <span>{currency === 'ILS' ? 'ביטול בכל עת' : 'Cancel Anytime'}</span>
           </div>
         </motion.div>
       </Container>
