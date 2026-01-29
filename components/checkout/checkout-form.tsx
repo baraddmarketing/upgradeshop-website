@@ -179,6 +179,13 @@ export function CheckoutForm() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
+    // Only create order on step 2 (review step)
+    // For earlier steps, prevent submission (user should use Continue button)
+    if (currentStep < 2) {
+      console.log("[Checkout] Form submitted on step", currentStep, "- ignoring");
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -281,8 +288,8 @@ export function CheckoutForm() {
             const isActive = index === currentStep;
             const isCompleted = index < currentStep;
             // Allow clicking on completed steps or current step (but not future steps)
-            // Don't allow navigation away from payment step (step 3) since order is created
-            const isClickable = (isCompleted || isActive) && currentStep !== 3 && index !== 3;
+            // Don't allow clicking TO payment step from earlier (must go through review first)
+            const isClickable = (isCompleted || isActive) && index !== 3;
 
             return (
               <div key={step.id} className="flex items-center">
@@ -339,7 +346,16 @@ export function CheckoutForm() {
 
       {/* Form */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(e) => {
+            // Prevent Enter key from submitting form on steps 0 and 1
+            // Only allow submission on step 2 (review) via "Confirm Order" button
+            if (e.key === 'Enter' && currentStep < 2) {
+              e.preventDefault();
+            }
+          }}
+        >
           <AnimatePresence mode="wait">
             {/* Step 1: Contact Info */}
             {currentStep === 0 && (
@@ -657,52 +673,52 @@ export function CheckoutForm() {
           </AnimatePresence>
 
           {/* Navigation Buttons */}
-          {currentStep !== 3 && (
-            <div className="flex justify-between mt-8 pt-6 border-t border-foreground/10">
-              {currentStep > 0 ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={goToPreviousStep}
-                  className="text-foreground"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              ) : (
-                <div />
-              )}
+          <div className="flex justify-between mt-8 pt-6 border-t border-foreground/10">
+            {currentStep > 0 ? (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={goToPreviousStep}
+                className="text-foreground"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+            ) : (
+              <div />
+            )}
 
-              {currentStep < 2 ? (
-                <Button
-                  type="button"
-                  onClick={goToNextStep}
-                  className="bg-gold hover:bg-gold-dark text-foreground"
-                >
-                  Continue
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-gold hover:bg-gold-dark text-foreground min-w-[180px]"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Confirm Order
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-          )}
+            {currentStep < 2 ? (
+              <Button
+                type="button"
+                onClick={goToNextStep}
+                className="bg-gold hover:bg-gold-dark text-foreground"
+              >
+                Continue
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            ) : currentStep === 2 ? (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-gold hover:bg-gold-dark text-foreground min-w-[180px]"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Confirm Order
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </>
+                )}
+              </Button>
+            ) : (
+              <div />
+            )}
+          </div>
         </form>
       </Form>
     </div>
