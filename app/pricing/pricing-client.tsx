@@ -5,19 +5,22 @@ import { Container } from "@/components/layout/container";
 import { ProductCard } from "@/components/pricing/product-card";
 import { Product, websiteService, websiteTiers } from "@/lib/products";
 import { useCurrency } from "@/lib/use-currency";
-import { Check, HelpCircle, ArrowRight, Sparkles, Globe, Zap, Package } from "lucide-react";
+import { Check, HelpCircle, ArrowRight, Sparkles, Globe, Zap, Package, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/lib/cart-context";
 import Link from "next/link";
 
 interface PricingClientProps {
   modules: Product[];
   websiteAddons: Product[];
   landingPageProduct: Product;
+  websiteVariantPrices?: Record<number, Record<string, number> | null>;
 }
 
-export default function PricingClient({ modules, websiteAddons, landingPageProduct }: PricingClientProps) {
+export default function PricingClient({ modules, websiteAddons, landingPageProduct, websiteVariantPrices = {} }: PricingClientProps) {
   const { getPriceDisplay, currency } = useCurrency();
+  const { addItem, isInCart, openCart } = useCart();
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,9 +118,9 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
                         <>
                           <div className="flex items-baseline justify-center gap-1 mb-2">
                             <span className="text-3xl font-display font-bold text-primary-foreground">
-                              {getPriceDisplay(tier.monthlyPrice).symbol}{getPriceDisplay(tier.monthlyPrice).amount}
+                              {getPriceDisplay(tier.monthlyPrice, websiteVariantPrices[tier.monthlyPrice]).symbol}{getPriceDisplay(tier.monthlyPrice, websiteVariantPrices[tier.monthlyPrice]).amount}
                             </span>
-                            <span className="text-primary-foreground/60">{getPriceDisplay(tier.monthlyPrice).periodLabel}</span>
+                            <span className="text-primary-foreground/60">{getPriceDisplay(tier.monthlyPrice, websiteVariantPrices[tier.monthlyPrice]).periodLabel}</span>
                           </div>
                           <p className="text-primary-foreground/70 text-sm">
                             {tier.maxPages ? (currency === 'ILS' ? `עד ${tier.maxPages} עמודים` : `Up to ${tier.maxPages} pages`) : (currency === 'ILS' ? "עמודים מותאמים" : "Custom pages")}
@@ -163,8 +166,8 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
                   className="bg-gold hover:bg-gold-dark text-foreground font-medium"
                   asChild
                 >
-                  <Link href="/checkout">
-                    Get Started <ArrowRight className="h-5 w-5 ml-2" />
+                  <Link href="/products/website">
+                    Learn More <ArrowRight className="h-5 w-5 ml-2" />
                   </Link>
                 </Button>
               </div>
@@ -200,19 +203,25 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
 
                 <div className="flex items-baseline gap-2 mb-6">
                   <span className="text-4xl font-display font-bold text-foreground">
-                    {getPriceDisplay(landingPageProduct.price).symbol}{getPriceDisplay(landingPageProduct.price).amount}
+                    {getPriceDisplay(landingPageProduct.price, landingPageProduct.prices).symbol}{getPriceDisplay(landingPageProduct.price, landingPageProduct.prices).amount}
                   </span>
-                  <span className="text-foreground/60">{getPriceDisplay(landingPageProduct.price).periodLabel}</span>
+                  <span className="text-foreground/60">{getPriceDisplay(landingPageProduct.price, landingPageProduct.prices).periodLabel}</span>
                 </div>
 
                 <Button
                   size="lg"
                   className="bg-foreground text-primary-foreground hover:bg-foreground/90 font-medium"
-                  asChild
+                  onClick={() => {
+                    if (isInCart(landingPageProduct.id)) {
+                      openCart();
+                    } else {
+                      addItem(landingPageProduct);
+                      openCart();
+                    }
+                  }}
                 >
-                  <Link href="/checkout">
-                    Get Landing Page <ArrowRight className="h-5 w-5 ml-2" />
-                  </Link>
+                  <ShoppingBag className="h-5 w-5 mr-2" />
+                  {isInCart(landingPageProduct.id) ? "View Cart" : "Add to Cart"}
                 </Button>
               </div>
 
@@ -311,9 +320,9 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
 
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="text-3xl font-display font-bold text-foreground">
-                    {getPriceDisplay(addon.price).symbol}{getPriceDisplay(addon.price).amount}
+                    {getPriceDisplay(addon.price, addon.prices).symbol}{getPriceDisplay(addon.price, addon.prices).amount}
                   </span>
-                  <span className="text-foreground/60">{getPriceDisplay(addon.price).periodLabel}</span>
+                  <span className="text-foreground/60">{getPriceDisplay(addon.price, addon.prices).periodLabel}</span>
                 </div>
 
                 <ul className="space-y-2 mb-6">
@@ -325,8 +334,20 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
                   ))}
                 </ul>
 
-                <Button variant="outline" className="w-full">
-                  Add to Website
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    if (isInCart(addon.id)) {
+                      openCart();
+                    } else {
+                      addItem(addon);
+                      openCart();
+                    }
+                  }}
+                >
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  {isInCart(addon.id) ? "View Cart" : "Add to Cart"}
                 </Button>
               </motion.div>
             ))}
@@ -423,7 +444,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageProdu
             {[
               {
                 question: "What's the difference between a Landing Page and Website?",
-                answer: "A Landing Page ($89/mo) is a single, high-converting page perfect for campaigns, lead generation, or promotions. A Website is a multi-page solution with tiered pricing based on the number of pages you need (Starter: 3 pages, Standard: 10 pages, Professional: 20 pages).",
+                answer: `A Landing Page ($${landingPageProduct.price}/mo) is a single, high-converting page perfect for campaigns, lead generation, or promotions. A Website is a multi-page solution with tiered pricing based on the number of pages you need (Starter: 3 pages, Standard: 10 pages, Professional: 20 pages).`,
               },
               {
                 question: "What happens after I subscribe?",
