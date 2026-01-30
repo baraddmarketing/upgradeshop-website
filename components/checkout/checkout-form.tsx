@@ -740,12 +740,17 @@ export function CheckoutForm() {
               country={form.watch("country")}
               onSuccess={(response) => {
                 console.log("[Checkout] Payment successful:", response);
-                clearCart();
-                clearSavedCheckoutData();
-                if (typeof window !== "undefined") {
-                  sessionStorage.removeItem("checkout-processing");
-                }
+                // Navigate FIRST, then clear cart - otherwise the empty cart
+                // triggers the checkout page's redirect to /pricing
                 router.push(`/checkout/success?orderId=${orderId}&orderNumber=${orderNumber}`);
+                // Clear after navigation is initiated
+                setTimeout(() => {
+                  clearCart();
+                  clearSavedCheckoutData();
+                  if (typeof window !== "undefined") {
+                    sessionStorage.removeItem("checkout-processing");
+                  }
+                }, 500);
               }}
               onCancel={() => {
                 setError("Payment was cancelled. Please try again.");
