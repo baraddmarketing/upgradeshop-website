@@ -78,9 +78,10 @@ export function SumitPayment({
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sdkReady, setSdkReady] = useState(false);
+  const [sdkLoaded, setSdkLoaded] = useState(false);
+  const [formBound, setFormBound] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const initializedRef = useRef(false);
+  const boundRef = useRef(false);
 
   // Load jQuery (required by SUMIT SDK)
   useEffect(() => {
@@ -114,7 +115,9 @@ export function SumitPayment({
 
   const loadSumitSDK = () => {
     if (window.OfficeGuy?.Payments) {
-      initializeSumit();
+      console.log("[SUMIT] SDK already loaded");
+      setSdkLoaded(true);
+      setIsLoading(false);
       return;
     }
 
@@ -123,7 +126,9 @@ export function SumitPayment({
     script.async = true;
 
     script.onload = () => {
-      initializeSumit();
+      console.log("[SUMIT] SDK script loaded");
+      setSdkLoaded(true);
+      setIsLoading(false);
     };
 
     script.onerror = () => {
@@ -135,27 +140,22 @@ export function SumitPayment({
     document.head.appendChild(script);
   };
 
-  const initializeSumit = () => {
+  // Bind SUMIT to the form AFTER both the SDK is loaded AND the form is in the DOM
+  useEffect(() => {
+    if (!sdkLoaded || !formRef.current || boundRef.current) return;
     if (!window.OfficeGuy?.Payments) {
+      console.error("[SUMIT] SDK loaded flag set but OfficeGuy not available");
       setError("Payment system not available");
-      setIsLoading(false);
       return;
     }
 
-    if (initializedRef.current) {
-      console.log("[SUMIT] Already initialized, skipping");
-      return;
-    }
-    initializedRef.current = true;
-
-    console.log("[SUMIT] Initializing payment system");
+    boundRef.current = true;
+    console.log("[SUMIT] Binding form - SDK loaded and form is in DOM");
 
     try {
-      // Initialize card number formatting
       window.OfficeGuy.Payments.InitEditors("#sumit-payment-form");
       console.log("[SUMIT] Card editors initialized");
 
-      // Bind form submission
       window.OfficeGuy.Payments.BindFormSubmit({
         CompanyID: companyId,
         APIPublicKey: apiPublicKey,
@@ -166,16 +166,13 @@ export function SumitPayment({
         ResponseCallback: handleTokenResponse,
       });
       console.log("[SUMIT] Form binding complete");
-
-      setSdkReady(true);
-      setIsLoading(false);
+      setFormBound(true);
     } catch (err) {
       console.error("[SUMIT] Initialization error:", err);
       setError("Failed to initialize payment. Please try again.");
-      setIsLoading(false);
       onError?.("Initialization failed");
     }
-  };
+  }, [sdkLoaded]);
 
   const handleTokenResponse = async (response: SumitTokenResponse) => {
     console.log("[SUMIT] Token response received:", response);
@@ -269,14 +266,13 @@ export function SumitPayment({
         </div>
       )}
 
-      {/* Payment Form - SUMIT SDK handles submission via BindFormSubmit */}
-      {sdkReady && !isLoading && (
-        <form
-          ref={formRef}
-          id="sumit-payment-form"
-          data-og="form"
-          className="space-y-6"
-        >
+      {/* Payment Form - always in DOM so SUMIT can bind to it, hidden while loading */}
+      <form
+        ref={formRef}
+        id="sumit-payment-form"
+        data-og="form"
+        className={`space-y-6 ${isLoading ? 'hidden' : ''}`}
+      >
           {/* Card Number */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
@@ -385,7 +381,7 @@ export function SumitPayment({
           {/* Submit Button - type="submit" triggers SUMIT's BindFormSubmit */}
           <button
             type="submit"
-            disabled={isProcessing}
+            disabled={isProcessing || !formBound}
             onClick={handlePayClick}
             className="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
@@ -402,7 +398,6 @@ export function SumitPayment({
             )}
           </button>
         </form>
-      )}
 
       {/* Security Notice */}
       <div className="bg-card/50 rounded-xl p-4">
