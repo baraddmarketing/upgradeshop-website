@@ -34,15 +34,20 @@ function SuccessContent() {
 
           {/* Heading */}
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Thank You for Your Order!
+            {pendingPayment ? "Order Created!" : "Payment Successful!"}
           </h1>
+
+          <p className="text-foreground/60 mb-6">
+            {pendingPayment
+              ? "Your order has been created. We'll send you a payment link shortly."
+              : "Your payment has been processed successfully. You're all set!"}
+          </p>
 
           {/* Pending Payment Notice */}
           {pendingPayment && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
               <p className="text-amber-900 text-sm">
-                <strong>Payment Pending:</strong> Your order has been created successfully.
-                We'll send you a secure payment link via email within the hour.
+                <strong>Payment Pending:</strong> We'll send you a secure payment link via email within the hour.
               </p>
             </div>
           )}
@@ -55,39 +60,55 @@ function SuccessContent() {
             </p>
           </div>
 
-          {/* What's Next */}
+          {/* What's Next - different content for paid vs pending */}
           <div className="bg-card rounded-2xl p-8 mb-8 text-left">
             <h2 className="font-display text-xl font-semibold text-foreground mb-6 text-center">
               What Happens Next?
             </h2>
 
             <ol className="space-y-4">
-              {[
-                {
-                  step: "1",
-                  title: "Check Your Email",
-                  description:
-                    "We've sent a confirmation email with your order details and payment instructions.",
-                },
-                {
-                  step: "2",
-                  title: "Complete Payment",
-                  description:
-                    "You'll receive a secure payment link within the hour. Pay at your convenience.",
-                },
-                {
-                  step: "3",
-                  title: "Meet Max",
-                  description:
-                    "Our AI assistant Max will reach out to start your onboarding. Max will gather your requirements and connect you with our team.",
-                },
-                {
-                  step: "4",
-                  title: "Go Live",
-                  description:
-                    "Typically within 1-2 weeks, your setup will be complete and live. We'll handle everything.",
-                },
-              ].map((item) => (
+              {(pendingPayment
+                ? [
+                    {
+                      step: "1",
+                      title: "Complete Payment",
+                      description:
+                        "We'll send you a secure payment link via email. Complete the payment to get started.",
+                    },
+                    {
+                      step: "2",
+                      title: "Meet Max",
+                      description:
+                        "Our AI assistant Max will reach out on WhatsApp to start your onboarding and gather your requirements.",
+                    },
+                    {
+                      step: "3",
+                      title: "Go Live",
+                      description:
+                        "Our team will set everything up for you. Typically within 1-2 weeks you'll be live.",
+                    },
+                  ]
+                : [
+                    {
+                      step: "1",
+                      title: "Check Your Email",
+                      description:
+                        "We've sent your receipt and dashboard login details to your email.",
+                    },
+                    {
+                      step: "2",
+                      title: "Message Max on WhatsApp",
+                      description:
+                        "Send Max a message to start your onboarding. Max will gather your requirements and get everything set up.",
+                    },
+                    {
+                      step: "3",
+                      title: "Go Live",
+                      description:
+                        "Our team handles everything. Typically within 1-2 weeks your setup will be complete and live.",
+                    },
+                  ]
+              ).map((item) => (
                 <li key={item.step} className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-gold/20 rounded-full flex items-center justify-center">
                     <span className="text-gold font-semibold text-sm">
@@ -107,17 +128,37 @@ function SuccessContent() {
             </ol>
           </div>
 
-          {/* Contact Options */}
+          {/* CTA - WhatsApp button prominent for paid orders */}
+          {!pendingPayment && (
+            <div className="mb-8">
+              <a
+                href="https://wa.me/message/..."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold rounded-xl transition-colors text-lg"
+              >
+                <MessageCircle className="h-6 w-6" />
+                Message Max on WhatsApp
+              </a>
+              <p className="text-foreground/40 text-sm mt-3">
+                Start your onboarding now
+              </p>
+            </div>
+          )}
+
+          {/* Secondary contact options */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a
-              href="https://wa.me/message/..."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card rounded-xl text-foreground hover:bg-foreground/5 transition-colors"
-            >
-              <MessageCircle className="h-5 w-5 text-green-600" />
-              <span>Chat on WhatsApp</span>
-            </a>
+            {pendingPayment && (
+              <a
+                href="https://wa.me/message/..."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card rounded-xl text-foreground hover:bg-foreground/5 transition-colors"
+              >
+                <MessageCircle className="h-5 w-5 text-green-600" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            )}
             <a
               href="mailto:hello@upgradeshop.ai"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card rounded-xl text-foreground hover:bg-foreground/5 transition-colors"

@@ -21,7 +21,10 @@ interface CheckoutRequestBody {
   items: Array<{
     product_id: string;
     quantity: number;
+    display_price?: number; // Price in the display currency (e.g., ILS)
   }>;
+  currency?: string; // Display currency (e.g., "ILS", "USD")
+  display_total?: number; // Total in the display currency
 }
 
 export async function POST(request: NextRequest) {
@@ -100,8 +103,9 @@ export async function POST(request: NextRequest) {
 
     // Build product map
     const productMap = new Map(productsResult.rows.map((p) => [p.id, p]));
+    const displayCurrency = body.currency || "USD";
 
-    // Calculate totals
+    // Calculate totals - use display prices if provided (for ILS etc.), otherwise DB prices
     let subtotal = 0;
     const orderItems: Array<{
       product_id: string;
@@ -117,7 +121,8 @@ export async function POST(request: NextRequest) {
       const product = productMap.get(item.product_id);
       if (!product) continue;
 
-      const price = Number(product.price);
+      // Use display price if provided, otherwise fall back to DB price
+      const price = item.display_price ?? Number(product.price);
       const itemTotal = price * item.quantity;
       subtotal += itemTotal;
 
@@ -132,10 +137,23 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Generate unique order number using timestamp to avoid conflicts
-    const timestamp = Date.now();
-    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-    const orderNumber = `ORD-${new Date().getFullYear()}-${timestamp}-${randomSuffix}`;
+    // Use display total if provided
+    if (body.display_total) {
+      subtotal = body.display_total;
+    }
+
+    // Generate sequential order number starting from 1000
+    const lastOrderResult = await client.query(
+      `SELECT order_number FROM store.orders
+       WHERE customer_id = $1 AND order_number ~ '^#[0-9]+$'
+       ORDER BY CAST(SUBSTRING(order_number FROM 2) AS INTEGER) DESC
+       LIMIT 1`,
+      [UPGRADESHOP_CUSTOMER_ID]
+    );
+    const lastNumber = lastOrderResult.rows.length > 0
+      ? parseInt(lastOrderResult.rows[0].order_number.slice(1), 10)
+      : 999;
+    const orderNumber = `#${lastNumber + 1}`;
 
     // Create order
     const orderResult = await client.query(
@@ -151,7 +169,7 @@ export async function POST(request: NextRequest) {
         orderNumber,
         subtotal,
         subtotal, // total_amount = subtotal (no discounts for now)
-        "USD",
+        displayCurrency,
         "pending", // Will be updated to 'paid' after payment
         "unfulfilled",
         body.buyer.email,
@@ -203,9 +221,8 @@ export async function POST(request: NextRequest) {
       order_id: orderId,
       order_number: finalOrderNumber,
       total: subtotal,
-      currency: "USD",
+      currency: displayCurrency,
       status: "pending",
-      message: "Order created successfully. We'll send you a payment link shortly.",
     });
   } catch (error) {
     await client.query("ROLLBACK");

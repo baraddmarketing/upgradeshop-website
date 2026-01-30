@@ -215,10 +215,16 @@ export function CheckoutForm() {
             company: data.company || undefined,
             country: data.country,
           },
-          items: items.map((item) => ({
-            product_id: item.product.id,
-            quantity: 1,
-          })),
+          items: items.map((item) => {
+            const { amount } = getPriceDisplay(item.product.price, item.product.prices);
+            return {
+              product_id: item.product.id,
+              quantity: 1,
+              display_price: amount,
+            };
+          }),
+          currency,
+          display_total: displayTotal,
         }),
       });
 
