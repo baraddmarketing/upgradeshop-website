@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const SUMIT_API_URL = "https://api.sumit.co.il";
 const APP_API_URL = process.env.NEXT_PUBLIC_UPGRADESHOP_API_URL || "https://app.staging.upgradeshop.ai";
 
 interface ChargeRequest {
@@ -20,21 +19,11 @@ interface ChargeRequest {
   }>;
 }
 
-interface SumitChargeResponse {
-  Status: number; // 0 = success
-  UserErrorMessage?: string;
-  TechnicalErrorDetails?: string;
-  Data?: {
-    PaymentID: number;
-    DocumentID: number;
-    AuthNum: string;
-    CardOwnerName?: string;
-    CardLastDigits?: string;
-    CardExpirationMonth?: number;
-    CardExpirationYear?: number;
-  };
-}
-
+/**
+ * POST /api/sumit/charge
+ *
+ * Proxies charge request to dashboard which has access to private SUMIT API key
+ */
 export async function POST(request: NextRequest) {
   try {
     const body: ChargeRequest = await request.json();
@@ -47,21 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get SUMIT credentials from the dashboard API
-    const configResponse = await fetch(`${APP_API_URL}/api/public/sumit-config`);
-
-    if (!configResponse.ok) {
-      console.error("Failed to fetch SUMIT config:", await configResponse.text());
-      return NextResponse.json(
-        { error: "Payment system not configured" },
-        { status: 500 }
-      );
-    }
-
-    const config = await configResponse.json();
-
-    // We need the private APIKey for charging - fetch from internal endpoint
-    // For now, we'll proxy through the dashboard's charge endpoint
+    // Proxy to dashboard's charge endpoint which has access to private API key
     const chargeResponse = await fetch(`${APP_API_URL}/api/public/sumit/charge`, {
       method: "POST",
       headers: {
@@ -74,14 +49,13 @@ export async function POST(request: NextRequest) {
         currency,
         customer,
         items,
-        companyId: config.companyId,
       }),
     });
 
     const chargeResult = await chargeResponse.json();
 
     if (!chargeResponse.ok) {
-      console.error("SUMIT charge failed:", chargeResult);
+      console.error("[Charge Proxy] Dashboard charge failed:", chargeResult);
       return NextResponse.json(
         {
           success: false,
@@ -91,15 +65,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      paymentId: chargeResult.paymentId,
-      documentId: chargeResult.documentId,
-      orderId,
-    });
+    return NextResponse.json(chargeResult);
 
   } catch (error) {
-    console.error("Error processing SUMIT charge:", error);
+    console.error("[Charge Proxy] Error processing payment:", error);
     return NextResponse.json(
       { error: "Failed to process payment" },
       { status: 500 }
