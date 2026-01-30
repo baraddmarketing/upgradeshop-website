@@ -226,12 +226,23 @@ export function SumitPayment({
     }
   };
 
-  // SUMIT's BindFormSubmit handles form submission automatically.
-  // We just track the processing state via the submit button click.
-  const handlePayClick = () => {
-    console.log("[SUMIT] Pay button clicked, SUMIT SDK will handle form submission");
+  // SUMIT's BindFormSubmit intercepts jQuery submit events, so we must trigger via jQuery
+  const handlePayClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent native browser form submission
+    console.log("[SUMIT] Pay button clicked, triggering jQuery form submission");
     setError(null);
     setIsProcessing(true);
+
+    if (!window.jQuery || !formRef.current) {
+      console.error("[SUMIT] jQuery or form ref not available");
+      setError("Payment form not ready. Please refresh the page.");
+      setIsProcessing(false);
+      return;
+    }
+
+    // SUMIT's BindFormSubmit intercepts jQuery submit events
+    console.log("[SUMIT] Triggering jQuery submit event");
+    window.jQuery(formRef.current).trigger("submit");
 
     // If SUMIT doesn't respond within 30 seconds, reset
     setTimeout(() => {
