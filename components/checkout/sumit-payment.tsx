@@ -42,6 +42,8 @@ interface SumitPaymentProps {
   companyId: number;
   apiPublicKey: string;
   orderId: string;
+  orderNumber: string;
+  isSubscription?: boolean; // If true, uses subscription checkout endpoint
   customer: {
     name: string;
     email: string;
@@ -55,7 +57,15 @@ interface SumitPaymentProps {
   total: number;
   currency?: string; // Currency code (e.g., "USD", "ILS")
   country: string; // ISO country code (e.g., "IL" for Israel)
-  onSuccess: (response: { token: string; orderId: string }) => void;
+  onSuccess: (response: {
+    token: string;
+    orderId: string;
+    paymentId?: number;
+    authNumber?: string;
+    documentId?: number;
+    documentNumber?: number;
+    documentDownloadURL?: string;
+  }) => void;
   onCancel?: () => void;
   onError?: (error: string) => void;
   isTest?: boolean;
@@ -65,6 +75,8 @@ export function SumitPayment({
   companyId,
   apiPublicKey,
   orderId,
+  orderNumber,
+  isSubscription = false,
   customer,
   items,
   total,
@@ -197,27 +209,101 @@ export function SumitPayment({
 
     // Token received successfully - now charge the card via server
     try {
-      const chargeResponse = await fetch("/api/sumit/charge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      if (isSubscription) {
+        // Subscription checkout - use dashboard API to save payment token
+        console.log("[SUMIT] Processing subscription payment via dashboard API");
+        const platformUrl = process.env.NEXT_PUBLIC_PLATFORM_URL || "https://app.staging.upgradeshop.ai";
+
+        console.log("[SUMIT] Calling:", `${platformUrl}/api/public/checkout/complete`);
+        console.log("[SUMIT] Order ID:", orderId);
+        console.log("[SUMIT] Token:", token.substring(0, 20) + "...");
+
+        const completeResponse = await fetch(`${platformUrl}/api/public/checkout/complete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId,
+            singleUseToken: token,
+            domain: "upgradeshop.ai",
+          }),
+        });
+
+        const completeResult = await completeResponse.json();
+
+        console.log("[SUMIT] Response status:", completeResponse.status);
+        console.log("[SUMIT] Response data:", completeResult);
+
+        if (!completeResponse.ok || !completeResult.success) {
+          const errorMsg = completeResult.error || completeResult.details || "Subscription payment failed";
+          console.error("[SUMIT] Subscription payment failed:", errorMsg);
+          throw new Error(errorMsg);
+        }
+
+        console.log("[SUMIT] Subscription created successfully");
+
+        onSuccess({
           token,
           orderId,
-          amount: total,
-          currency,
-          customer,
-          items,
-        }),
-      });
+          paymentId: undefined, // Dashboard handles this
+          authNumber: undefined,
+          documentId: undefined,
+          documentNumber: undefined,
+          documentDownloadURL: undefined,
+        });
+      } else {
+        // Regular one-time payment - use local charge endpoint
+        console.log("[SUMIT] Processing one-time payment");
+        const chargeResponse = await fetch("/api/sumit/charge", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token,
+            orderId,
+            orderNumber,
+            amount: total,
+            currency,
+            customer,
+            items,
+          }),
+        });
 
-      const chargeResult = await chargeResponse.json();
+        const chargeResult = await chargeResponse.json();
 
-      if (!chargeResponse.ok || !chargeResult.success) {
-        throw new Error(chargeResult.error || "Payment failed");
+        if (!chargeResponse.ok || !chargeResult.success) {
+          throw new Error(chargeResult.error || "Payment failed");
+        }
+
+        // Payment successful - update order status to paid
+        try {
+          await fetch("/api/checkout/update-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId,
+              financialStatus: "paid",
+              paymentMethod: "sumit",
+              paymentId: chargeResult.paymentId,
+              authNumber: chargeResult.authNumber,
+              documentId: chargeResult.documentId,
+              documentNumber: chargeResult.documentNumber,
+              documentDownloadURL: chargeResult.documentDownloadURL,
+            }),
+          });
+        } catch (updateErr) {
+          // Log but don't block - payment already went through
+          console.error("[SUMIT] Failed to update order status:", updateErr);
+        }
+
+        onSuccess({
+          token,
+          orderId,
+          paymentId: chargeResult.paymentId,
+          authNumber: chargeResult.authNumber,
+          documentId: chargeResult.documentId,
+          documentNumber: chargeResult.documentNumber,
+          documentDownloadURL: chargeResult.documentDownloadURL,
+        });
       }
-
-      // Payment successful!
-      onSuccess({ token, orderId });
     } catch (err: any) {
       console.error("[SUMIT] Charge error:", err);
       setError(err.message || "Payment failed. Please try again.");
@@ -296,9 +382,10 @@ export function SumitPayment({
                 data-og="cardnumber"
                 placeholder="1234 5678 9012 3456"
                 maxLength={19}
-                className="w-full pl-10 pr-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
+                className="w-full pl-10 pr-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
                 required
                 autoComplete="cc-number"
+                dir="ltr"
               />
             </div>
           </div>
@@ -314,6 +401,7 @@ export function SumitPayment({
                 data-og="expirationmonth"
                 className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
                 required
+                autoComplete="cc-exp-month"
               >
                 <option value="">MM</option>
                 {Array.from({ length: 12 }, (_, i) => {
@@ -336,6 +424,7 @@ export function SumitPayment({
                 data-og="expirationyear"
                 className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
                 required
+                autoComplete="cc-exp-year"
               >
                 <option value="">YY</option>
                 {Array.from({ length: 15 }, (_, i) => {
@@ -359,9 +448,10 @@ export function SumitPayment({
                 data-og="cvv"
                 placeholder="123"
                 maxLength={4}
-                className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
+                className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
                 required
                 autoComplete="cc-csc"
+                dir="ltr"
               />
             </div>
           </div>
@@ -377,8 +467,9 @@ export function SumitPayment({
                 data-og="citizenid"
                 placeholder="Enter your ID number"
                 maxLength={9}
-                className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
+                className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
                 autoComplete="off"
+                dir="ltr"
               />
               <p className="text-xs text-foreground/50">
                 Required for Israeli credit cards

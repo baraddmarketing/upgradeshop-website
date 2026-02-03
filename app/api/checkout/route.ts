@@ -145,15 +145,15 @@ export async function POST(request: NextRequest) {
     // Generate sequential order number starting from 1000
     const lastOrderResult = await client.query(
       `SELECT order_number FROM store.orders
-       WHERE customer_id = $1 AND order_number ~ '^#[0-9]+$'
-       ORDER BY CAST(SUBSTRING(order_number FROM 2) AS INTEGER) DESC
+       WHERE customer_id = $1 AND order_number ~ '^[0-9]+$'
+       ORDER BY CAST(order_number AS INTEGER) DESC
        LIMIT 1`,
       [UPGRADESHOP_CUSTOMER_ID]
     );
     const lastNumber = lastOrderResult.rows.length > 0
-      ? parseInt(lastOrderResult.rows[0].order_number.slice(1), 10)
+      ? parseInt(lastOrderResult.rows[0].order_number, 10)
       : 999;
-    const orderNumber = `#${lastNumber + 1}`;
+    const orderNumber = `${lastNumber + 1}`;
 
     // Create order
     const orderResult = await client.query(
@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
         subtotal, // total_amount = subtotal (no discounts for now)
         displayCurrency,
         "pending", // Will be updated to 'paid' after payment
-        "unfulfilled",
+        "fulfilled", // Digital/virtual products - no shipping needed
         body.buyer.email,
         body.buyer.phone || null,
         `${body.buyer.first_name} ${body.buyer.last_name}`,
@@ -213,6 +213,10 @@ export async function POST(request: NextRequest) {
 
     await client.query("COMMIT");
 
+    // Check if this order has subscription products
+    const hasSubscriptions = orderItems.some(item => item.billing_cycle !== null);
+    console.log("[Checkout API] Order has subscriptions:", hasSubscriptions);
+
     // TODO: Send notification email to team about new order
     // TODO: Send confirmation email to customer
 
@@ -223,6 +227,7 @@ export async function POST(request: NextRequest) {
       total: subtotal,
       currency: displayCurrency,
       status: "pending",
+      hasSubscriptions,
     });
   } catch (error) {
     await client.query("ROLLBACK");

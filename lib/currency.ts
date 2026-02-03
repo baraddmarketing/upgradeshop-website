@@ -111,3 +111,39 @@ export function getPriceDisplayValues(
     fullPrice: `${formatted}${periodLabel}`,
   };
 }
+
+/**
+ * Simple currency formatter for payment pages
+ * Supports multiple currencies from platform API
+ */
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  ILS: "₪",
+  JPY: "¥",
+};
+
+export function formatPriceSimple(amount: number | string, currencyCode: string = "ILS"): string {
+  const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+
+  if (isNaN(numAmount)) {
+    return "0.00";
+  }
+
+  const symbol = CURRENCY_SYMBOLS[currencyCode.toUpperCase()] || currencyCode;
+
+  // Format with 2 decimal places and thousands separator
+  const formatted = numAmount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  // ILS symbol comes after the number
+  if (currencyCode.toUpperCase() === "ILS") {
+    return `${formatted} ${symbol}`;
+  }
+
+  // Other currencies: symbol before number
+  return `${symbol}${formatted}`;
+}

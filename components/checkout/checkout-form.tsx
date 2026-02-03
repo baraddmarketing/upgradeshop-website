@@ -95,6 +95,7 @@ export function CheckoutForm() {
   const [error, setError] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [hasSubscriptions, setHasSubscriptions] = useState(false);
   const [sumitConfig, setSumitConfig] = useState<{
     companyId: number;
     apiPublicKey: string;
@@ -235,6 +236,10 @@ export function CheckoutForm() {
       }
 
       console.log("[Checkout] Order created:", orderResult.order_id);
+      console.log("[Checkout] Has subscriptions:", orderResult.hasSubscriptions);
+
+      // Store subscription flag
+      setHasSubscriptions(orderResult.hasSubscriptions || false);
 
       // Mark that we're processing an order to prevent redirect
       if (typeof window !== "undefined") {
@@ -534,9 +539,9 @@ export function CheckoutForm() {
 
                 <div className="bg-card rounded-xl p-4 mt-6">
                   <p className="text-foreground/60 text-sm">
-                    <strong className="text-foreground">Note:</strong> After
-                    placing your order, we&apos;ll send you a secure payment link
-                    based on your location.
+                    <strong className="text-foreground">Note:</strong> Your
+                    location helps us set up the correct currency and tax settings
+                    for your account.
                   </p>
                 </div>
               </motion.div>
@@ -722,6 +727,8 @@ export function CheckoutForm() {
               companyId={sumitConfig.companyId}
               apiPublicKey={sumitConfig.apiPublicKey}
               orderId={orderId}
+              orderNumber={orderNumber!}
+              isSubscription={hasSubscriptions}
               customer={{
                 name: `${form.watch("firstName")} ${form.watch("lastName")}`,
                 email: form.watch("email"),
