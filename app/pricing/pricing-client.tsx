@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/layout/container";
 import { ProductCard } from "@/components/pricing/product-card";
 import { Product, websiteService, websiteTiers } from "@/lib/products";
 import { useCurrency } from "@/lib/use-currency";
-import { Check, HelpCircle, ArrowRight, Globe, Zap, Package, ShoppingBag, Bot, FileText } from "lucide-react";
+import { Check, HelpCircle, ArrowRight, Globe, Zap, Package, ShoppingBag, Bot, ChevronDown, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/lib/cart-context";
@@ -20,14 +21,27 @@ interface PricingClientProps {
   websiteVariantPrices?: Record<number, Record<string, number> | null>;
 }
 
+const navItems = [
+  { id: "website", label: "Website", icon: Globe },
+  { id: "ai-agent", label: "AI Agent", icon: Bot },
+  { id: "modules", label: "Modules", icon: LayoutGrid },
+  { id: "landing-page", label: "Landing Page", icon: Zap },
+];
+
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export default function PricingClient({ modules, websiteAddons, landingPageAddons, aiAgentProduct, landingPageProduct, websiteVariantPrices = {} }: PricingClientProps) {
   const { getPriceDisplay, currency } = useCurrency();
   const { addItem, isInCart, openCart } = useCart();
+  const [showWebsiteAddons, setShowWebsiteAddons] = useState(false);
+  const [showLandingAddons, setShowLandingAddons] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-20 md:py-28">
+      <section className="pt-20 md:pt-28 pb-10 md:pb-14">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -53,8 +67,38 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
         </Container>
       </section>
 
-      {/* Website Service with Tiers */}
-      <section className="pb-16 md:pb-24">
+      {/* Anchor Navigation */}
+      <section className="pb-12 md:pb-16">
+        <Container>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap justify-center gap-3"
+          >
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-foreground/[0.04] border border-foreground/10 hover:border-gold/40 hover:bg-gold/5 transition-all duration-200"
+                >
+                  <Icon className="h-4 w-4 text-foreground/50 group-hover:text-gold transition-colors" />
+                  <span className="text-sm font-medium text-foreground/70 group-hover:text-foreground transition-colors">
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          WEBSITE SERVICE
+       ═══════════════════════════════════════════════════════════════════════ */}
+      <section id="website" className="pb-16 md:pb-24 scroll-mt-8">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -151,7 +195,8 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                 </div>
               </div>
 
-              <div className="text-center mt-8">
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
                 <Button
                   size="lg"
                   className="bg-gold hover:bg-gold-dark text-foreground font-medium"
@@ -161,128 +206,105 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                     Learn More <ArrowRight className="h-5 w-5 ml-2" />
                   </Link>
                 </Button>
+
+                {websiteAddons.length > 0 && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-transparent border-white/20 text-primary-foreground hover:bg-white/5"
+                    onClick={() => setShowWebsiteAddons(!showWebsiteAddons)}
+                  >
+                    <Package className="h-4 w-4 mr-2" />
+                    {showWebsiteAddons ? "Hide" : "View"} Website Addons ({websiteAddons.length})
+                    <ChevronDown className={`h-4 w-4 ml-2 transition-transform duration-300 ${showWebsiteAddons ? "rotate-180" : ""}`} />
+                  </Button>
+                )}
               </div>
+
+              {/* Expandable Website Addons */}
+              <AnimatePresence>
+                {showWebsiteAddons && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-10">
+                      <div className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10">
+                        <div className="text-center mb-8">
+                          <h3 className="font-display text-xl font-semibold text-primary-foreground mb-2">
+                            Website Addons
+                          </h3>
+                          <p className="text-primary-foreground/60 text-sm">
+                            Add powerful functionality to your website. Requires an active Website subscription.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          {websiteAddons.map((addon) => (
+                            <div
+                              key={addon.id}
+                              className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-gold/30 transition-all"
+                            >
+                              <h4 className="font-display text-lg font-semibold text-primary-foreground mb-2">
+                                {addon.name}
+                              </h4>
+                              <p className="text-primary-foreground/50 text-sm mb-4">
+                                {addon.shortDescription}
+                              </p>
+
+                              <div className="flex items-baseline gap-1 mb-4">
+                                <span className="text-2xl font-display font-bold text-primary-foreground">
+                                  {getPriceDisplay(addon.price, addon.prices).symbol}{getPriceDisplay(addon.price, addon.prices).amount}
+                                </span>
+                                <span className="text-primary-foreground/50">{getPriceDisplay(addon.price, addon.prices).periodLabel}</span>
+                              </div>
+
+                              <ul className="space-y-2 mb-5">
+                                {addon.features.slice(0, 3).map((feature, featureIndex) => (
+                                  <li key={featureIndex} className="flex items-start gap-2">
+                                    <Check className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
+                                    <span className="text-primary-foreground/70 text-sm">{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full bg-transparent border-white/20 text-primary-foreground hover:bg-white/5"
+                                onClick={() => {
+                                  if (isInCart(addon.id)) {
+                                    openCart();
+                                  } else {
+                                    addItem(addon);
+                                    openCart();
+                                  }
+                                }}
+                              >
+                                <ShoppingBag className="h-4 w-4 mr-2" />
+                                {isInCart(addon.id) ? "View Cart" : "Add to Cart"}
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </Container>
       </section>
 
-      {/* Website Addons Section */}
-      <section className="py-16 md:pb-24 bg-foreground/[0.02]">
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-full mb-6">
-              <Package className="h-4 w-4 text-gold" />
-              <span className="text-sm font-medium text-gold">Website Addons</span>
-            </div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Extend Your Website
-            </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
-              Add powerful functionality to your website. These addons require an active Website subscription.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {websiteAddons.map((addon, index) => (
-              <motion.div
-                key={addon.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl p-8 border-2 border-transparent hover:border-gold/30 transition-all"
-              >
-                <div className="mb-4">
-                  <Badge variant="outline" className="text-xs">
-                    {currency === 'ILS' ? 'דורש אתר' : 'Requires Website'}
-                  </Badge>
-                </div>
-
-                <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                  {addon.name}
-                </h3>
-                <p className="text-foreground/60 text-sm mb-4">
-                  {addon.shortDescription}
-                </p>
-
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-3xl font-display font-bold text-foreground">
-                    {getPriceDisplay(addon.price, addon.prices).symbol}{getPriceDisplay(addon.price, addon.prices).amount}
-                  </span>
-                  <span className="text-foreground/60">{getPriceDisplay(addon.price, addon.prices).periodLabel}</span>
-                </div>
-
-                <ul className="space-y-2 mb-6">
-                  {addon.features.slice(0, 4).map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                      <span className="text-foreground/70 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => {
-                    if (isInCart(addon.id)) {
-                      openCart();
-                    } else {
-                      addItem(addon);
-                      openCart();
-                    }
-                  }}
-                >
-                  <ShoppingBag className="h-4 w-4 mr-2" />
-                  {isInCart(addon.id) ? "View Cart" : "Add to Cart"}
-                </Button>
-              </motion.div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Platform Modules Header */}
-      <section className="pb-8">
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Platform Modules
-            </h2>
-            <p className="text-foreground/70">
-              Standalone products you can add to your toolkit. All modules integrate seamlessly.
-            </p>
-          </motion.div>
-        </Container>
-      </section>
-
-      {/* Modules Grid */}
-      <section className="pb-16">
-        <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-            {modules.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* AI Agents Section */}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          AI AGENT
+       ═══════════════════════════════════════════════════════════════════════ */}
       {aiAgentProduct && (
-        <section className="py-16 md:py-24 bg-gradient-to-br from-foreground to-foreground/95">
+        <section id="ai-agent" className="py-16 md:py-24 bg-gradient-to-br from-foreground to-foreground/95 scroll-mt-8">
           <Container>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -421,8 +443,42 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
         </section>
       )}
 
-      {/* Landing Page Product */}
-      <section className="pb-16 md:pb-24">
+      {/* ═══════════════════════════════════════════════════════════════════════
+          PLATFORM MODULES
+       ═══════════════════════════════════════════════════════════════════════ */}
+      <section id="modules" className="py-16 md:py-24 scroll-mt-8">
+        <Container>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto mb-12"
+          >
+            <div className="inline-flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-full mb-6">
+              <LayoutGrid className="h-4 w-4 text-gold" />
+              <span className="text-sm font-medium text-gold">Platform Modules</span>
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Build Your Stack
+            </h2>
+            <p className="text-foreground/70">
+              Each module works on its own — and gets smarter with AI Agents. Add what you need, when you need it.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+            {modules.map((product, index) => (
+              <ProductCard key={product.id} product={product} index={index} />
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          LANDING PAGE
+       ═══════════════════════════════════════════════════════════════════════ */}
+      <section id="landing-page" className="py-16 md:py-24 bg-foreground/[0.02] scroll-mt-8">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -453,21 +509,35 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                   <span className="text-foreground/60">{getPriceDisplay(landingPageProduct.price, landingPageProduct.prices).periodLabel}</span>
                 </div>
 
-                <Button
-                  size="lg"
-                  className="bg-foreground text-primary-foreground hover:bg-foreground/90 font-medium"
-                  onClick={() => {
-                    if (isInCart(landingPageProduct.id)) {
-                      openCart();
-                    } else {
-                      addItem(landingPageProduct);
-                      openCart();
-                    }
-                  }}
-                >
-                  <ShoppingBag className="h-5 w-5 mr-2" />
-                  {isInCart(landingPageProduct.id) ? "View Cart" : "Add to Cart"}
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    size="lg"
+                    className="bg-foreground text-primary-foreground hover:bg-foreground/90 font-medium"
+                    onClick={() => {
+                      if (isInCart(landingPageProduct.id)) {
+                        openCart();
+                      } else {
+                        addItem(landingPageProduct);
+                        openCart();
+                      }
+                    }}
+                  >
+                    <ShoppingBag className="h-5 w-5 mr-2" />
+                    {isInCart(landingPageProduct.id) ? "View Cart" : "Add to Cart"}
+                  </Button>
+
+                  {landingPageAddons.length > 0 && (
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      onClick={() => setShowLandingAddons(!showLandingAddons)}
+                    >
+                      <Package className="h-4 w-4 mr-2" />
+                      Addons ({landingPageAddons.length})
+                      <ChevronDown className={`h-4 w-4 ml-2 transition-transform duration-300 ${showLandingAddons ? "rotate-180" : ""}`} />
+                    </Button>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -483,95 +553,92 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                 ))}
               </div>
             </div>
+
+            {/* Expandable Landing Page Addons */}
+            <AnimatePresence>
+              {showLandingAddons && landingPageAddons.length > 0 && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-10 border-t border-foreground/10 mt-10">
+                    <div className="text-center mb-8">
+                      <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                        Landing Page Addons
+                      </h3>
+                      <p className="text-foreground/60 text-sm">
+                        Extend your landing page with these add-ons. Requires an active Landing Page subscription.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                      {landingPageAddons.map((addon) => (
+                        <div
+                          key={addon.id}
+                          className="bg-foreground/[0.03] rounded-xl p-6 border border-foreground/10 hover:border-gold/30 transition-all"
+                        >
+                          <div className="mb-3">
+                            <Badge variant="outline" className="text-xs">
+                              {currency === 'ILS' ? 'דורש דף נחיתה' : 'Requires Landing Page'}
+                            </Badge>
+                          </div>
+
+                          <h4 className="font-display text-lg font-semibold text-foreground mb-2">
+                            {addon.name}
+                          </h4>
+                          <p className="text-foreground/60 text-sm mb-4">
+                            {addon.shortDescription}
+                          </p>
+
+                          <div className="flex items-baseline gap-1 mb-4">
+                            <span className="text-2xl font-display font-bold text-foreground">
+                              {getPriceDisplay(addon.price, addon.prices).symbol}{getPriceDisplay(addon.price, addon.prices).amount}
+                            </span>
+                            <span className="text-foreground/60">{getPriceDisplay(addon.price, addon.prices).periodLabel}</span>
+                          </div>
+
+                          <ul className="space-y-2 mb-5">
+                            {addon.features.slice(0, 3).map((feature, featureIndex) => (
+                              <li key={featureIndex} className="flex items-start gap-2">
+                                <Check className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
+                                <span className="text-foreground/70 text-sm">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full"
+                            onClick={() => {
+                              if (isInCart(addon.id)) {
+                                openCart();
+                              } else {
+                                addItem(addon);
+                                openCart();
+                              }
+                            }}
+                          >
+                            <ShoppingBag className="h-4 w-4 mr-2" />
+                            {isInCart(addon.id) ? "View Cart" : "Add to Cart"}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </Container>
       </section>
 
-      {/* Landing Page Addons Section */}
-      {landingPageAddons.length > 0 && (
-        <section className="py-16 md:py-24">
-          <Container>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <div className="inline-flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-full mb-6">
-                <FileText className="h-4 w-4 text-gold" />
-                <span className="text-sm font-medium text-gold">Landing Page Addons</span>
-              </div>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Extend Your Landing Page
-              </h2>
-              <p className="text-foreground/70 max-w-2xl mx-auto">
-                Add powerful functionality to your landing page. These addons require an active Landing Page subscription.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto">
-              {landingPageAddons.map((addon, index) => (
-                <motion.div
-                  key={addon.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-card rounded-2xl p-8 border-2 border-transparent hover:border-gold/30 transition-all"
-                >
-                  <div className="mb-4">
-                    <Badge variant="outline" className="text-xs">
-                      {currency === 'ILS' ? 'דורש דף נחיתה' : 'Requires Landing Page'}
-                    </Badge>
-                  </div>
-
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {addon.name}
-                  </h3>
-                  <p className="text-foreground/60 text-sm mb-4">
-                    {addon.shortDescription}
-                  </p>
-
-                  <div className="flex items-baseline gap-1 mb-6">
-                    <span className="text-3xl font-display font-bold text-foreground">
-                      {getPriceDisplay(addon.price, addon.prices).symbol}{getPriceDisplay(addon.price, addon.prices).amount}
-                    </span>
-                    <span className="text-foreground/60">{getPriceDisplay(addon.price, addon.prices).periodLabel}</span>
-                  </div>
-
-                  <ul className="space-y-2 mb-6">
-                    {addon.features.slice(0, 4).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-gold flex-shrink-0 mt-0.5" />
-                        <span className="text-foreground/70 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => {
-                      if (isInCart(addon.id)) {
-                        openCart();
-                      } else {
-                        addItem(addon);
-                        openCart();
-                      }
-                    }}
-                  >
-                    <ShoppingBag className="h-4 w-4 mr-2" />
-                    {isInCart(addon.id) ? "View Cart" : "Add to Cart"}
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
-          </Container>
-        </section>
-      )}
-
-      {/* What's Included Section */}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          WHAT'S INCLUDED
+       ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-16 md:py-24">
         <Container>
           <motion.div
@@ -585,7 +652,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
               What You Get With Every Product
             </h2>
             <p className="text-foreground/70 max-w-2xl mx-auto">
-              No matter which product you choose, you'll always get these essentials.
+              No matter which product you choose, you&apos;ll always get these essentials.
             </p>
           </motion.div>
 
@@ -641,7 +708,9 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
         </Container>
       </section>
 
-      {/* FAQ Section */}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          FAQ
+       ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-16 md:py-24 bg-foreground/[0.02]">
         <Container>
           <motion.div
@@ -708,7 +777,9 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
         </Container>
       </section>
 
-      {/* Final CTA */}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          FINAL CTA
+       ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-16 md:py-24 bg-foreground">
         <Container>
           <motion.div
