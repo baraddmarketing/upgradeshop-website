@@ -1,10 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchProductsFromDB } from "@/lib/db-products";
-import { mergeWithStaticProducts } from "@/lib/fetch-products";
-import { allProducts, modules, websiteAddons, websiteService, landingPageProduct } from "@/lib/products";
+import { fetchProductsFromDB, fetchWebsiteVariantsFromDB } from "@/lib/db-products";
+import { enrichWithStaticData } from "@/lib/fetch-products";
+import { allProducts, websiteService } from "@/lib/products";
 import { getAllProductSlugs, getProductContent } from "@/lib/product-content";
 import ProductPageClient from "./product-page-client";
+import WebsiteProductPage from "./website-product-page";
+import AiAgentProductPage from "./ai-agent-product-page";
 
 export const revalidate = 60;
 
@@ -25,8 +27,16 @@ export async function generateMetadata({
     return { title: "Product Not Found | The Upgrade Shop" };
   }
 
-  const name = slug === "website" ? websiteService.name : (product?.name || slug);
-  const description = slug === "website" ? websiteService.description : (product?.description || content.overviewParagraphs[0]);
+  const name = slug === "website"
+    ? websiteService.name
+    : slug === "ai-agent"
+    ? "AI Agent"
+    : (product?.name || slug);
+  const description = slug === "website"
+    ? websiteService.description
+    : slug === "ai-agent"
+    ? content.overviewParagraphs[0]
+    : (product?.description || content.overviewParagraphs[0]);
 
   return {
     title: `${name} | The Upgrade Shop`,
@@ -53,32 +63,51 @@ export default async function ProductPage({
     notFound();
   }
 
-  // Fetch DB prices and merge
+  // Fetch from DB (source of truth) and enrich with static features
   const dbProducts = await fetchProductsFromDB();
+  const enrichedProducts = enrichWithStaticData(dbProducts);
 
-  const mergedModules = mergeWithStaticProducts(
-    dbProducts.filter((p) => p.category === "module"),
-    modules
-  );
-  const mergedAddons = mergeWithStaticProducts(
-    dbProducts.filter((p) => p.category === "addon"),
-    websiteAddons
-  );
-  const allMerged = [...mergedModules, ...mergedAddons];
-
-  // Find this product (merged with DB prices)
-  const product = allMerged.find((p) => p.slug === slug) ||
+  // Find this product - DB first, static fallback
+  const product = enrichedProducts.find((p) => p.slug === slug) ||
     allProducts.find((p) => p.slug === slug);
 
-  if (!product && slug !== "website") {
+  if (!product && slug !== "website" && slug !== "ai-agent") {
     notFound();
   }
 
-  // Get related products
+  // Dedicated AI Agent product page
+  if (slug === "ai-agent") {
+    const aiAgentProduct = enrichedProducts.find(
+      (p) => p.category === "ai-agent"
+    ) || product || null;
+
+    return <AiAgentProductPage aiAgentProduct={aiAgentProduct} />;
+  }
+
+  // Dedicated Website product page
+  if (slug === "website") {
+    const [websiteVariants] = await Promise.all([
+      fetchWebsiteVariantsFromDB(),
+    ]);
+
+    // Get website addon products with DB prices
+    const addonProducts = enrichedProducts.filter(
+      (p) => (p.category === "addon" || p.category === "website-addon") && p.requires === "website"
+    );
+
+    return (
+      <WebsiteProductPage
+        addonProducts={addonProducts}
+        websiteVariants={websiteVariants}
+      />
+    );
+  }
+
+  // Get related products - DB first, static fallback
   const relatedProducts = content.relatedSlugs
     .map((rs) => {
       if (rs === "website") return null; // Website is a service, not a product card
-      return allMerged.find((p) => p.slug === rs) || allProducts.find((p) => p.slug === rs);
+      return enrichedProducts.find((p) => p.slug === rs) || allProducts.find((p) => p.slug === rs);
     })
     .filter(Boolean) as typeof allProducts;
 
@@ -87,10 +116,10 @@ export default async function ProductPage({
       product={product || null}
       content={content}
       relatedProducts={relatedProducts}
-      isWebsiteService={slug === "website"}
-      serviceName={slug === "website" ? websiteService.name : undefined}
-      websiteTiers={slug === "website" ? websiteService.tiers : undefined}
-      websiteFeatures={slug === "website" ? websiteService.features : undefined}
+      isWebsiteService={false}
+      serviceName={undefined}
+      websiteTiers={undefined}
+      websiteFeatures={undefined}
     />
   );
 }
