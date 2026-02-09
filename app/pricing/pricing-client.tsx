@@ -402,7 +402,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                     <Button
                       size="lg"
                       variant="outline"
-                      className="w-full border-white/20 text-primary-foreground hover:bg-white/5"
+                      className="w-full bg-transparent border-white/20 text-primary-foreground hover:bg-white/5"
                       asChild
                     >
                       <Link href="/products/ai-agent">
