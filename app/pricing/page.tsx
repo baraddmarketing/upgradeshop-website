@@ -1,45 +1,44 @@
 import { fetchProductsFromDB, fetchWebsiteVariantsFromDB } from '@/lib/db-products';
-import { mergeWithStaticProducts } from '@/lib/fetch-products';
-import { modules, websiteAddons, landingPageProduct } from '@/lib/products';
+import { enrichWithStaticData } from '@/lib/fetch-products';
+import { modules, websiteAddons, landingPageAddons, landingPageProduct } from '@/lib/products';
 import PricingClient from './pricing-client';
 
 // Enable ISR - page will be regenerated every 60 seconds
 export const revalidate = 60;
 
 export default async function PricingPage() {
-  // Fetch products and website variants from database
+  // Database is the source of truth - fetch everything from there
   const [dbProducts, websiteVariants] = await Promise.all([
     fetchProductsFromDB(),
     fetchWebsiteVariantsFromDB(),
   ]);
 
-  console.log('[pricing] Got', dbProducts.length, 'products from DB');
-  console.log('[pricing] Got', websiteVariants.length, 'website variants from DB');
+  // Enrich DB products with static features (DB prices always win)
+  const allDbProducts = enrichWithStaticData(dbProducts);
 
-  // Merge with static products (database prices override static prices)
-  const mergedModules = mergeWithStaticProducts(
-    dbProducts.filter(p => p.category === 'module' && p.id !== landingPageProduct.id),
-    modules
-  );
+  // Group products by their database category
+  // If DB is empty (connection error), fall back to static products
+  const hasDbData = allDbProducts.length > 0;
 
-  const mergedAddons = mergeWithStaticProducts(
-    dbProducts.filter(p => p.category === 'addon'),
-    websiteAddons
-  );
+  const finalModules = hasDbData
+    ? allDbProducts.filter(p => p.category === 'module')
+    : modules;
 
-  // Check if landing page product has updated price in database
-  const dbLandingPage = dbProducts.find(p => p.id === landingPageProduct.id);
-  console.log('[pricing] landingPageProduct.id:', landingPageProduct.id);
-  console.log('[pricing] dbLandingPage found:', !!dbLandingPage);
-  if (dbLandingPage) {
-    console.log('[pricing] dbLandingPage.price:', dbLandingPage.price);
-  }
+  const finalWebsiteAddons = hasDbData
+    ? allDbProducts.filter(p => p.category === 'website-addon')
+    : websiteAddons;
 
-  const mergedLandingPage = dbLandingPage
-    ? { ...landingPageProduct, ...dbLandingPage }
+  const finalLandingPageAddons = hasDbData
+    ? allDbProducts.filter(p => p.category === 'landing-addon')
+    : landingPageAddons;
+
+  const finalAiAgentProduct = hasDbData
+    ? allDbProducts.find(p => p.category === 'ai-agent') || null
+    : null;
+
+  const finalLandingPage = hasDbData
+    ? allDbProducts.find(p => p.category === 'landing-page') || landingPageProduct
     : landingPageProduct;
-
-  console.log('[pricing] mergedLandingPage.price:', mergedLandingPage.price);
 
   // Create a map of website variant prices by USD price (to match with static tiers)
   const variantPriceMap: Record<number, Record<string, number> | null> = {};
@@ -49,9 +48,11 @@ export default async function PricingPage() {
 
   return (
     <PricingClient
-      modules={mergedModules}
-      websiteAddons={mergedAddons}
-      landingPageProduct={mergedLandingPage}
+      modules={finalModules}
+      websiteAddons={finalWebsiteAddons}
+      landingPageAddons={finalLandingPageAddons}
+      aiAgentProduct={finalAiAgentProduct}
+      landingPageProduct={finalLandingPage}
       websiteVariantPrices={variantPriceMap}
     />
   );

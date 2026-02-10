@@ -12,7 +12,7 @@
  * The product IDs are used when creating orders through the checkout API.
  */
 
-export type ProductCategory = "module" | "addon";
+export type ProductCategory = "module" | "addon" | "website-addon" | "landing-addon" | "ai-agent" | "ai-agent-type" | "landing-page" | "website" | "test";
 
 export interface Product {
   id: string;
@@ -26,7 +26,6 @@ export interface Product {
   prices?: Record<string, number> | null; // Multi-currency prices from database
   billingCycle: "monthly" | "yearly";
   features: string[];
-  isPopular?: boolean;
   isBundle?: boolean;
   category: ProductCategory;
   requires?: string; // For addons, which module they require (e.g., "website")
@@ -46,12 +45,29 @@ export const PRODUCT_IDS = {
   aiAgent: "a9faff03-c67f-4f5b-8548-ca096558cb49",
   employeeManagement: "4486566d-3325-4a93-9cd8-73686904bc93",
   projectTaskManagement: "fde46275-5d68-4ce6-9039-78dbd2021d22",
+  blog: "79265e22-c181-444c-b41f-920a25c43e8b",
+  communityForum: "42cf6eaf-dcc7-483d-8f85-5860921e1000",
+  facebookInstagram: "e74360ec-35c2-45ad-baaf-2865d889611f",
+  salesFunnel: "661dc637-29d5-4797-b695-1e818a109fc5",
   // Website Addons (require website module)
   digitalCourse: "027e1552-5e7d-4958-bdf4-05daabbfe46e",
   bookingSystem: "a51a650f-c187-4af8-a61b-bfd2392c4833",
   eventsManagement: "759670a3-0b9c-4889-b9cb-4b97c61433e9",
-  storeSimple: "21a9bff3-bf34-4f12-b873-b391b48cdccc",
-  storeFull: "69c69a27-b911-4974-9d58-c2daef6b8b9e",
+  storeSimple: "c329a518-9cb4-47a3-a432-78dfdb3c65ab",
+  storeFull: "7499fd04-9510-4ed5-a0cb-d0398cffe9eb",
+  abTesting: "e54e6b54-3a37-4fa3-8628-64e64f47ca39",
+  additionalLanguage: "8fcb3248-8188-44d0-ac1a-1706dc111cf4",
+  liveStreamingPlatform: "bdc5779f-8a83-4fc7-b125-a38c31d867ec",
+  videoLibraryVOD: "322da23e-cb85-47d8-92ef-24b6ec259f16",
+  // Landing Page Addons (require landing page)
+  landingBooking: "ec0ebedd-132c-486e-b814-e1fc91fea906",
+  landingPaymentGateway: "84eb6204-9e1c-430d-b458-3839eb50a7ca",
+  // AI Agents
+  aiShiftManager: "0e3eb157-5351-4831-9981-d18ec05e327a",
+  aiOnboarding: "102c07e1-2fb1-426c-b6fd-0321df3a6769",
+  aiClaimsManager: "ac351af6-6d09-429c-8267-6aa3ac7b433c",
+  aiComplaintManager: "c8340426-7b40-4b08-8cea-ee8e5c25cb79",
+  customAIAgent: "92353e90-9ee4-4735-a24e-d29716e1788b",
   // Test Products (for SUMIT gateway testing)
   testSubscription: "f0658690-01ee-4d08-aca1-421ba77cd42c",
   testOneTime: "ec938382-a54f-452c-94a9-6dd85ce86c7d",
@@ -119,25 +135,6 @@ export const modules: Product[] = [
     ],
   },
   {
-    id: PRODUCT_IDS.aiAgent,
-    slug: "ai-agent",
-    name: "AI Agents",
-    shortDescription: "Multi-channel smart assistant",
-    description: "Intelligent AI assistant across WhatsApp, Telegram, Messenger, and Instagram DM.",
-    price: 35,
-    pricePrefix: "Starting from",
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "WhatsApp integration",
-      "Telegram support",
-      "Messenger integration",
-      "Instagram DM automation",
-      "Custom personality",
-      "Context-aware conversations",
-    ],
-  },
-  {
     id: PRODUCT_IDS.employeeManagement,
     slug: "employee-management",
     name: "Employee Management",
@@ -158,10 +155,10 @@ export const modules: Product[] = [
   {
     id: PRODUCT_IDS.projectTaskManagement,
     slug: "project-task-management",
-    name: "Task & Project Management",
+    name: "Project Management",
     shortDescription: "Projects, tasks & time tracking",
     description: "Complete project planning, task tracking, team collaboration, and time logging system.",
-    price: 24,
+    price: 25,
     billingCycle: "monthly",
     category: "module",
     features: [
@@ -173,48 +170,26 @@ export const modules: Product[] = [
       "Comments & discussions",
     ],
   },
-];
-
-// =============================================================================
-// TEST PRODUCTS - For SUMIT payment gateway testing
-// =============================================================================
-
-export const testProducts: Product[] = [
   {
-    id: PRODUCT_IDS.testSubscription,
-    slug: "test-subscription-5ils",
-    name: "Test Subscription - 5 ILS",
-    shortDescription: "Monthly subscription test - 5 ILS/month",
-    description: "Monthly subscription test product for SUMIT payment gateway integration testing. Charges 5 ILS per month.",
-    price: 1.5,
-    prices: { ILS: 5 },
+    id: PRODUCT_IDS.facebookInstagram,
+    slug: "social-media",
+    name: "Facebook & Instagram",
+    shortDescription: "Social media automation",
+    description: "Instagram DM automation, Facebook Messenger automation, comment auto-replies, lead capture to CRM",
+    price: 30,
     billingCycle: "monthly",
     category: "module",
     features: [
-      "Test recurring charges",
-      "Test subscription management",
-      "Test auto-renewal",
-      "SUMIT gateway integration",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.testOneTime,
-    slug: "test-onetime-10ils",
-    name: "Test One-Time Product - 10 ILS",
-    shortDescription: "One-time purchase test - 10 ILS",
-    description: "One-time purchase test product for SUMIT payment gateway integration testing. Single payment of 10 ILS.",
-    price: 3.0,
-    prices: { ILS: 10 },
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Test one-time payments",
-      "Test checkout flow",
-      "Test order completion",
-      "SUMIT gateway integration",
+      "Instagram DM automation",
+      "Facebook Messenger automation",
+      "Comment auto-replies",
+      "Lead capture to CRM",
+      "Template messages",
+      "Analytics dashboard",
     ],
   },
 ];
+
 
 // =============================================================================
 // LANDING PAGE - Separate product for single high-converting pages
@@ -250,7 +225,6 @@ export interface WebsiteTier {
   maxPages: number | null; // null for enterprise/custom
   monthlyPrice: number;
   description: string;
-  isPopular?: boolean;
 }
 
 export const websiteTiers: WebsiteTier[] = [
@@ -267,7 +241,6 @@ export const websiteTiers: WebsiteTier[] = [
     maxPages: 10,
     monthlyPrice: 260,
     description: "Perfect for most businesses",
-    isPopular: true,
   },
   {
     key: "professional",
@@ -389,7 +362,7 @@ export const websiteAddons: Product[] = [
     slug: "full-ecommerce",
     name: "Full E-commerce",
     shortDescription: "Complete online store solution",
-    description: "Full-featured e-commerce platform with unlimited products, advanced inventory, and powerful sales tools.",
+    description: "Unlimited products, inventory tracking, variants, abandoned cart recovery, shipping calculator, tax automation",
     price: 50,
     billingCycle: "monthly",
     category: "addon",
@@ -403,6 +376,281 @@ export const websiteAddons: Product[] = [
       "Tax automation",
     ],
   },
+  {
+    id: PRODUCT_IDS.abTesting,
+    slug: "ab-testing",
+    name: "A/B Testing",
+    shortDescription: "Test multiple page versions",
+    description: "Test multiple versions of your landing page. Split traffic automatically, track conversions, find what works best",
+    price: 19,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "Split traffic testing",
+      "Automatic routing",
+      "Conversion tracking",
+      "Statistical analysis",
+      "Winner detection",
+      "Multi-variant testing",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.additionalLanguage,
+    slug: "additional-language",
+    name: "Additional Language",
+    shortDescription: "Add another language",
+    description: "Add another language to your website ($17/mo per language)",
+    price: 17,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "Full language support",
+      "Translation management",
+      "Language switcher",
+      "SEO for each language",
+      "Localized URLs",
+      "RTL support",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.liveStreamingPlatform,
+    slug: "live-streaming-platform",
+    name: "Live Streaming Platform",
+    shortDescription: "Complete live streaming solution",
+    description: "Complete live streaming solution with OBS integration, real-time chat, automatic recording, and comprehensive analytics.",
+    price: 119,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "OBS Studio RTMP integration",
+      "CDN delivery (Bunny.net, Mux)",
+      "Real-time viewer chat",
+      "Automatic session recording",
+      "Live analytics",
+      "Privacy controls",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.videoLibraryVOD,
+    slug: "video-library-vod",
+    name: "Video Library (VOD)",
+    shortDescription: "Video-on-demand platform",
+    description: "Complete video-on-demand platform with searchable archive, embedded player, and engagement analytics.",
+    price: 69,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "CDN-powered video hosting",
+      "Searchable archive",
+      "DRM-protected player",
+      "View counts & analytics",
+      "Threaded comments",
+      "Playlists and collections",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.blog,
+    slug: "blog",
+    name: "Blog",
+    shortDescription: "Full blog functionality",
+    description: "Full blog functionality with post management, categories, tags, RSS feed",
+    price: 9,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "Unlimited blog posts",
+      "Categories & tags",
+      "RSS feed",
+      "SEO optimization",
+      "Comment system",
+      "Media management",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.communityForum,
+    slug: "community-forum",
+    name: "Community/Forum",
+    shortDescription: "Member area & discussion forums",
+    description: "Member area, discussion forums, user profiles, moderation tools",
+    price: 30,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "Discussion forums",
+      "User profiles",
+      "Member directory",
+      "Moderation tools",
+      "Private messaging",
+      "Topic subscriptions",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.salesFunnel,
+    slug: "sales-funnel",
+    name: "Sales Funnel",
+    shortDescription: "Complete conversion flow",
+    description: "Complete conversion flow: Opt-in landing page for lead capture, sales page, booking integration, and downsell pages",
+    price: 149,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "website",
+    features: [
+      "Opt-in landing page",
+      "Sales page builder",
+      "Booking integration",
+      "Downsell pages",
+      "A/B testing",
+      "Conversion tracking",
+    ],
+  },
+];
+
+// =============================================================================
+// LANDING PAGE ADDONS - Extensions for the Landing Page product
+// =============================================================================
+
+export const landingPageAddons: Product[] = [
+  {
+    id: PRODUCT_IDS.landingBooking,
+    slug: "landing-booking",
+    name: "Booking System (Landing Page)",
+    shortDescription: "Add appointment scheduling",
+    description: "Add appointment scheduling to your landing page. Calendar sync, automated reminders, payment collection",
+    price: 25,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "landing-page",
+    features: [
+      "Calendar sync",
+      "Automated reminders",
+      "Payment collection",
+      "Timezone support",
+      "Availability management",
+      "Email notifications",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.landingPaymentGateway,
+    slug: "landing-payment-gateway",
+    name: "Payment Gateway",
+    shortDescription: "Accept payments on landing page",
+    description: "Accept payments directly on your landing page. Stripe/PayPal integration, checkout forms, and order management",
+    price: 25,
+    billingCycle: "monthly",
+    category: "addon",
+    requires: "landing-page",
+    features: [
+      "Stripe integration",
+      "PayPal support",
+      "Checkout forms",
+      "Order management",
+      "Payment receipts",
+      "Secure processing",
+    ],
+  },
+];
+
+// =============================================================================
+// AI AGENTS - Specialized AI agent products
+// =============================================================================
+
+export const aiAgents: Product[] = [
+  {
+    id: PRODUCT_IDS.aiShiftManager,
+    slug: "ai-shift-manager-agent",
+    name: "Shift Manager Agent",
+    shortDescription: "AI-powered shift scheduling",
+    description: "AI agent that collects employee availability via WhatsApp and manages shift preferences",
+    price: 17,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "WhatsApp integration",
+      "Availability collection",
+      "Shift preference tracking",
+      "Automated reminders",
+      "Calendar integration",
+      "Team scheduling",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.aiOnboarding,
+    slug: "ai-onboarding-agent",
+    name: "Onboarding Agent",
+    shortDescription: "Automated customer onboarding",
+    description: "AI agent that guides new customers through onboarding, answers questions, and collects required information",
+    price: 35,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Automated onboarding flow",
+      "Information collection",
+      "Progress tracking",
+      "Multi-channel support",
+      "Custom workflows",
+      "Integration with CRM",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.aiClaimsManager,
+    slug: "ai-claims-manager-agent",
+    name: "Claims Manager Agent",
+    shortDescription: "AI-powered claims processing",
+    description: "AI agent that handles insurance claims, documentation, and status updates",
+    price: 25,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Claims intake",
+      "Document collection",
+      "Status updates",
+      "Automated notifications",
+      "Integration with systems",
+      "Compliance tracking",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.aiComplaintManager,
+    slug: "ai-complaint-manager-agent",
+    name: "Complaint Manager Agent",
+    shortDescription: "AI-powered complaint handling",
+    description: "AI agent that manages customer complaints, tracks resolution, and maintains service quality",
+    price: 15,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Complaint intake",
+      "Priority classification",
+      "Resolution tracking",
+      "Escalation management",
+      "Customer communication",
+      "Analytics & reporting",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.customAIAgent,
+    slug: "custom-ai-agent",
+    name: "Custom AI Agent",
+    shortDescription: "Fully custom AI agent",
+    description: "Custom-built AI agent tailored to your specific business needs and workflows",
+    price: 800,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Custom AI logic",
+      "Tailored workflows",
+      "Integration with systems",
+      "Training on your data",
+      "Dedicated support",
+      "Ongoing optimization",
+    ],
+  },
 ];
 
 // =============================================================================
@@ -412,8 +660,13 @@ export const websiteAddons: Product[] = [
 // All products (modules + landing page, excluding website addons for now)
 export const products: Product[] = [...modules];
 
-// All products including addons and test products
-export const allProducts: Product[] = [...modules, landingPageProduct, ...websiteAddons, ...testProducts];
+// All products including addons (but not individual AI agent products - they're internal only)
+export const allProducts: Product[] = [
+  ...modules,
+  landingPageProduct,
+  ...landingPageAddons,
+  ...websiteAddons,
+];
 
 // Helper to find product by ID
 export function getProductById(id: string): Product | undefined {

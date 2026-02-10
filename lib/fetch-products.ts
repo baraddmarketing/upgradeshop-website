@@ -1,62 +1,33 @@
-import { Product } from './products';
-
-const API_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://upgradeshop.ai';
+import { Product, allProducts } from './products';
 
 /**
- * Fetch products from the database via API
+ * Enrich database products with static features/descriptions when DB doesn't have them.
  *
- * This function is used in Server Components to fetch real-time product data
- * from the dashboard's database. ISR caching is handled by the API route.
+ * The database is the source of truth for prices. Static products.ts is only used
+ * as fallback for features and descriptions that aren't yet stored in the database.
  */
-export async function fetchProducts(): Promise<Product[]> {
-  try {
-    const response = await fetch(`${API_URL}/api/products`, {
-      next: { revalidate: 60 }, // ISR: revalidate every 60 seconds
-    });
+export function enrichWithStaticData(dbProducts: Product[]): Product[] {
+  return dbProducts.map((dbProduct) => {
+    const staticProduct = allProducts.find((p) => p.id === dbProduct.id);
+    if (!staticProduct) return dbProduct;
 
-    if (!response.ok) {
-      console.error('Failed to fetch products from API, falling back to static data');
-      // Fallback to static products if API fails
-      return [];
-    }
-
-    const data = await response.json();
-    return data.products || [];
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    // Return empty array on error, components will fall back to static data
-    return [];
-  }
+    return {
+      ...staticProduct,       // Start with static (features, descriptions)
+      ...dbProduct,           // Override with everything from DB
+      price: dbProduct.price, // Explicit: DB price always wins
+      prices: dbProduct.prices,
+      // Use DB features if available, otherwise fall back to static
+      features: dbProduct.features.length > 0 ? dbProduct.features : staticProduct.features,
+    };
+  });
 }
 
 /**
- * Merge database products with static product definitions
- *
- * This ensures we always have product data even if the database is empty
- * or unavailable. Database prices override static prices.
+ * @deprecated Use enrichWithStaticData instead. Kept for backwards compatibility.
  */
 export function mergeWithStaticProducts(
   dbProducts: Product[],
   staticProducts: Product[]
 ): Product[] {
-  const merged = [...staticProducts];
-
-  dbProducts.forEach((dbProduct) => {
-    const index = merged.findIndex((p) => p.id === dbProduct.id);
-    if (index >= 0) {
-      // Update existing product with database data
-      merged[index] = {
-        ...merged[index],
-        ...dbProduct,
-        price: dbProduct.price, // Always use database price
-        prices: dbProduct.prices,
-        features: dbProduct.features.length > 0 ? dbProduct.features : merged[index].features,
-      };
-    } else {
-      // Add new product from database
-      merged.push(dbProduct);
-    }
-  });
-
-  return merged;
+  return enrichWithStaticData(dbProducts.length > 0 ? dbProducts : staticProducts);
 }

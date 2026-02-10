@@ -1,13 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, ShoppingBag, Sparkles } from "lucide-react";
+import { ArrowRight, Check, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import { useCurrency } from "@/lib/use-currency";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
@@ -35,25 +34,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`
-        relative bg-card rounded-2xl p-8
-        border-2 transition-all duration-300
-        ${product.isPopular
-          ? "border-gold shadow-lg shadow-gold/10"
-          : "border-transparent hover:border-gold/30"
-        }
-      `}
+      className="relative bg-card rounded-2xl p-8 border-2 transition-all duration-300 border-transparent hover:border-gold/30"
     >
-      {/* Popular Badge */}
-      {product.isPopular && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <Badge className="bg-gold text-foreground hover:bg-gold px-4 py-1 font-medium">
-            <Sparkles className="h-3 w-3 mr-1" />
-            Most Popular
-          </Badge>
-        </div>
-      )}
-
       {/* Header */}
       <div className="text-center mb-6">
         <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
@@ -94,11 +76,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         onClick={handleAddToCart}
         className={`
           w-full py-6 text-base font-medium transition-all
-          ${product.isPopular
-            ? "bg-gold hover:bg-gold-dark text-foreground"
-            : inCart
-              ? "bg-foreground/10 text-foreground hover:bg-foreground/20"
-              : "bg-foreground text-primary-foreground hover:bg-foreground/90"
+          ${inCart
+            ? "bg-foreground/10 text-foreground hover:bg-foreground/20"
+            : "bg-foreground text-primary-foreground hover:bg-foreground/90"
           }
         `}
       >

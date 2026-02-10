@@ -1,44 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rm, mkdir } from "fs/promises";
-import { join } from "path";
+import { rm, rename, mkdir, access } from "fs/promises";
+import { join, dirname } from "path";
 
 export async function POST(request: NextRequest) {
   try {
+    const { name, parentPath } = await request.json();
     const apiKey = request.headers.get("X-API-Key");
+
+    console.log("[Create Folder API] Request received - name:", name, "parentPath:", parentPath);
 
     // Verify API key
     if (apiKey !== process.env.UPLOAD_API_KEY) {
+      console.error("[Create Folder API] Invalid API key");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { parentPath, name } = body;
-
     if (!name) {
+      console.error("[Create Folder API] No name provided");
       return NextResponse.json({ error: "Folder name is required" }, { status: 400 });
     }
 
     // Construct folder path
-    const folderPath = parentPath
-      ? join(process.cwd(), "public", "images", parentPath, name)
-      : join(process.cwd(), "public", "images", name);
+    const folderPath = parentPath ? `${parentPath}/${name}` : name;
+    const absolutePath = join(process.cwd(), "public", "images", folderPath);
 
-    // Create folder
-    await mkdir(folderPath, { recursive: true });
+    console.log("[Create Folder API] Creating folder:", absolutePath);
 
-    const relativePath = parentPath ? `${parentPath}/${name}` : name;
+    // Create the folder
+    await mkdir(absolutePath, { recursive: true });
+
+    console.log("[Create Folder API] Folder created successfully");
 
     return NextResponse.json({
       success: true,
       folder: {
         name,
-        path: relativePath,
+        path: folderPath,
       },
     });
   } catch (error) {
-    console.error("Create folder error:", error);
+    console.error("[Create Folder API] Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Create folder failed" },
+      { error: error instanceof Error ? error.message : "Create failed" },
       { status: 500 }
     );
   }
@@ -92,6 +95,81 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Delete failed" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { apiKey, sourcePath, destPath } = await request.json();
+
+    console.log("[Move Folder API] Request received - source:", sourcePath, "dest:", destPath);
+
+    // Verify API key
+    if (apiKey !== process.env.UPLOAD_API_KEY) {
+      console.error("[Move Folder API] Invalid API key");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!sourcePath || !destPath) {
+      console.error("[Move Folder API] Missing sourcePath or destPath");
+      return NextResponse.json(
+        { error: "sourcePath and destPath are required" },
+        { status: 400 }
+      );
+    }
+
+    // Prevent path traversal
+    if (sourcePath.includes("..") || destPath.includes("..")) {
+      return NextResponse.json(
+        { error: "Invalid path" },
+        { status: 400 }
+      );
+    }
+
+    // Prevent moving folder into itself or its subfolder
+    if (destPath.startsWith(sourcePath + "/") || destPath === sourcePath) {
+      return NextResponse.json(
+        { error: "Cannot move folder into itself or its subfolder" },
+        { status: 400 }
+      );
+    }
+
+    // Construct absolute folder paths
+    const absoluteSource = join(process.cwd(), "public", "images", sourcePath);
+    const absoluteDest = join(process.cwd(), "public", "images", destPath);
+
+    // Verify source folder exists
+    try {
+      await access(absoluteSource);
+    } catch {
+      console.error("[Move Folder API] Source folder not found:", absoluteSource);
+      return NextResponse.json(
+        { error: "Source folder not found" },
+        { status: 404 }
+      );
+    }
+
+    // Create parent directory of destination if it doesn't exist
+    const destParent = dirname(absoluteDest);
+    await mkdir(destParent, { recursive: true });
+
+    // Move the folder
+    await rename(absoluteSource, absoluteDest);
+
+    console.log("[Move Folder API] Folder moved successfully:", sourcePath, "->", destPath);
+
+    return NextResponse.json({
+      success: true,
+      folder: {
+        path: destPath,
+      },
+    });
+  } catch (error) {
+    console.error("[Move Folder API] Error:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Move failed" },
       { status: 500 }
     );
   }

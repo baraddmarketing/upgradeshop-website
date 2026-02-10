@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, ShoppingCart, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Loader2, ShoppingCart, AlertCircle, CheckCircle2, ChevronDown, MapPin } from "lucide-react";
 import { formatPriceSimple as formatPrice } from "@/lib/currency";
 
 const PLATFORM_URL = process.env.NEXT_PUBLIC_UPGRADESHOP_API_URL || "https://app.staging.upgradeshop.ai";
@@ -33,6 +33,14 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  // Address fields (optional)
+  const [showAddress, setShowAddress] = useState(false);
+  const [company, setCompany] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("");
 
   // Track page view on mount
   useEffect(() => {
@@ -93,6 +101,16 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
               lastName,
               email,
               phone,
+              // Include address if any field is filled
+              ...(company || street || city || postalCode || country ? {
+                address: {
+                  company: company || undefined,
+                  street: street || undefined,
+                  city: city || undefined,
+                  postalCode: postalCode || undefined,
+                  country: country || undefined,
+                }
+              } : {}),
             },
             viewId,
           }),
@@ -317,6 +335,83 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                     onChange={(e) => setPhone(e.target.value)}
                     required
                   />
+                </div>
+
+                {/* Address Section (Optional) */}
+                <div className="space-y-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-between"
+                    onClick={() => setShowAddress(!showAddress)}
+                  >
+                    <span className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      Add Address Details (Optional)
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${showAddress ? "rotate-180" : ""}`}
+                    />
+                  </Button>
+
+                  {showAddress && (
+                    <div className="space-y-3 pt-2 border-t">
+                      {/* Company */}
+                      <div className="space-y-2">
+                        <Label htmlFor="company">Company</Label>
+                        <Input
+                          id="company"
+                          value={company}
+                          onChange={(e) => setCompany(e.target.value)}
+                          placeholder="Optional"
+                        />
+                      </div>
+
+                      {/* Street */}
+                      <div className="space-y-2">
+                        <Label htmlFor="street">Street Address</Label>
+                        <Input
+                          id="street"
+                          value={street}
+                          onChange={(e) => setStreet(e.target.value)}
+                          placeholder="Optional"
+                        />
+                      </div>
+
+                      {/* City */}
+                      <div className="space-y-2">
+                        <Label htmlFor="city">City</Label>
+                        <Input
+                          id="city"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          placeholder="Optional"
+                        />
+                      </div>
+
+                      {/* Postal Code & Country (side by side) */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label htmlFor="postalCode">Postal Code</Label>
+                          <Input
+                            id="postalCode"
+                            value={postalCode}
+                            onChange={(e) => setPostalCode(e.target.value)}
+                            placeholder="Optional"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="country">Country</Label>
+                          <Input
+                            id="country"
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                            placeholder="Optional"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Terms & Conditions */}

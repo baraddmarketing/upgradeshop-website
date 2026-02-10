@@ -6,7 +6,7 @@ const PLATFORM_URL = process.env.NEXT_PUBLIC_UPGRADESHOP_API_URL || "https://app
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://anahata.staging.upgradeshop.ai";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function fetchPaymentPage(slug: string) {
@@ -32,7 +32,8 @@ async function fetchPaymentPage(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const paymentPage = await fetchPaymentPage(params.slug);
+  const { slug } = await params;
+  const paymentPage = await fetchPaymentPage(slug);
 
   if (!paymentPage) {
     return {
@@ -47,7 +48,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PaymentPagePage({ params }: PageProps) {
-  const paymentPage = await fetchPaymentPage(params.slug);
+  const { slug } = await params;
+  const paymentPage = await fetchPaymentPage(slug);
 
   if (!paymentPage) {
     notFound();
@@ -56,7 +58,7 @@ export default async function PaymentPagePage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <PaymentPageCheckout paymentPage={paymentPage} slug={params.slug} />
+        <PaymentPageCheckout paymentPage={paymentPage} slug={slug} />
       </div>
     </div>
   );

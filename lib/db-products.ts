@@ -18,18 +18,15 @@ const pool = new Pool({
 });
 
 /**
- * Fetch products directly from database
- * Used in Server Components for optimal performance
+ * Fetch products directly from database (source of truth)
+ * Used in Server Components for optimal performance.
+ * Database prices always override any static fallback.
  */
 export async function fetchProductsFromDB(): Promise<Product[]> {
   let client;
 
-  console.log('[db-products] fetchProductsFromDB called');
-  console.log('[db-products] DB_HOST:', process.env.DB_HOST);
-
   try {
     client = await pool.connect();
-    console.log('[db-products] Connected to database');
 
     const result = await client.query(`
       SELECT
@@ -50,14 +47,6 @@ export async function fetchProductsFromDB(): Promise<Product[]> {
       ORDER BY name ASC
     `);
 
-    console.log('[db-products] Query returned', result.rows.length, 'products');
-    if (result.rows.length > 0) {
-      const landing = result.rows.find((r: { id: string }) => r.id === '6da65c79-276f-48a8-a091-c5f02a94dff0');
-      if (landing) {
-        console.log('[db-products] Landing Page price from DB:', landing.price);
-      }
-    }
-
     return result.rows.map((row) => ({
       id: row.id,
       slug: row.slug,
@@ -66,17 +55,14 @@ export async function fetchProductsFromDB(): Promise<Product[]> {
       description: row.description || '',
       price: row.price ? parseFloat(row.price) : 0,
       compareAtPrice: row.compare_at_price ? parseFloat(row.compare_at_price) : undefined,
-      // Use currency_prices from metadata (where dashboard stores ILS prices)
       prices: row.metadata?.currency_prices || row.prices || null,
       billingCycle: 'monthly' as const,
       features: row.metadata?.features || [],
-      isPopular: row.is_featured || false,
-      category: (row.metadata?.category || (row.product_type === 'addon' ? 'addon' : 'module')) as 'module' | 'addon',
+      category: (row.metadata?.category || 'module') as Product['category'],
       requires: row.metadata?.requires,
     }));
   } catch (error) {
-    console.error('Error fetching products from database:', error);
-    // Return empty array on error, components will fall back to static data
+    console.error('[db-products] Error fetching products:', error);
     return [];
   } finally {
     if (client) client.release();

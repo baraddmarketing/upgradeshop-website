@@ -253,18 +253,22 @@ export function SumitPayment({
       } else {
         // Regular one-time payment - use local charge endpoint
         console.log("[SUMIT] Processing one-time payment");
+        console.log("[SUMIT] Currency value:", currency, "| type:", typeof currency);
+        const chargePayload = {
+          token,
+          orderId,
+          orderNumber,
+          amount: total,
+          currency,
+          customer,
+          items,
+        };
+        console.log("[SUMIT] Charge payload being sent:", JSON.stringify(chargePayload, null, 2));
+
         const chargeResponse = await fetch("/api/sumit/charge", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token,
-            orderId,
-            orderNumber,
-            amount: total,
-            currency,
-            customer,
-            items,
-          }),
+          body: JSON.stringify(chargePayload),
         });
 
         const chargeResult = await chargeResponse.json();

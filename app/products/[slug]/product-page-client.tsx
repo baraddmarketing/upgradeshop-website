@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Check,
   ShoppingBag,
-  Sparkles,
   HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
@@ -244,18 +243,8 @@ export default function ProductPageClient({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className={`bg-card rounded-2xl p-6 border-2 transition-all ${
-                    tier.isPopular
-                      ? "border-gold shadow-lg shadow-gold/10"
-                      : "border-transparent hover:border-gold/30"
-                  }`}
+                  className="bg-card rounded-2xl p-6 border-2 transition-all border-transparent hover:border-gold/30"
                 >
-                  {tier.isPopular && (
-                    <Badge className="bg-gold text-foreground hover:bg-gold mb-3">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      Most Popular
-                    </Badge>
-                  )}
                   <h3 className="font-display text-xl font-semibold mb-1">
                     {tier.name}
                   </h3>

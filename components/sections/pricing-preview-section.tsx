@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Star } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
@@ -21,28 +21,24 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
       price: 89,
       description: "Built by developers, managed by Max",
       features: ["Professional design", "Content updates", "SEO optimized"],
-      highlight: true,
     },
     {
       name: "CRM",
       price: 19,
       description: "Manage customers and close deals",
       features: ["Lead tracking", "Pipeline management", "Contact history"],
-      highlight: false,
     },
     {
       name: "Email Marketing",
       price: 16,
       description: "Automated campaigns that convert",
       features: ["Beautiful templates", "Smart segmentation", "Analytics"],
-      highlight: false,
     },
     {
       name: "WhatsApp Integration",
       price: 30,
       description: "Meet customers where they are",
       features: ["Business messaging", "Auto-responses", "Team inbox"],
-      highlight: false,
     },
   ];
 
@@ -103,24 +99,9 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative bg-card rounded-2xl p-6 border transition-all duration-300 ${
-                product.highlight
-                  ? "border-gold/40 shadow-lg shadow-gold/10"
-                  : "border-border hover:border-gold/20"
-              }`}
+              className="relative bg-card rounded-2xl p-6 border transition-all duration-300 border-border hover:border-gold/20"
             >
-              {product.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-gold text-foreground text-xs font-semibold rounded-full">
-                    <Star className="h-3 w-3" />
-                    <span data-field-id={getFieldId(sections, "pricing-preview", "p", 3) || undefined}>
-                      {getEditableText(sections, "pricing-preview", "p", "Most Popular", 3)}
-                    </span>
-                  </span>
-                </div>
-              )}
-
-              <div className="mb-4 pt-2">
+              <div className="mb-4">
                 <h3 className="font-display text-lg font-semibold text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "h3", index + 1) || undefined}>
                   {getEditableText(sections, "pricing-preview", "h3", product.name, index + 1)}
                 </h3>

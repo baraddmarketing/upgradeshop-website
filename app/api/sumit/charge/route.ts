@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
     const body: ChargeRequest = await request.json();
     const { token, orderId, amount, currency = "USD", customer, items } = body;
 
+    console.log("[Charge Proxy] Request received:", { orderId, amount, currency });
+    console.log("[Charge Proxy] Currency type:", typeof currency, "| value:", currency);
+
     if (!token || !orderId || !amount) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -36,20 +39,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const proxyBody = {
+      token,
+      orderId,
+      amount,
+      currency,
+      customer,
+      items,
+    };
+    console.log("[Charge Proxy] Sending to dashboard:", JSON.stringify(proxyBody, null, 2));
+
     // Proxy to dashboard's charge endpoint which has access to private API key
     const chargeResponse = await fetch(`${APP_API_URL}/api/public/sumit/charge`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        token,
-        orderId,
-        amount,
-        currency,
-        customer,
-        items,
-      }),
+      body: JSON.stringify(proxyBody),
     });
 
     const chargeResult = await chargeResponse.json();
