@@ -6,8 +6,9 @@ import sharp from "sharp";
 
 const MAX_FILE_SIZE_KB = 300; // 300KB target for images
 const IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+const SVG_MIME_TYPES = ["image/svg+xml"];
 const FONT_MIME_TYPES = ["font/ttf", "font/otf", "font/woff", "font/woff2", "application/x-font-ttf", "application/x-font-otf", "application/font-woff", "application/font-woff2"];
-const ALLOWED_MIME_TYPES = [...IMAGE_MIME_TYPES, ...FONT_MIME_TYPES];
+const ALLOWED_MIME_TYPES = [...IMAGE_MIME_TYPES, ...SVG_MIME_TYPES, ...FONT_MIME_TYPES];
 
 async function optimizeImage(buffer: Buffer, originalType: string): Promise<Buffer> {
   const isWebP = originalType === "image/webp";
@@ -19,23 +20,35 @@ async function optimizeImage(buffer: Buffer, originalType: string): Promise<Buff
     return buffer;
   }
 
-  let quality = 75; // Default quality 75%
+  const quality = 75; // Always use 75% quality, never reduce
   let optimized: Buffer;
+  let currentBuffer = buffer;
 
-  // Convert to WebP with initial quality
-  optimized = await sharp(buffer)
+  // Get original dimensions
+  const metadata = await sharp(buffer).metadata();
+  let width = metadata.width || 1920;
+  let height = metadata.height || 1080;
+
+  // Convert to WebP with 75% quality
+  optimized = await sharp(currentBuffer)
     .webp({ quality })
     .toBuffer();
 
-  // If still too large, reduce quality iteratively
-  while (optimized.length > MAX_FILE_SIZE_KB * 1024 && quality > 10) {
-    quality -= 5;
+  // If still too large, reduce resolution iteratively (10% each time)
+  let resizePercent = 100;
+  while (optimized.length > MAX_FILE_SIZE_KB * 1024 && resizePercent > 20) {
+    resizePercent -= 10;
+    const newWidth = Math.round(width * (resizePercent / 100));
+    const newHeight = Math.round(height * (resizePercent / 100));
+
     optimized = await sharp(buffer)
+      .resize(newWidth, newHeight, { fit: 'inside' })
       .webp({ quality })
       .toBuffer();
   }
 
-  console.log(`[Upload API] Optimized: ${(buffer.length / 1024).toFixed(0)}KB → ${(optimized.length / 1024).toFixed(0)}KB (quality: ${quality})`);
+  const resolutionInfo = resizePercent < 100 ? ` resized to ${resizePercent}%` : '';
+  console.log(`[Upload API] Optimized: ${(buffer.length / 1024).toFixed(0)}KB → ${(optimized.length / 1024).toFixed(0)}KB (quality: ${quality}${resolutionInfo})`);
 
   return optimized;
 }
@@ -63,9 +76,10 @@ export async function POST(request: NextRequest) {
 
     // Validate file type
     const isFont = FONT_MIME_TYPES.includes(file.type) || /\.(ttf|otf|woff|woff2)$/i.test(file.name);
+    const isSVG = SVG_MIME_TYPES.includes(file.type) || /\.svg$/i.test(file.name);
     const isImage = IMAGE_MIME_TYPES.includes(file.type);
 
-    if (!isImage && !isFont && !ALLOWED_MIME_TYPES.includes(file.type)) {
+    if (!isImage && !isSVG && !isFont && !ALLOWED_MIME_TYPES.includes(file.type)) {
       const ext = file.name.split(".").pop()?.toLowerCase();
       console.error("[Upload API] Unsupported file type:", file.type, "extension:", ext);
       return NextResponse.json(
@@ -83,7 +97,7 @@ export async function POST(request: NextRequest) {
     const baseName = filenameParts.join(".");
 
     // If it's an image, convert to WebP and change extension
-    // For fonts and other files, keep original extension
+    // For SVG, fonts, and other files, keep original extension
     const finalExt = isImage ? "webp" : originalExt;
 
     // Sanitize filename - remove only filesystem-unsafe characters, keep Hebrew and other Unicode
@@ -137,14 +151,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log("[Upload API] Saving file as:", filename, "Type:", isFont ? "font" : isImage ? "image" : "other");
+    console.log("[Upload API] Saving file as:", filename, "Type:", isFont ? "font" : isSVG ? "svg" : isImage ? "image" : "other");
 
     // Optimize image if applicable, save fonts and other files as-is
     let finalBuffer: Buffer;
     if (isImage) {
       finalBuffer = await optimizeImage(buffer, file.type);
     } else {
-      // For fonts and other non-image files, save directly without optimization
+      // For SVG, fonts, and other non-bitmap files, save directly without optimization
       finalBuffer = buffer;
     }
 
