@@ -15,12 +15,81 @@ import { formatPriceSimple as formatPrice } from "@/lib/currency";
 const PLATFORM_URL = process.env.NEXT_PUBLIC_UPGRADESHOP_API_URL || "https://app.staging.upgradeshop.ai";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://anahata.staging.upgradeshop.ai";
 
+const translations: Record<string, Record<string, string>> = {
+  en: {
+    checkout: "Checkout",
+    completePurchase: "Complete your purchase",
+    firstName: "First Name",
+    lastName: "Last Name",
+    email: "Email",
+    phone: "Phone",
+    addAddress: "Add Address Details (Optional)",
+    company: "Company",
+    streetAddress: "Street Address",
+    city: "City",
+    postalCode: "Postal Code",
+    country: "Country",
+    optional: "Optional",
+    termsAgree: "I agree to the terms and conditions and privacy policy",
+    processing: "Processing...",
+    pay: "Pay",
+    secureCheckout: "Secure checkout",
+    orderSuccess: "Order Placed Successfully!",
+    confirmationEmail: "Thank you for your purchase. You'll receive a confirmation email shortly.",
+    acceptTerms: "Please accept the terms and conditions",
+    qty: "Qty",
+    coupon: "Coupon",
+    applied: "Applied",
+    subtotal: "Subtotal",
+    discount: "Discount",
+    total: "Total",
+    expires: "Expires",
+    limitedAvailability: "Limited availability",
+    remaining: "remaining",
+  },
+  he: {
+    checkout: "תשלום",
+    completePurchase: "השלימו את הרכישה",
+    firstName: "שם פרטי",
+    lastName: "שם משפחה",
+    email: "אימייל",
+    phone: "טלפון",
+    addAddress: "הוספת פרטי כתובת (אופציונלי)",
+    company: "חברה",
+    streetAddress: "כתובת",
+    city: "עיר",
+    postalCode: "מיקוד",
+    country: "מדינה",
+    optional: "אופציונלי",
+    termsAgree: "אני מסכים/ה לתנאי השימוש ומדיניות הפרטיות",
+    processing: "מעבד...",
+    pay: "לתשלום",
+    secureCheckout: "תשלום מאובטח",
+    orderSuccess: "ההזמנה בוצעה בהצלחה!",
+    confirmationEmail: "תודה על הרכישה. אישור יישלח אליכם במייל בהקדם.",
+    acceptTerms: "יש לאשר את התנאים וההגבלות",
+    qty: "כמות",
+    coupon: "קופון",
+    applied: "הוחל",
+    subtotal: "סה״כ ביניים",
+    discount: "הנחה",
+    total: "סה״כ",
+    expires: "תוקף",
+    limitedAvailability: "זמינות מוגבלת",
+    remaining: "נותרו",
+  },
+};
+
 interface PaymentPageCheckoutProps {
   paymentPage: any;
   slug: string;
 }
 
 export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutProps) {
+  const lang = paymentPage.language || "en";
+  const t = translations[lang] || translations.en;
+  const isRTL = lang === "he";
+  const dir = isRTL ? "rtl" : "ltr";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +150,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
     setError(null);
 
     if (!termsAccepted) {
-      setError("Please accept the terms and conditions");
+      setError(t.acceptTerms);
       return;
     }
 
@@ -151,7 +220,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
     paymentPage.restrictions?.expiresAt || paymentPage.restrictions?.usageRemaining !== null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" dir={dir}>
       {/* Left Column - Products & Summary */}
       <div className="space-y-6">
         <Card>
@@ -188,7 +257,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                     )}
                     <div className="flex items-center gap-2 mt-2">
                       <span className="text-sm text-muted-foreground">
-                        Qty: {item.quantity}
+                        {t.qty}: {item.quantity}
                       </span>
                       {item.effectivePrice < item.originalPrice && (
                         <>
@@ -217,27 +286,27 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
             {paymentPage.coupon && (
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">
-                  Coupon: <code className="font-mono">{paymentPage.coupon.code}</code>
+                  {t.coupon}: <code className="font-mono">{paymentPage.coupon.code}</code>
                 </span>
-                <span className="text-green-600">Applied</span>
+                <span className="text-green-600">{t.applied}</span>
               </div>
             )}
 
             {/* Price Summary */}
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal:</span>
+                <span className="text-muted-foreground">{t.subtotal}:</span>
                 <span>{formatPrice(paymentPage.subtotal, paymentPage.items[0]?.product.currency || "ILS")}</span>
               </div>
               {paymentPage.discount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
-                  <span>Discount:</span>
+                  <span>{t.discount}:</span>
                   <span>-{formatPrice(paymentPage.discount, paymentPage.items[0]?.product.currency || "ILS")}</span>
                 </div>
               )}
               <Separator />
               <div className="flex justify-between text-lg font-bold">
-                <span>Total:</span>
+                <span>{t.total}:</span>
                 <span>{formatPrice(paymentPage.total, paymentPage.items[0]?.product.currency || "ILS")}</span>
               </div>
             </div>
@@ -247,12 +316,12 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
               <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
                 {paymentPage.restrictions.expiresAt && (
                   <p>
-                    Expires: {new Date(paymentPage.restrictions.expiresAt).toLocaleDateString()}
+                    {t.expires}: {new Date(paymentPage.restrictions.expiresAt).toLocaleDateString(isRTL ? "he-IL" : "en-US")}
                   </p>
                 )}
                 {paymentPage.restrictions.usageRemaining !== null && (
                   <p>
-                    Limited availability: {paymentPage.restrictions.usageRemaining} remaining
+                    {t.limitedAvailability}: {paymentPage.restrictions.usageRemaining} {t.remaining}
                   </p>
                 )}
               </div>
@@ -265,19 +334,19 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
       <div>
         <Card>
           <CardHeader>
-            <CardTitle>Checkout</CardTitle>
-            <CardDescription>Complete your purchase</CardDescription>
+            <CardTitle>{t.checkout}</CardTitle>
+            <CardDescription>{t.completePurchase}</CardDescription>
           </CardHeader>
           <CardContent>
             {success ? (
               <div className="text-center py-8 space-y-4">
                 <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
-                <h3 className="text-xl font-semibold">Order Placed Successfully!</h3>
+                <h3 className="text-xl font-semibold">{t.orderSuccess}</h3>
                 {paymentPage.customSuccessMessage ? (
                   <p className="text-muted-foreground">{paymentPage.customSuccessMessage}</p>
                 ) : (
                   <p className="text-muted-foreground">
-                    Thank you for your purchase. You'll receive a confirmation email shortly.
+                    {t.confirmationEmail}
                   </p>
                 )}
               </div>
@@ -293,7 +362,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
 
                 {/* First Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name *</Label>
+                  <Label htmlFor="firstName">{t.firstName} *</Label>
                   <Input
                     id="firstName"
                     value={firstName}
@@ -304,7 +373,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
 
                 {/* Last Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Label htmlFor="lastName">{t.lastName} *</Label>
                   <Input
                     id="lastName"
                     value={lastName}
@@ -315,7 +384,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">{t.email} *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -327,7 +396,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
 
                 {/* Phone */}
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone *</Label>
+                  <Label htmlFor="phone">{t.phone} *</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -347,7 +416,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                   >
                     <span className="flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
-                      Add Address Details (Optional)
+                      {t.addAddress}
                     </span>
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${showAddress ? "rotate-180" : ""}`}
@@ -358,55 +427,55 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                     <div className="space-y-3 pt-2 border-t">
                       {/* Company */}
                       <div className="space-y-2">
-                        <Label htmlFor="company">Company</Label>
+                        <Label htmlFor="company">{t.company}</Label>
                         <Input
                           id="company"
                           value={company}
                           onChange={(e) => setCompany(e.target.value)}
-                          placeholder="Optional"
+                          placeholder={t.optional}
                         />
                       </div>
 
                       {/* Street */}
                       <div className="space-y-2">
-                        <Label htmlFor="street">Street Address</Label>
+                        <Label htmlFor="street">{t.streetAddress}</Label>
                         <Input
                           id="street"
                           value={street}
                           onChange={(e) => setStreet(e.target.value)}
-                          placeholder="Optional"
+                          placeholder={t.optional}
                         />
                       </div>
 
                       {/* City */}
                       <div className="space-y-2">
-                        <Label htmlFor="city">City</Label>
+                        <Label htmlFor="city">{t.city}</Label>
                         <Input
                           id="city"
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
-                          placeholder="Optional"
+                          placeholder={t.optional}
                         />
                       </div>
 
                       {/* Postal Code & Country (side by side) */}
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                          <Label htmlFor="postalCode">Postal Code</Label>
+                          <Label htmlFor="postalCode">{t.postalCode}</Label>
                           <Input
                             id="postalCode"
                             value={postalCode}
                             onChange={(e) => setPostalCode(e.target.value)}
-                            placeholder="Optional"
+                            placeholder={t.optional}
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="country">Country</Label>
+                          <Label htmlFor="country">{t.country}</Label>
                           <Input
                             id="country"
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
-                            placeholder="Optional"
+                            placeholder={t.optional}
                           />
                         </div>
                       </div>
@@ -425,18 +494,18 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                     htmlFor="terms"
                     className="text-sm text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    I agree to the terms and conditions and privacy policy
+                    {t.termsAgree}
                   </label>
                 </div>
 
                 {/* Submit Button */}
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-                  {loading ? "Processing..." : `Pay ${formatPrice(paymentPage.total, paymentPage.items[0]?.product.currency || "ILS")}`}
+                  {loading ? t.processing : `${t.pay} ${formatPrice(paymentPage.total, paymentPage.items[0]?.product.currency || "ILS")}`}
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  Secure checkout powered by Anahata
+                  {t.secureCheckout}
                 </p>
               </form>
             )}
