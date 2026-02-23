@@ -11,6 +11,7 @@ import {
   BarChart3,
   Zap,
   Badge,
+  Bot,
 } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { PageSection, getEditableText, getFieldId, getSection } from "@/lib/pages-api";
@@ -26,12 +27,19 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
 
   const capabilities = [
     {
+      icon: Bot,
+      title: "Personal AI Agent",
+      description:
+        "Named by you, included from day one. Manages your platform and serves your customers — 24/7, across every module you own.",
+      highlight: true,
+      badge: "Included free",
+    },
+    {
       icon: Globe,
       title: "Website & Landing Pages",
       description:
         "Professional websites built by developers, not DIY templates. Managed updates through conversation.",
-      highlight: true,
-      badge: "Built for you",
+      highlight: false,
     },
     {
       icon: Users,

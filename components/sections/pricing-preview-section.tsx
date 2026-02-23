@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Bot } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
@@ -134,7 +134,7 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
           ))}
         </div>
 
-        {/* Bundle highlight */}
+        {/* AI Agent included callout */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -142,48 +142,35 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
           transition={{ delay: 0.4 }}
           className="max-w-2xl mx-auto"
         >
-          <div className="bg-foreground text-primary-foreground rounded-2xl p-8 text-center">
-            <div className="inline-block px-3 py-1 bg-gold/20 text-gold text-sm font-medium rounded-full mb-4" data-field-id={getFieldId(sections, "pricing-preview", "p", 12) || undefined}>
-              {getEditableText(sections, "pricing-preview", "p", "Best Value", 12)}
+          <div className="bg-foreground text-primary-foreground rounded-2xl p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="flex-shrink-0 h-16 w-16 rounded-2xl bg-gold/20 flex items-center justify-center">
+                <Bot className="h-8 w-8 text-gold" />
+              </div>
+              <div className="flex-1">
+                <div className="inline-block px-3 py-1 bg-gold/20 text-gold text-sm font-medium rounded-full mb-2">
+                  Included with every subscription
+                </div>
+                <h3 className="font-display text-xl font-semibold mb-1">
+                  Your own personal AI agent — free
+                </h3>
+                <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                  Named by you, managing your platform from day one. 200 credits/month included.
+                  Extend it to serve your customers when you're ready.
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <Button
+                  asChild
+                  className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+                >
+                  <Link href="/pricing">
+                    <span>See All Pricing</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
-            <h3 className="font-display text-2xl font-semibold mb-2" data-field-id={getFieldId(sections, "pricing-preview", "h3", 0) || undefined}>
-              {getEditableText(
-                sections,
-                "pricing-preview",
-                "h3",
-                "Want everything?",
-                0
-              )}
-            </h3>
-            <p className="text-primary-foreground/80 mb-4" data-field-id={getFieldId(sections, "pricing-preview", "p", 1) || undefined}>
-              {getEditableText(
-                sections,
-                "pricing-preview",
-                "p",
-                "All-Access Bundle — everything we offer, one simple price.",
-                1
-              )}
-            </p>
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="font-display text-4xl font-bold text-gold" data-field-id={getFieldId(sections, "pricing-preview", "p", 13) || undefined}>
-                {getEditableText(sections, "pricing-preview", "p", "$199", 13)}
-              </span>
-              <span className="text-primary-foreground/60">/mo</span>
-              <span className="ml-2 px-2 py-1 bg-gold/20 text-gold text-sm rounded-full" data-field-id={getFieldId(sections, "pricing-preview", "p", 14) || undefined}>
-                {getEditableText(sections, "pricing-preview", "p", "Save $90+", 14)}
-              </span>
-            </div>
-            <Button
-              asChild
-              className="bg-gold hover:bg-gold-dark text-foreground font-medium px-8"
-            >
-              <Link href="/pricing">
-                <span data-field-id={getFieldId(sections, "pricing-preview", "button", 0) || undefined}>
-                  {getEditableText(sections, "pricing-preview", "button", "View All Products & Pricing", 0)}
-                </span>
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
           </div>
         </motion.div>
       </Container>

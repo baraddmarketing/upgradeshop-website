@@ -19,6 +19,7 @@ interface PricingClientProps {
   aiAgentProduct: Product | null;
   landingPageProduct: Product;
   websiteVariantPrices?: Record<number, Record<string, number> | null>;
+  exchangeRates?: Record<string, number>;
 }
 
 const navItems = [
@@ -32,8 +33,8 @@ function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-export default function PricingClient({ modules, websiteAddons, landingPageAddons, aiAgentProduct, landingPageProduct, websiteVariantPrices = {} }: PricingClientProps) {
-  const { getPriceDisplay, currency } = useCurrency();
+export default function PricingClient({ modules, websiteAddons, landingPageAddons, aiAgentProduct, landingPageProduct, websiteVariantPrices = {}, exchangeRates }: PricingClientProps) {
+  const { getPriceDisplay, currency } = useCurrency(exchangeRates);
   const { addItem, isInCart, openCart } = useCart();
   const [showWebsiteAddons, setShowWebsiteAddons] = useState(false);
   const [showLandingAddons, setShowLandingAddons] = useState(false);
@@ -199,7 +200,8 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
                 <Button
                   size="lg"
-                  className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+                  variant="outline"
+                  className="bg-gold/10 border-gold/50 text-gold hover:bg-gold/20 hover:border-gold"
                   asChild
                 >
                   <Link href="/products/website">
@@ -210,8 +212,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                 {websiteAddons.length > 0 && (
                   <Button
                     size="lg"
-                    variant="outline"
-                    className="bg-transparent border-white/20 text-primary-foreground hover:bg-white/5"
+                    className="bg-gold hover:bg-gold-dark text-foreground font-medium"
                     onClick={() => setShowWebsiteAddons(!showWebsiteAddons)}
                   >
                     <Package className="h-4 w-4 mr-2" />
@@ -303,145 +304,120 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
       {/* ═══════════════════════════════════════════════════════════════════════
           AI AGENT
        ═══════════════════════════════════════════════════════════════════════ */}
-      {aiAgentProduct && (
-        <section id="ai-agent" className="py-16 md:py-24 bg-gradient-to-br from-foreground to-foreground/95 scroll-mt-8">
-          <Container>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="max-w-5xl mx-auto"
-            >
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Left side - Explanation */}
-                <div>
-                  <div className="inline-flex items-center gap-2 bg-gold/20 px-4 py-2 rounded-full mb-6">
-                    <Bot className="h-4 w-4 text-gold" />
-                    <span className="text-sm font-medium text-gold">AI-Powered Enhancement</span>
-                  </div>
-
-                  <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-                    AI Agents Credit System
-                  </h2>
-
-                  <p className="text-primary-foreground/70 text-lg mb-6 leading-relaxed">
-                    AI Agents enhance your existing modules with intelligent automation. Purchase credits once,
-                    use them across <strong className="text-primary-foreground">all compatible modules</strong>.
-                  </p>
-
-                  <div className="bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10 mb-6">
-                    <h3 className="font-display text-lg font-semibold text-primary-foreground mb-4">
-                      How It Works
-                    </h3>
-                    <ol className="space-y-3">
-                      <li className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gold/20 text-gold flex items-center justify-center text-sm font-bold">1</span>
-                        <span className="text-primary-foreground/80 text-sm">Subscribe to modules you need (CRM, WhatsApp, Email, etc.)</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gold/20 text-gold flex items-center justify-center text-sm font-bold">2</span>
-                        <span className="text-primary-foreground/80 text-sm">Add AI Agents to get monthly credits</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gold/20 text-gold flex items-center justify-center text-sm font-bold">3</span>
-                        <span className="text-primary-foreground/80 text-sm">Credits work across all your modules automatically</span>
-                      </li>
-                    </ol>
-                  </div>
-
-                  <div className="bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10">
-                    <h3 className="font-display text-sm font-semibold text-primary-foreground/60 mb-3 uppercase tracking-wide">
-                      Works With These Modules
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {['CRM', 'Email Marketing', 'WhatsApp', 'Booking System', 'Employee Management', 'Project Management'].map((module, index) => (
-                        <div key={index} className="flex items-center gap-2 text-primary-foreground/80 text-sm">
-                          <Check className="h-4 w-4 text-gold flex-shrink-0" />
-                          <span>{module}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right side - Product Card */}
-                <div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-white/5 backdrop-blur rounded-2xl p-8 border-2 border-gold/30"
-                  >
-                    <h3 className="font-display text-2xl font-bold text-primary-foreground mb-2">
-                      {aiAgentProduct.name}
-                    </h3>
-                    <p className="text-primary-foreground/60 mb-6">
-                      {aiAgentProduct.description}
-                    </p>
-
-                    <div className="mb-6">
-                      <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-sm text-primary-foreground/60">Starting from</span>
-                      </div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-5xl font-display font-bold text-primary-foreground">
-                          {getPriceDisplay(aiAgentProduct.price, aiAgentProduct.prices).symbol}{getPriceDisplay(aiAgentProduct.price, aiAgentProduct.prices).amount}
-                        </span>
-                        <span className="text-primary-foreground/60 text-lg">{getPriceDisplay(aiAgentProduct.price, aiAgentProduct.prices).periodLabel}</span>
-                      </div>
-                      <p className="text-primary-foreground/50 text-sm mt-2">
-                        Includes monthly AI credits for all modules
-                      </p>
-                    </div>
-
-                    <ul className="space-y-3 mb-8">
-                      {aiAgentProduct.features.map((feature, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <Check className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
-                          <span className="text-primary-foreground/80">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Button
-                      size="lg"
-                      className="w-full bg-gold hover:bg-gold-dark text-foreground font-medium mb-3"
-                      onClick={() => {
-                        if (isInCart(aiAgentProduct.id)) {
-                          openCart();
-                        } else {
-                          addItem(aiAgentProduct);
-                          openCart();
-                        }
-                      }}
-                    >
-                      <ShoppingBag className="h-5 w-5 mr-2" />
-                      {isInCart(aiAgentProduct.id) ? "View Cart" : "Add to Cart"}
-                    </Button>
-
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-full bg-transparent border-white/20 text-primary-foreground hover:bg-white/5"
-                      asChild
-                    >
-                      <Link href="/products/ai-agent">
-                        Learn More <ArrowRight className="h-5 w-5 ml-2" />
-                      </Link>
-                    </Button>
-
-                    <p className="text-primary-foreground/50 text-xs text-center mt-4">
-                      {currency === 'ILS' ? 'דורש לפחות מודול אחד' : 'Requires at least one module'}
-                    </p>
-                  </motion.div>
-                </div>
+      <section id="ai-agent" className="py-16 md:py-24 bg-gradient-to-br from-foreground to-foreground/95 scroll-mt-8">
+        <Container>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-5xl mx-auto"
+          >
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-gold/20 px-4 py-2 rounded-full mb-6">
+                <Bot className="h-4 w-4 text-gold" />
+                <span className="text-sm font-medium text-gold">Included with every account</span>
               </div>
-            </motion.div>
-          </Container>
-        </section>
-      )}
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+                Your personal AI agent
+              </h2>
+              <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto leading-relaxed">
+                Every subscription includes a personal AI agent — named by you, managing your platform from day one.
+                Base credits cover normal use. Top up only when you go customer-facing.
+              </p>
+            </div>
+
+            {/* Included vs Paid split */}
+            <div className="grid md:grid-cols-2 gap-6 mb-10">
+              <div className="bg-white/5 backdrop-blur rounded-2xl p-7 border border-gold/20">
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="h-8 w-8 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
+                    <Check className="h-4 w-4 text-gold" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-primary-foreground text-sm">Included — 200 credits/month</p>
+                    <p className="text-primary-foreground/50 text-xs">Internal platform management</p>
+                  </div>
+                </div>
+                <ul className="space-y-2.5">
+                  {["Update website content & products", "Manage CRM contacts and deals", "Create & schedule email campaigns", "Handle tasks and project updates", "Answer your own platform questions"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2.5 text-primary-foreground/80 text-sm">
+                      <Check className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur rounded-2xl p-7 border border-white/10">
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-4 w-4 text-primary-foreground/60" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-primary-foreground text-sm">Paid credits — when you need them</p>
+                    <p className="text-primary-foreground/50 text-xs">Customer-facing use</p>
+                  </div>
+                </div>
+                <ul className="space-y-2.5">
+                  {["WhatsApp support & inquiry bot", "Abandoned cart recovery automation", "Post-purchase follow-up sequences", "Lead capture from Instagram & Facebook", "Order status & returns handling"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2.5 text-primary-foreground/80 text-sm">
+                      <ArrowRight className="h-3.5 w-3.5 text-gold flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Credit packages */}
+            <div className="bg-white/5 backdrop-blur rounded-2xl p-7 border border-white/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-primary-foreground">Credit Packages</h3>
+                  <p className="text-primary-foreground/50 text-sm">Pay-as-you-go at $0.08/credit — or save with a package</p>
+                </div>
+                <Button variant="outline" className="bg-transparent border-white/20 text-primary-foreground hover:bg-white/5 shrink-0" asChild>
+                  <Link href="/products/ai-agent">
+                    Learn More <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { name: "Starter", credits: 500, price: 29, saving: "27%", highlight: false },
+                  { name: "Growth", credits: 1500, price: 59, saving: "51%", highlight: true },
+                  { name: "Pro", credits: 5000, price: 149, saving: "63%", highlight: false },
+                  { name: "Scale", credits: 15000, price: 349, saving: "71%", highlight: false },
+                ].map((pkg, i) => (
+                  <div
+                    key={i}
+                    className={`relative rounded-xl p-4 border transition-all ${
+                      pkg.highlight
+                        ? "bg-gold/10 border-gold/40"
+                        : "bg-white/5 border-white/10"
+                    }`}
+                  >
+                    {pkg.highlight && (
+                      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-gold text-foreground text-xs font-bold rounded-full whitespace-nowrap">
+                        Popular
+                      </div>
+                    )}
+                    <p className="font-semibold text-primary-foreground text-sm mb-0.5">{pkg.name}</p>
+                    <p className="text-primary-foreground/40 text-xs mb-3">{pkg.credits.toLocaleString()} credits</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-display text-2xl font-bold text-primary-foreground">${pkg.price}</span>
+                      <span className="text-primary-foreground/40 text-xs">/mo</span>
+                    </div>
+                    <p className="text-gold text-xs mt-1.5">Save {pkg.saving}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </Container>
+      </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
           PLATFORM MODULES
@@ -469,7 +445,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
             {modules.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
+              <ProductCard key={product.id} product={product} index={index} exchangeRates={exchangeRates} />
             ))}
           </div>
         </Container>

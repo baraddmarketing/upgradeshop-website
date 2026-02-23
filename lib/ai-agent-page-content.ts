@@ -44,24 +44,24 @@ export interface HowItWorksStep {
 export const aiAgentHowItWorksSteps: HowItWorksStep[] = [
   {
     number: "01",
-    icon: "ToggleRight",
-    title: "Activate on your modules",
+    icon: "UserCircle",
+    title: "Name it during onboarding",
     description:
-      "Purchase the AI Agent and activate it on any module you own — complaints, booking, onboarding, shift management.",
+      "When you sign up, Max walks you through naming and configuring your personal agent. Call it Sara, Bolt, Alex — anything. It's yours from day one, no extra purchase needed.",
   },
   {
     number: "02",
-    icon: "MessageCircle",
-    title: "Your contacts start talking",
+    icon: "LayoutDashboard",
+    title: "It manages your platform",
     description:
-      "Customers and contacts interact with the AI agent via WhatsApp, Telegram, or any channel. It knows your business, your policies, your tone.",
+      "Your agent handles everything across your active modules — website edits, CRM updates, email campaigns, product descriptions. All through natural conversation, covered by your included monthly credits.",
   },
   {
     number: "03",
-    icon: "Sparkles",
-    title: "You review with Max",
+    icon: "Megaphone",
+    title: "Extend it to your customers",
     description:
-      "Ask Max 'What happened today?' — he summarizes complaints, bookings, and new leads. You stay in control without doing the work.",
+      "When you're ready, activate it customer-facing. It handles WhatsApp inquiries, bookings, support, and order questions 24/7, in any language — using additional paid credits.",
   },
 ];
 
@@ -76,8 +76,16 @@ export interface AgentConversation {
 
 export const agentConversations: AgentConversation[] = [
   {
+    label: "E-commerce",
+    module: "Full E-commerce",
+    contactMessage:
+      "How much is the wireless speaker? And do you deliver to Tel Aviv?",
+    agentResponse:
+      "The wireless speaker is $89. Yes, we deliver to Tel Aviv — standard delivery takes 2-3 business days. Want me to send you the product link so you can order?",
+  },
+  {
     label: "Complaint",
-    module: "Complaint Management",
+    module: "Customer Support",
     contactMessage:
       "Hi, I ordered a cake for my daughter's birthday and it arrived damaged. I'm really upset.",
     agentResponse:
@@ -92,20 +100,12 @@ export const agentConversations: AgentConversation[] = [
       "Thursday afternoon — let me check. We have slots at 2:00pm and 4:30pm. Which works better for you? I'll book it right away.",
   },
   {
-    label: "Shift",
-    module: "Shift Management",
+    label: "Abandoned Cart",
+    module: "Full E-commerce",
     contactMessage:
-      "Hey, I can work Sunday morning and Tuesday all day, but not Wednesday.",
+      "I saw the running shoes I had in my cart went back to full price",
     agentResponse:
-      "Got it! I've recorded your availability: Sunday morning, Tuesday full day, Wednesday unavailable. I'll notify the manager. Anything else to update?",
-  },
-  {
-    label: "Inquiry",
-    module: "E-commerce",
-    contactMessage:
-      "How much is the wireless speaker? And do you deliver to Tel Aviv?",
-    agentResponse:
-      "The wireless speaker is $89. Yes, we deliver to Tel Aviv — standard delivery takes 2-3 business days. Want me to send you the product link so you can order?",
+      "Hey! I noticed you left those in your cart too — they're popular. I can apply a 10% discount for you right now if you'd like to complete the order. Want me to send the link?",
   },
 ];
 
@@ -119,10 +119,22 @@ export interface IncludedFeature {
 
 export const aiAgentIncludedFeatures: IncludedFeature[] = [
   {
+    icon: "Gift",
+    title: "Included from day one",
+    description:
+      "Every subscription includes your personal agent. 200 credits/month covers normal platform management — no top-up needed for most users.",
+  },
+  {
+    icon: "Puzzle",
+    title: "Grows with your modules",
+    description:
+      "Add the Website module — your agent can update it. Add CRM — it manages contacts. Each new module automatically expands what your agent can do.",
+  },
+  {
     icon: "Globe",
     title: "Multi-channel support",
     description:
-      "WhatsApp, Telegram, Facebook Messenger, Instagram DM — one agent, every channel your contacts use.",
+      "WhatsApp, Facebook Messenger, Instagram DM — one agent, every channel your contacts use.",
   },
   {
     icon: "BookOpen",
@@ -154,18 +166,6 @@ export const aiAgentIncludedFeatures: IncludedFeature[] = [
     description:
       "Auto-detects the contact's language and responds naturally. Serve anyone, anywhere.",
   },
-  {
-    icon: "BarChart3",
-    title: "Conversation analytics",
-    description:
-      "See what contacts ask most, where the agent excels, and where to improve. Data-driven insights.",
-  },
-  {
-    icon: "Puzzle",
-    title: "Works across all your modules",
-    description:
-      "Activate on CRM, complaints, booking, shift management — one subscription, every module.",
-  },
 ];
 
 // ─── S6: Compatible Modules ───────────────────────────────────────────────────
@@ -180,12 +180,17 @@ export const compatibleModules: CompatibleModule[] = [
   {
     icon: "Users",
     name: "CRM & Customer Management",
-    description: "Qualify leads, collect contact info, answer account questions.",
+    description: "Qualify leads, collect contact info, update deals and pipelines.",
   },
   {
-    icon: "AlertCircle",
-    name: "Complaint Management",
-    description: "Receive complaints, acknowledge issues, log and escalate.",
+    icon: "ShoppingBag",
+    name: "E-commerce",
+    description: "Answer product questions, recover abandoned carts, share order status.",
+  },
+  {
+    icon: "MessageCircle",
+    name: "WhatsApp Integration",
+    description: "Broadcast messages, handle replies, automate follow-up sequences.",
   },
   {
     icon: "CalendarCheck",
@@ -193,47 +198,85 @@ export const compatibleModules: CompatibleModule[] = [
     description: "Check availability, book appointments, send confirmations.",
   },
   {
-    icon: "Clock",
-    name: "Shift Management",
-    description: "Collect employee availability, confirm schedules, send reminders.",
+    icon: "Mail",
+    name: "Email Marketing",
+    description: "Draft campaigns, manage sequences, report on performance.",
   },
   {
-    icon: "UserPlus",
-    name: "Onboarding",
-    description: "Guide new customers through setup, collect required information.",
-  },
-  {
-    icon: "ShoppingBag",
-    name: "E-commerce",
-    description: "Answer product questions, check stock, share order status.",
+    icon: "FolderKanban",
+    name: "Project Management",
+    description: "Create tasks, update status, track deadlines — all via chat.",
   },
 ];
 
-// ─── S8: Max vs AI Agent ──────────────────────────────────────────────────────
+// ─── Credits ──────────────────────────────────────────────────────────────────
+
+export interface CreditPackage {
+  name: string;
+  credits: number;
+  price: number;
+  pricePerCredit: string;
+  saving: string;
+  highlighted?: boolean;
+}
+
+export const creditPackages: CreditPackage[] = [
+  {
+    name: "Starter",
+    credits: 500,
+    price: 29,
+    pricePerCredit: "$0.058",
+    saving: "27%",
+  },
+  {
+    name: "Growth",
+    credits: 1500,
+    price: 59,
+    pricePerCredit: "$0.039",
+    saving: "51%",
+    highlighted: true,
+  },
+  {
+    name: "Pro",
+    credits: 5000,
+    price: 149,
+    pricePerCredit: "$0.030",
+    saving: "63%",
+  },
+  {
+    name: "Scale",
+    credits: 15000,
+    price: 349,
+    pricePerCredit: "$0.023",
+    saving: "71%",
+  },
+];
+
+// ─── S8: Max vs Your Agent ────────────────────────────────────────────────────
 
 export const maxVsAgent = {
   agent: {
-    title: "Your AI Agent",
-    subtitle: "Talks to your customers",
+    title: "Your Personal Agent",
+    subtitle: "Manages your business",
     points: [
-      "Handles complaints, bookings, and inquiries",
-      "Available 24/7 on WhatsApp, Telegram, and more",
-      "Speaks your brand voice in any language",
-      "Logs everything on your account automatically",
+      "Named by you during onboarding — fully yours",
+      "Updates your website, manages CRM, runs email campaigns",
+      "Handles your customers via WhatsApp and other channels",
+      "Gets smarter with every module you add",
     ],
   },
   max: {
     title: "Max",
-    subtitle: "Talks to you",
+    subtitle: "The Upgrade Shop's own agent",
     points: [
-      "Manages your account and updates your website",
-      "Summarizes what happened — complaints, leads, bookings",
-      "Routes dev requests to our team",
-      "Your partner for running the business side",
+      "Max is our agent — built on the same system we sell",
+      "Onboards you and configures your personal agent",
+      "Handles your support and account questions",
+      "Proof that the product actually works",
     ],
   },
   tagline:
-    "They work together. The AI agent handles the front line. Max keeps you informed.",
+    "Max shows it's possible. Your agent makes it personal.",
 };
 
 // ─── S9: FAQ ───────────────────────────────────────────────────────────────────
@@ -245,33 +288,38 @@ export interface FAQItem {
 
 export const aiAgentFAQs: FAQItem[] = [
   {
-    question: "What are credits?",
+    question: "Is the AI agent included in my subscription?",
     answer:
-      "Each AI interaction with your contacts uses credits. A simple question-and-answer uses fewer credits, while a longer multi-step conversation uses more. You choose how many credits you need per month, and can always scale up.",
+      "Yes — every account gets a personal AI agent from day one, at no extra cost. You name it during onboarding and it immediately begins managing your platform across all active modules.",
   },
   {
-    question: "Which channels does it support?",
+    question: "What are credits and when do I need more?",
     answer:
-      "WhatsApp, Telegram, Facebook Messenger, and Instagram DM. Your contacts reach your AI agent on whichever channel they prefer — the experience is consistent everywhere.",
+      "Every subscription includes 200 credits/month — enough for normal platform management like website edits, CRM updates, and email campaigns. Additional credits are needed for customer-facing use: WhatsApp support bots, sales automation, order notifications, and broadcast messaging. You choose if and when to top up.",
+  },
+  {
+    question: "What's the difference between internal and customer-facing use?",
+    answer:
+      "Internal use means your agent manages your platform — updating your website, creating products, managing CRM contacts. Customer-facing means your agent talks to YOUR customers — answering WhatsApp inquiries, handling bookings, recovering abandoned carts. Internal use is covered by your base 200 credits. Customer-facing use requires additional paid credits.",
+  },
+  {
+    question: "Which channels does the customer-facing agent support?",
+    answer:
+      "WhatsApp, Facebook Messenger, and Instagram DM. Your contacts reach your agent on whichever channel they prefer — the experience is consistent everywhere.",
   },
   {
     question: "Can it handle multiple languages?",
     answer:
-      "Yes. The AI agent auto-detects the contact's language and responds naturally. Whether your contacts speak English, Hebrew, Spanish, or Arabic — it handles the conversation fluently.",
+      "Yes. The agent auto-detects the contact's language and responds naturally — Hebrew, English, Spanish, Arabic, and more. Train it in one language, it serves in many.",
   },
   {
-    question: "What if it can't answer a question?",
+    question: "What's the difference between my agent and Max?",
     answer:
-      "It seamlessly escalates to a human on your team — with full conversation context included. The contact doesn't have to repeat anything, and your team picks up right where the AI left off.",
+      "Max is The Upgrade Shop's own AI agent — it onboards you, configures your personal agent, and handles your platform support. Your personal agent is entirely yours: named by you, scoped to your business, managing your platform and optionally serving your customers. Max is the demo. Your agent is the product.",
   },
   {
     question: "Do I need technical skills to set it up?",
     answer:
-      "Zero. We configure everything for you. You just describe your business, upload your FAQ or documents, and we handle the rest. Training your agent is as simple as having a conversation.",
-  },
-  {
-    question: "What's the difference between the AI Agent and Max?",
-    answer:
-      "The AI Agent talks to your customers and contacts — handling inquiries, complaints, bookings on WhatsApp and other channels. Max talks to you — managing your account, updating your website, summarizing activity. They work together as your complete infrastructure.",
+      "Zero. Max walks you through naming and configuring your agent during onboarding. You describe your business, upload any documents or FAQs, and we handle everything else. Changing your agent's behavior later is as simple as sending it a message.",
   },
 ];
