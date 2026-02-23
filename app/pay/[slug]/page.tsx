@@ -56,7 +56,7 @@ export default async function PaymentPagePage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50">
       <div className="max-w-[1280px] mx-auto px-4 py-8">
         <PaymentPageCheckout paymentPage={paymentPage} slug={slug} />
       </div>

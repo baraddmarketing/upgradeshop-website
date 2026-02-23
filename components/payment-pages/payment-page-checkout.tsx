@@ -479,7 +479,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
 
   if (success) {
     return (
-      <div className="max-w-md mx-auto text-center py-16 space-y-4">
+      <div className="max-w-md mx-auto text-center space-y-4 flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
         <CheckCircle2 className="h-20 w-20 text-green-600 mx-auto" />
         <h2 className="text-2xl font-semibold">
           {requiresPayment ? t.paymentSuccess : t.orderSuccess}
