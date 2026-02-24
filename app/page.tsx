@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/sections/hero-section";
 import { ProblemSection } from "@/components/sections/problem-section";
 import { SolutionSection } from "@/components/sections/solution-section";
 import { WebsiteCalloutSection } from "@/components/sections/website-callout-section";
+import { EcommerceSection } from "@/components/sections/ecommerce-section";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { ImprovementSection } from "@/components/sections/improvement-section";
 import { HowItWorksSection } from "@/components/sections/how-it-works-section";
@@ -31,8 +32,11 @@ export default async function HomePage() {
       {/* Solution - Introduce The Upgrade Shop as the third option */}
       <SolutionSection sections={sections} />
 
-      {/* Website Callout - Key differentiator about websites being built for them */}
+      {/* Website Callout - Full website product showcase with tiers & add-ons */}
       <WebsiteCalloutSection sections={sections} />
+
+      {/* E-commerce - Stack consolidation ROI story */}
+      <EcommerceSection />
 
       {/* Capabilities - Show the full ecosystem */}
       <CapabilitiesSection sections={sections} />

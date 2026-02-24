@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Bot } from "lucide-react";
+import { ArrowRight, Bot } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import { PageSection, getEditableText, getFieldId, getSection } from "@/lib/pages-api";
+import { PageSection, getSection } from "@/lib/pages-api";
 
 interface PricingPreviewSectionProps {
   sections: PageSection[];
@@ -15,163 +15,170 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
   const pricingPreviewSection = getSection(sections, "pricing-preview");
   const sectionId = pricingPreviewSection?.id;
   const sectionKey = pricingPreviewSection?.sectionKey;
-  const products = [
+
+  const modules = [
     {
-      name: "Website Builder",
-      price: 89,
-      description: "Built by developers, managed by Max",
-      features: ["Professional design", "Content updates", "SEO optimized"],
+      name: "Website",
+      price: "from $170",
+      period: "/mo",
+      note: "Starter — 3 pages, setup included",
+      highlight: true,
+    },
+    {
+      name: "Landing Page",
+      price: "$89",
+      period: "/mo",
+      note: "Single conversion page",
     },
     {
       name: "CRM",
-      price: 19,
-      description: "Manage customers and close deals",
-      features: ["Lead tracking", "Pipeline management", "Contact history"],
+      price: "$19",
+      period: "/mo",
+      note: "Pipeline + up to 5 users",
     },
     {
       name: "Email Marketing",
-      price: 16,
-      description: "Automated campaigns that convert",
-      features: ["Beautiful templates", "Smart segmentation", "Analytics"],
+      price: "$16",
+      period: "/mo",
+      note: "5,000 sends/month",
     },
     {
-      name: "WhatsApp Integration",
-      price: 30,
-      description: "Meet customers where they are",
-      features: ["Business messaging", "Auto-responses", "Team inbox"],
+      name: "WhatsApp",
+      price: "$30",
+      period: "/mo",
+      note: "Business API + automation",
+    },
+    {
+      name: "Facebook & Instagram",
+      price: "$30",
+      period: "/mo",
+      note: "DMs, comments, lead capture",
+    },
+    {
+      name: "Project Management",
+      price: "$25",
+      period: "/mo",
+      note: "Tasks + up to 5 users",
+    },
+    {
+      name: "SEO Management",
+      price: "Soon",
+      period: "",
+      note: "Automated optimization",
     },
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
-      {/* Subtle texture */}
+    <section
+      className="py-24 md:py-32 bg-sand/50 relative overflow-hidden"
+      data-section-id={sectionId}
+      data-section-key={sectionKey}
+    >
       <div className="absolute inset-0 bg-noise opacity-30" />
 
       <Container className="relative z-10">
-        {/* Section header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="text-center max-w-3xl mx-auto mb-12"
         >
-          <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6" data-field-id={getFieldId(sections, "pricing-preview", "p", 2) || undefined}>
-            {getEditableText(sections, "pricing-preview", "p", "Transparent Pricing", 2)}
+          <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
+            Transparent Pricing
           </div>
-
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "pricing-preview", "h2", 0) || undefined}>
-            {getEditableText(
-              sections,
-              "pricing-preview",
-              "h2",
-              "Start with what you need.",
-              0
-            )}
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            Pay only for what you need.
             <br />
-            <span className="text-gold" data-field-id={getFieldId(sections, "pricing-preview", "h2", 1) || undefined}>
-              {getEditableText(
-                sections,
-                "pricing-preview",
-                "h2",
-                "Add more as you grow.",
-                1
-              )}
-            </span>
+            <span className="text-gold">Everything works together.</span>
           </h2>
-          <p className="text-lg text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "p", 0) || undefined}>
-            {getEditableText(
-              sections,
-              "pricing-preview",
-              "p",
-              "No long-term contracts. No hidden fees. Cancel anytime.",
-              0
-            )}
+          <p className="text-lg text-foreground">
+            Each module stands alone or integrates with the others. Start small.
+            Add more as your business grows. No long-term contracts.
           </p>
         </motion.div>
 
-        {/* Products grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {products.map((product, index) => (
+        {/* AI Agent callout */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto mb-8"
+        >
+          <div className="bg-foreground text-primary-foreground rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-shrink-0 h-11 w-11 rounded-xl bg-gold/20 flex items-center justify-center">
+              <Bot className="h-5 w-5 text-gold" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-gold text-xs font-bold uppercase tracking-wider">
+                Included free with every subscription
+              </span>
+              <p className="font-semibold text-primary-foreground mt-0.5">
+                Your own personal AI agent — named by you, from day one.
+              </p>
+              <p className="text-sm text-primary-foreground/55 mt-0.5">
+                200 credits/month included. Manages your platform internally.
+                Extend it to serve your customers when you&apos;re ready.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Module grid */}
+        <div className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
+          {modules.map((mod, i) => (
             <motion.div
-              key={index}
+              key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative bg-card rounded-2xl p-6 border transition-all duration-300 border-border hover:border-gold/20"
+              transition={{ delay: i * 0.05 }}
+              className={`rounded-xl p-5 border transition-all duration-300 ${
+                mod.highlight
+                  ? "bg-card border-gold/30 shadow-sm shadow-gold/10"
+                  : "bg-card border-border hover:border-gold/20"
+              }`}
             >
-              <div className="mb-4">
-                <h3 className="font-display text-lg font-semibold text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "h3", index + 1) || undefined}>
-                  {getEditableText(sections, "pricing-preview", "h3", product.name, index + 1)}
-                </h3>
-                <p className="text-sm text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "p", index + 4) || undefined}>
-                  {getEditableText(sections, "pricing-preview", "p", product.description, index + 4)}
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <span className="font-display text-3xl font-bold text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "p", index + 8) || undefined}>
-                  {getEditableText(sections, "pricing-preview", "p", `$${product.price}`, index + 8)}
+              {mod.highlight && (
+                <span className="text-xs font-semibold text-gold-dark uppercase tracking-wide">
+                  Flagship
                 </span>
-                <span className="text-foreground">/mo</span>
-              </div>
-
-              <ul className="space-y-2">
-                {product.features.map((feature, featureIndex) => (
-                  <li
-                    key={featureIndex}
-                    className="flex items-center gap-2 text-sm text-foreground"
-                  >
-                    <Check className="h-4 w-4 text-gold-dark flex-shrink-0" />
-                    <span data-field-id={getFieldId(sections, "pricing-preview", "ul", index * 3 + featureIndex) || undefined}>
-                      {getEditableText(sections, "pricing-preview", "ul", feature, index * 3 + featureIndex)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              )}
+              <p className={`font-semibold text-foreground ${mod.highlight ? "mt-1" : ""}`}>
+                {mod.name}
+              </p>
+              <p className="font-display text-2xl font-bold text-foreground mt-1">
+                {mod.price}
+                <span className="text-sm font-normal text-foreground/50">
+                  {mod.period}
+                </span>
+              </p>
+              <p className="text-xs text-foreground/45 mt-1">{mod.note}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* AI Agent included callout */}
+        {/* Free tier note + CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="max-w-2xl mx-auto"
+          transition={{ delay: 0.3 }}
+          className="text-center"
         >
-          <div className="bg-foreground text-primary-foreground rounded-2xl p-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className="flex-shrink-0 h-16 w-16 rounded-2xl bg-gold/20 flex items-center justify-center">
-                <Bot className="h-8 w-8 text-gold" />
-              </div>
-              <div className="flex-1">
-                <div className="inline-block px-3 py-1 bg-gold/20 text-gold text-sm font-medium rounded-full mb-2">
-                  Included with every subscription
-                </div>
-                <h3 className="font-display text-xl font-semibold mb-1">
-                  Your own personal AI agent — free
-                </h3>
-                <p className="text-primary-foreground/70 text-sm leading-relaxed">
-                  Named by you, managing your platform from day one. 200 credits/month included.
-                  Extend it to serve your customers when you're ready.
-                </p>
-              </div>
-              <div className="flex-shrink-0">
-                <Button
-                  asChild
-                  className="bg-gold hover:bg-gold-dark text-foreground font-medium"
-                >
-                  <Link href="/pricing">
-                    <span>See All Pricing</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
+          <p className="text-foreground/50 text-sm mb-5">
+            Free CRM and basic email included with every subscription. Website
+            add-ons (e-commerce, booking, blog) available separately.
+          </p>
+          <Button
+            asChild
+            className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+          >
+            <Link href="/pricing">
+              View Full Pricing & Add-Ons{" "}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </motion.div>
       </Container>
     </section>

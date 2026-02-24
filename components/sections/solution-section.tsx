@@ -112,7 +112,7 @@ export function SolutionSection({ sections }: SolutionSectionProps) {
                 className="group bg-card rounded-2xl p-6 border border-border hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5 transition-all duration-300"
               >
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 p-3 bg-gold/10 rounded-xl group-hover:bg-gold/20 transition-colors">
+                  <div className="flex-shrink-0 self-start p-3 bg-gold/10 rounded-xl group-hover:bg-gold/20 transition-colors">
                     <benefit.icon className="h-6 w-6 text-gold-dark" />
                   </div>
                   <div>
