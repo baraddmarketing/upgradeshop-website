@@ -11,11 +11,12 @@ import { Button } from "@/components/ui/button";
 interface ProductCardProps {
   product: Product;
   index?: number;
+  exchangeRates?: Record<string, number>;
 }
 
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
+export function ProductCard({ product, index = 0, exchangeRates }: ProductCardProps) {
   const { addItem, isInCart, openCart } = useCart();
-  const { getPriceDisplay } = useCurrency();
+  const { getPriceDisplay } = useCurrency(exchangeRates);
   const inCart = isInCart(product.id);
   const priceDisplay = getPriceDisplay(product.price, product.prices);
 
@@ -89,7 +90,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       {/* Learn More Link */}
       <Link
         href={`/products/${product.slug}`}
-        className="flex items-center justify-center gap-1.5 mt-4 text-sm text-foreground/50 hover:text-gold transition-colors"
+        className="flex items-center justify-center gap-1.5 mt-4 px-4 py-2 rounded-lg text-sm font-medium bg-white text-foreground border border-foreground/10 hover:border-gold/40 hover:text-gold transition-colors"
       >
         Learn more
         <ArrowRight className="h-3.5 w-3.5" />

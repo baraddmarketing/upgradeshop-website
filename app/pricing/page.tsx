@@ -1,4 +1,4 @@
-import { fetchProductsFromDB, fetchWebsiteVariantsFromDB } from '@/lib/db-products';
+import { fetchProductsFromDB, fetchWebsiteVariantsFromDB, fetchStoreExchangeRates } from '@/lib/db-products';
 import { enrichWithStaticData } from '@/lib/fetch-products';
 import { modules, websiteAddons, landingPageAddons, landingPageProduct } from '@/lib/products';
 import PricingClient from './pricing-client';
@@ -8,9 +8,10 @@ export const revalidate = 60;
 
 export default async function PricingPage() {
   // Database is the source of truth - fetch everything from there
-  const [dbProducts, websiteVariants] = await Promise.all([
+  const [dbProducts, websiteVariants, exchangeRates] = await Promise.all([
     fetchProductsFromDB(),
     fetchWebsiteVariantsFromDB(),
+    fetchStoreExchangeRates(),
   ]);
 
   // Enrich DB products with static features (DB prices always win)
@@ -54,6 +55,7 @@ export default async function PricingPage() {
       aiAgentProduct={finalAiAgentProduct}
       landingPageProduct={finalLandingPage}
       websiteVariantPrices={variantPriceMap}
+      exchangeRates={exchangeRates}
     />
   );
 }

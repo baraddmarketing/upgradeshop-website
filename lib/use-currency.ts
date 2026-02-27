@@ -7,7 +7,7 @@ import { Currency, detectCurrency, formatPrice, getPriceDisplayValues } from './
  * Hook to get the user's preferred currency based on browser language
  * Automatically updates when language changes via localStorage
  */
-export function useCurrency() {
+export function useCurrency(exchangeRates?: Record<string, number>) {
   const [currency, setCurrency] = useState<Currency>('USD');
   const [isReady, setIsReady] = useState(false);
 
@@ -43,8 +43,8 @@ export function useCurrency() {
   return {
     currency,
     isReady,
-    formatPrice: (usdPrice: number) => formatPrice(usdPrice, currency),
+    formatPrice: (usdPrice: number) => formatPrice(usdPrice, currency, exchangeRates),
     getPriceDisplay: (usdPrice: number, dbPrices?: Record<string, number> | null) =>
-      getPriceDisplayValues(usdPrice, currency, dbPrices),
+      getPriceDisplayValues(usdPrice, currency, dbPrices, exchangeRates),
   };
 }

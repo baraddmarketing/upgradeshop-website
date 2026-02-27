@@ -36,7 +36,7 @@ export async function fetchProductsFromDB(): Promise<Product[]> {
         description,
         short_description,
         price,
-        compare_at_price,
+        sale_price,
         prices,
         product_type,
         is_featured,
@@ -54,7 +54,7 @@ export async function fetchProductsFromDB(): Promise<Product[]> {
       shortDescription: row.short_description || row.description?.substring(0, 100) || '',
       description: row.description || '',
       price: row.price ? parseFloat(row.price) : 0,
-      compareAtPrice: row.compare_at_price ? parseFloat(row.compare_at_price) : undefined,
+      compareAtPrice: row.sale_price ? parseFloat(row.sale_price) : undefined,
       prices: row.metadata?.currency_prices || row.prices || null,
       billingCycle: 'monthly' as const,
       features: row.metadata?.features || [],
@@ -64,6 +64,39 @@ export async function fetchProductsFromDB(): Promise<Product[]> {
   } catch (error) {
     console.error('[db-products] Error fetching products:', error);
     return [];
+  } finally {
+    if (client) client.release();
+  }
+}
+
+/**
+ * Fetch store exchange rates from database
+ * Returns a map of currency code → units per 1 USD (e.g. { ILS: 3.1 })
+ */
+export async function fetchStoreExchangeRates(): Promise<Record<string, number>> {
+  let client;
+
+  try {
+    client = await pool.connect();
+
+    const result = await client.query(`
+      SELECT settings->'currency'->'exchangeRates' as exchange_rates
+      FROM store.configs
+      WHERE customer_id = '00000000-0000-0000-0000-000000000001'
+    `);
+
+    const raw = result.rows[0]?.exchange_rates;
+    if (!raw) return {};
+
+    const rates: Record<string, number> = {};
+    for (const [k, v] of Object.entries(raw)) {
+      const num = Number(v);
+      if (!isNaN(num) && num > 0) rates[k] = num;
+    }
+    return rates;
+  } catch (error) {
+    console.error('[db-products] Error fetching exchange rates:', error);
+    return {};
   } finally {
     if (client) client.release();
   }

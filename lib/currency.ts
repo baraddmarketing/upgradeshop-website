@@ -8,8 +8,7 @@ import { getCurrentLanguage, getCurrencyForLanguage } from './i18n';
 
 export type Currency = 'USD' | 'ILS';
 
-// Approximate USD to ILS conversion rate (update periodically)
-// Using a conservative rate that's slightly higher to account for fluctuations
+// Fallback USD to ILS conversion rate (used only when no rate is configured in store settings)
 const USD_TO_ILS_RATE = 3.7;
 
 export interface PriceDisplay {
@@ -35,22 +34,24 @@ export function detectCurrency(): Currency {
 
 /**
  * Convert USD price to the target currency
+ * Uses dynamic exchange rate from store settings when provided, otherwise falls back to hardcoded rate
  */
-export function convertPrice(usdPrice: number, targetCurrency: Currency): number {
+export function convertPrice(usdPrice: number, targetCurrency: Currency, exchangeRates?: Record<string, number>): number {
   if (targetCurrency === 'USD') {
     return usdPrice;
   }
 
-  // Convert to ILS and round to nearest 10
-  const ilsPrice = usdPrice * USD_TO_ILS_RATE;
-  return Math.round(ilsPrice / 10) * 10;
+  const rate = exchangeRates?.ILS ?? USD_TO_ILS_RATE;
+  const ilsPrice = usdPrice * rate;
+  // Round up to nearest x9 (psychological pricing: 151 → 159, 160 → 169)
+  return Math.ceil(ilsPrice / 10) * 10 - 1;
 }
 
 /**
  * Format price for display
  */
-export function formatPrice(usdPrice: number, currency: Currency): PriceDisplay {
-  const amount = convertPrice(usdPrice, currency);
+export function formatPrice(usdPrice: number, currency: Currency, exchangeRates?: Record<string, number>): PriceDisplay {
+  const amount = convertPrice(usdPrice, currency, exchangeRates);
   const symbol = currency === 'ILS' ? '₪' : '$';
 
   // Format the number
@@ -77,17 +78,18 @@ export function formatPriceWithPeriod(usdPrice: number, currency: Currency): str
 
 /**
  * Price display component helper - returns all needed values
- * If dbPrices contains the target currency, use it directly instead of converting
+ * Priority: 1) manually set DB price for currency, 2) auto-convert using store exchange rate, 3) hardcoded fallback rate
  */
 export function getPriceDisplayValues(
   usdPrice: number,
   currency: Currency,
-  dbPrices?: Record<string, number> | null
+  dbPrices?: Record<string, number> | null,
+  exchangeRates?: Record<string, number>
 ) {
   const symbol = currency === 'ILS' ? '₪' : '$';
   const periodLabel = currency === 'ILS' ? '/חודש' : '/mo';
 
-  // Check if we have a database price for this currency
+  // Check if we have a manually set database price for this currency
   if (dbPrices && currency === 'ILS' && dbPrices.ILS) {
     const amount = dbPrices.ILS;
     const formatted = `${symbol}${amount.toLocaleString('he-IL')}`;
@@ -100,8 +102,8 @@ export function getPriceDisplayValues(
     };
   }
 
-  // Fall back to conversion
-  const { amount, formatted } = formatPrice(usdPrice, currency);
+  // Auto-convert using store exchange rate (or hardcoded fallback)
+  const { amount, formatted } = formatPrice(usdPrice, currency, exchangeRates);
 
   return {
     amount,
@@ -124,23 +126,27 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   JPY: "¥",
 };
 
+// Currencies that don't use decimal places
+const NO_DECIMAL_CURRENCIES = new Set(["ILS", "JPY"]);
+
 export function formatPriceSimple(amount: number | string, currencyCode: string = "ILS"): string {
   const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
 
   if (isNaN(numAmount)) {
-    return "0.00";
+    return "0";
   }
 
-  const symbol = CURRENCY_SYMBOLS[currencyCode.toUpperCase()] || currencyCode;
+  const code = currencyCode.toUpperCase();
+  const symbol = CURRENCY_SYMBOLS[code] || currencyCode;
+  const decimals = NO_DECIMAL_CURRENCIES.has(code) ? 0 : 2;
 
-  // Format with 2 decimal places and thousands separator
   const formatted = numAmount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   });
 
   // ILS symbol comes after the number
-  if (currencyCode.toUpperCase() === "ILS") {
+  if (code === "ILS") {
     return `${formatted} ${symbol}`;
   }
 
