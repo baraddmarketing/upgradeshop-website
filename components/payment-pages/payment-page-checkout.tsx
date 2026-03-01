@@ -20,18 +20,6 @@ import {
 } from "lucide-react";
 import { formatPriceSimple as formatPrice } from "@/lib/currency";
 
-// SUMIT SDK types
-declare global {
-  interface Window {
-    OfficeGuy?: {
-      Payments: {
-        BindFormSubmit: (config: any) => void;
-        InitEditors: (selector?: string) => void;
-      };
-    };
-    jQuery?: any;
-  }
-}
 
 const PLATFORM_URL = process.env.NEXT_PUBLIC_UPGRADESHOP_API_URL || "https://app.staging.upgradeshop.ai";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://anahata.staging.upgradeshop.ai";
