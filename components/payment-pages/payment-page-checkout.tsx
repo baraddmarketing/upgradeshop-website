@@ -696,8 +696,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
               {requiresPayment && !showPaymentFields && (
                 <Button
                   type="button"
-                  variant="outline"
-                  className="w-full"
+                  className="w-full bg-gold hover:bg-gold-dark text-foreground font-semibold text-base h-12"
                   onClick={() => {
                     if (!firstName || !lastName || !email || !phone) {
                       setError(lang === "he" ? "יש למלא את כל השדות החובה" : "Please fill in all required fields");
@@ -836,7 +835,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
               {(!requiresPayment || showPaymentFields) && <Button
                 type="button"
                 onClick={handlePayClick}
-                className="w-full"
+                className="w-full bg-gold hover:bg-gold-dark text-foreground font-semibold text-base h-12"
                 disabled={loading || (requiresPayment && showPaymentFields && (!formBound || paymentLoading))}
               >
                 {loading ? (
