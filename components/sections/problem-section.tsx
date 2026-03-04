@@ -30,7 +30,7 @@ export function ProblemSection({ sections }: ProblemSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Subtle texture */}
       <div className="absolute inset-0 bg-noise opacity-50" />
 
@@ -43,7 +43,7 @@ export function ProblemSection({ sections }: ProblemSectionProps) {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "problem", "h2", 0) || undefined}>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "problem", "h2", 0) || undefined}>
             {getEditableText(
               sections,
               "problem",
@@ -76,7 +76,7 @@ export function ProblemSection({ sections }: ProblemSectionProps) {
             <div className="inline-block px-3 py-1 bg-muted text-foreground text-sm font-medium rounded-full mb-4">
               Option 1
             </div>
-            <h3 className="font-display text-2xl font-semibold text-foreground mb-2" data-field-id={getFieldId(sections, "problem", "h3", 0) || undefined}>
+            <h3 className="font-display text-2xl font-normal text-foreground mb-2" data-field-id={getFieldId(sections, "problem", "h3", 0) || undefined}>
               {getEditableText(
                 sections,
                 "problem",
@@ -132,7 +132,7 @@ export function ProblemSection({ sections }: ProblemSectionProps) {
             <div className="inline-block px-3 py-1 bg-muted text-foreground text-sm font-medium rounded-full mb-4">
               Option 2
             </div>
-            <h3 className="font-display text-2xl font-semibold text-foreground mb-2" data-field-id={getFieldId(sections, "problem", "h3", 1) || undefined}>
+            <h3 className="font-display text-2xl font-normal text-foreground mb-2" data-field-id={getFieldId(sections, "problem", "h3", 1) || undefined}>
               {getEditableText(
                 sections,
                 "problem",

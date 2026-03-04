@@ -40,7 +40,7 @@ export function HowItWorksSection({ sections }: HowItWorksSectionProps) {
   return (
     <section
       id="how-it-works"
-      className="py-24 md:py-32 bg-background relative overflow-hidden"
+      className="py-24 md:py-24 bg-background relative overflow-hidden"
       data-section-id={sectionId} data-section-key={sectionKey}
     >
       {/* Decorative line connecting steps */}
@@ -59,7 +59,7 @@ export function HowItWorksSection({ sections }: HowItWorksSectionProps) {
             {getEditableText(sections, "how-it-works", "p", "Simple Process", 1)}
           </div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "how-it-works", "h2", 0) || undefined}>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "how-it-works", "h2", 0) || undefined}>
             {getEditableText(
               sections,
               "how-it-works",
@@ -105,7 +105,7 @@ export function HowItWorksSection({ sections }: HowItWorksSectionProps) {
                 </div>
 
                 {/* Content */}
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3" data-field-id={getFieldId(sections, "how-it-works", "h3", index) || undefined}>
+                <h3 className="font-display text-xl font-normal text-foreground mb-3" data-field-id={getFieldId(sections, "how-it-works", "h3", index) || undefined}>
                   {getEditableText(sections, "how-it-works", "h3", step.title, index)}
                 </h3>
                 <p className="text-foreground leading-relaxed" data-field-id={getFieldId(sections, "how-it-works", "p", index + 5) || undefined}>

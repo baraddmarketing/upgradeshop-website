@@ -36,7 +36,7 @@ export function FinalCTASection({ sections }: FinalCTASectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-foreground text-primary-foreground relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-foreground text-primary-foreground relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Gold accent stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold via-gold-light to-gold" />
 
@@ -53,7 +53,7 @@ export function FinalCTASection({ sections }: FinalCTASectionProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 leading-tight" data-field-id={getFieldId(sections, "final-cta", "h2", 0) || undefined}>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal mb-6 leading-tight" data-field-id={getFieldId(sections, "final-cta", "h2", 0) || undefined}>
               {getEditableText(
                 sections,
                 "final-cta",

@@ -145,7 +145,7 @@ export default function WebsiteProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               The Problem
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Every option feels like a{" "}
               <span className="text-gold">compromise</span>
             </h2>
@@ -166,7 +166,7 @@ export default function WebsiteProductPage({
                   <div className="h-12 w-12 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
                     <Icon className="h-6 w-6 text-gold" />
                   </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3">
                     {card.title}
                   </h3>
                   <p className="text-foreground/70 leading-relaxed">
@@ -195,7 +195,7 @@ export default function WebsiteProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Simple Process
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Three steps to a website that{" "}
               <span className="text-gold">works</span>
             </h2>
@@ -224,7 +224,7 @@ export default function WebsiteProductPage({
                     <div className="p-4 bg-sand rounded-xl w-fit mb-6 mt-2">
                       <StepIcon className="h-8 w-8 text-gold-dark" />
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                    <h3 className="font-display text-xl font-normal text-foreground mb-3">
                       {step.title}
                     </h3>
                     <p className="text-foreground/70 leading-relaxed">
@@ -271,7 +271,7 @@ export default function WebsiteProductPage({
               <Sparkles className="h-4 w-4" />
               Meet Max
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal mb-6">
               Tell Max what you need.{" "}
               <span className="text-gold">Consider it done.</span>
             </h2>
@@ -365,7 +365,7 @@ export default function WebsiteProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Everything Included
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               More than a website.{" "}
               <span className="text-gold">Complete infrastructure.</span>
             </h2>
@@ -390,7 +390,7 @@ export default function WebsiteProductPage({
                   <div className="h-10 w-10 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
                     <FeatureIcon className="h-5 w-5 text-gold" />
                   </div>
-                  <h3 className="font-display text-base font-semibold text-foreground mb-2">
+                  <h3 className="font-display text-base font-normal text-foreground mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-foreground/60 text-sm leading-relaxed">
@@ -419,7 +419,7 @@ export default function WebsiteProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Plans & Pricing
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Choose your <span className="text-gold">plan</span>
             </h2>
             <p className="text-lg text-foreground/70">
@@ -453,7 +453,7 @@ export default function WebsiteProductPage({
                       </span>
                     </div>
                   )}
-                  <h3 className="font-display text-xl font-semibold mb-1">
+                  <h3 className="font-display text-xl font-normal mb-1">
                     {variant.title}
                   </h3>
                   <p className="text-sm text-foreground/60 mb-4">
@@ -497,7 +497,7 @@ export default function WebsiteProductPage({
               transition={{ duration: 0.5, delay: websiteVariants.length * 0.1 }}
               className="bg-card rounded-2xl p-6 border-2 border-transparent hover:border-gold/30 transition-all"
             >
-              <h3 className="font-display text-xl font-semibold mb-1">
+              <h3 className="font-display text-xl font-normal mb-1">
                 Custom
               </h3>
               <p className="text-sm text-foreground/60 mb-4">
@@ -541,7 +541,7 @@ export default function WebsiteProductPage({
               <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
                 Addon Ecosystem
               </div>
-              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
                 Your website grows with{" "}
                 <span className="text-gold">your business</span>
               </h2>
@@ -562,7 +562,7 @@ export default function WebsiteProductPage({
                   className="bg-card rounded-2xl p-6 border border-transparent hover:border-gold/20 transition-all"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="font-display text-lg font-semibold text-foreground">
+                    <h3 className="font-display text-lg font-normal text-foreground">
                       {addon.name}
                     </h3>
                     <span className="text-gold font-display font-bold whitespace-nowrap ml-3">
@@ -621,7 +621,7 @@ export default function WebsiteProductPage({
               <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
                 Continuous Improvement
               </div>
-              <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-6">
+              <h2 className="font-display text-3xl md:text-4xl font-normal text-foreground mb-6">
                 Most websites are finished the day they launch.{" "}
                 <span className="text-gold">Yours is just getting started.</span>
               </h2>
@@ -650,7 +650,7 @@ export default function WebsiteProductPage({
                       <Check className="h-3.5 w-3.5 text-gold" />
                     </div>
                     <div>
-                      <h3 className="font-display text-base font-semibold text-foreground mb-1">
+                      <h3 className="font-display text-base font-normal text-foreground mb-1">
                         {example.title}
                       </h3>
                       <p className="text-foreground/60 text-sm leading-relaxed">
@@ -678,7 +678,7 @@ export default function WebsiteProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Who It&apos;s For
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Built for businesses that{" "}
               <span className="text-gold">do the work</span>
             </h2>
@@ -699,7 +699,7 @@ export default function WebsiteProductPage({
                   <div className="h-10 w-10 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
                     <CardIcon className="h-5 w-5 text-gold" />
                   </div>
-                  <h3 className="font-display text-base font-semibold text-foreground mb-2">
+                  <h3 className="font-display text-base font-normal text-foreground mb-2">
                     {card.title}
                   </h3>
                   <p className="text-foreground/60 text-sm leading-relaxed">
@@ -727,7 +727,7 @@ export default function WebsiteProductPage({
                 <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
                   FAQ
                 </div>
-                <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-6">
+                <h2 className="font-display text-3xl md:text-4xl font-normal text-foreground mb-6">
                   Common questions
                 </h2>
                 <p className="text-lg text-foreground/70 mb-8">
@@ -778,7 +778,7 @@ export default function WebsiteProductPage({
                       )}
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <h3 className="font-display text-lg font-semibold text-foreground">
+                        <h3 className="font-display text-lg font-normal text-foreground">
                           {faq.question}
                         </h3>
                         <ChevronDown
@@ -820,7 +820,7 @@ export default function WebsiteProductPage({
             transition={{ duration: 0.6 }}
             className="text-center max-w-2xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Ready to stop worrying about your{" "}
               <span className="text-gold">website?</span>
             </h2>

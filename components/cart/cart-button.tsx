@@ -17,16 +17,16 @@ export function CartButton() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-3 right-3 z-50"
       >
         <Button
           onClick={toggleCart}
           size="lg"
-          className="bg-gold hover:bg-gold-dark text-foreground rounded-full h-14 w-14 p-0 shadow-lg shadow-gold/30"
+          className="bg-gold hover:bg-gold-dark text-foreground rounded-full h-[72px] w-[72px] p-0 shadow-lg shadow-gold/30 [&_svg]:size-auto"
         >
           <div className="relative">
-            <ShoppingBag className="h-6 w-6" />
-            <span className="absolute -top-1.5 -right-2.5 bg-foreground text-primary-foreground text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center">
+            <ShoppingBag className="h-9 w-9" />
+            <span className="absolute -top-3 -right-3 bg-foreground text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
               {itemCount > 9 ? "9+" : itemCount}
             </span>
           </div>

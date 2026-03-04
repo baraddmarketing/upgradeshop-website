@@ -93,7 +93,7 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Subtle decorative elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sand-dark/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
@@ -111,7 +111,7 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
             {getEditableText(sections, "capabilities", "p", "One Unified System", 2)}
           </div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "capabilities", "h2", 0) || undefined}>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "capabilities", "h2", 0) || undefined}>
             {getEditableText(
               sections,
               "capabilities",
@@ -173,7 +173,7 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
                 />
               </div>
 
-              <h3 className="font-display text-lg font-semibold text-foreground mb-2" data-field-id={getFieldId(sections, "capabilities", "h3", index) || undefined}>
+              <h3 className="font-display text-lg font-normal text-foreground mb-2" data-field-id={getFieldId(sections, "capabilities", "h3", index) || undefined}>
                 {getEditableText(sections, "capabilities", "h3", capability.title, index)}
               </h3>
 

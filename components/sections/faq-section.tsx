@@ -51,7 +51,7 @@ export function FAQSection({ sections }: FAQSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       <Container className="relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Left: Header */}
@@ -66,7 +66,7 @@ export function FAQSection({ sections }: FAQSectionProps) {
                 {getEditableText(sections, "faq", "p", "FAQ", 1)}
               </div>
 
-              <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "faq", "h2", 0) || undefined}>
+              <h2 className="font-display text-3xl md:text-4xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "faq", "h2", 0) || undefined}>
                 {getEditableText(
                   sections,
                   "faq",
@@ -126,7 +126,7 @@ export function FAQSection({ sections }: FAQSectionProps) {
                     )}
                   >
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-display text-lg font-semibold text-foreground" data-field-id={getFieldId(sections, "faq", "h3", index) || undefined}>
+                      <h3 className="font-display text-lg font-normal text-foreground" data-field-id={getFieldId(sections, "faq", "h3", index) || undefined}>
                         {getEditableText(sections, "faq", "h3", faq.question, index)}
                       </h3>
                       <ChevronDown

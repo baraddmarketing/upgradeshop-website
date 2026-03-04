@@ -53,21 +53,21 @@ export function HeroSection({ sections }: HeroSectionProps) {
       {/* Decorative bottom-left shape */}
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sand-dark/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
 
-      <Container className="relative z-10 py-20 md:py-32">
+      <Container className="relative z-10 py-20 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
           {/* Eyebrow text */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-sm md:text-base font-medium text-gold-dark tracking-wide uppercase mb-6"
+            className="text-base md:text-lg font-medium text-gold-dark tracking-wide uppercase mb-6"
             data-field-id={getFieldId(sections, "hero", "p", 0) || undefined}
           >
             {getEditableText(
               sections,
               "hero",
               "p",
-              "Digital Infrastructure for Small Businesses",
+              "Everything Your Business Needs — One Platform",
               0
             )}
           </motion.p>
@@ -77,7 +77,7 @@ export function HeroSection({ sections }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-foreground leading-[1.1] tracking-tight mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-foreground leading-[1.1] tracking-wide mb-6 uppercase"
           >
             <span data-field-id={getFieldId(sections, "hero", "h1", 0) || undefined}>
               {getEditableText(
@@ -153,21 +153,6 @@ export function HeroSection({ sections }: HeroSectionProps) {
         </div>
       </Container>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.7 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-foreground/20 flex items-start justify-center pt-2"
-        >
-          <div className="w-1.5 h-3 bg-foreground/40 rounded-full" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

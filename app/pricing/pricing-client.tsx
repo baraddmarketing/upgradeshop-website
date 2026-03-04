@@ -143,7 +143,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                     className="relative bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10"
                   >
                     <div className="text-center">
-                      <h3 className="font-display text-lg font-semibold text-primary-foreground mb-2">
+                      <h3 className="font-display text-lg font-normal text-primary-foreground mb-2">
                         {tier.name}
                       </h3>
                       <p className="text-primary-foreground/60 text-sm mb-4">
@@ -179,7 +179,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
 
               {/* Features Grid */}
               <div className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10">
-                <h3 className="font-display text-lg font-semibold text-primary-foreground mb-6 text-center">
+                <h3 className="font-display text-lg font-normal text-primary-foreground mb-6 text-center">
                   All Website Plans Include
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -235,7 +235,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                     <div className="pt-10">
                       <div className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10">
                         <div className="text-center mb-8">
-                          <h3 className="font-display text-xl font-semibold text-primary-foreground mb-2">
+                          <h3 className="font-display text-xl font-normal text-primary-foreground mb-2">
                             Website Addons
                           </h3>
                           <p className="text-primary-foreground/60 text-sm">
@@ -249,7 +249,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                               key={addon.id}
                               className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-gold/30 transition-all"
                             >
-                              <h4 className="font-display text-lg font-semibold text-primary-foreground mb-2">
+                              <h4 className="font-display text-lg font-normal text-primary-foreground mb-2">
                                 {addon.name}
                               </h4>
                               <p className="text-primary-foreground/50 text-sm mb-4">
@@ -375,7 +375,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
             <div className="bg-white/5 backdrop-blur rounded-2xl p-7 border border-white/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                 <div>
-                  <h3 className="font-display text-lg font-semibold text-primary-foreground">Credit Packages</h3>
+                  <h3 className="font-display text-lg font-normal text-primary-foreground">Credit Packages</h3>
                   <p className="text-primary-foreground/50 text-sm">Pay-as-you-go at $0.08/credit — or save with a package</p>
                 </div>
                 <Button variant="outline" className="bg-transparent border-white/20 text-primary-foreground hover:bg-white/5 shrink-0" asChild>
@@ -542,7 +542,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                 >
                   <div className="pt-10 border-t border-foreground/10 mt-10">
                     <div className="text-center mb-8">
-                      <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                      <h3 className="font-display text-xl font-normal text-foreground mb-2">
                         Landing Page Addons
                       </h3>
                       <p className="text-foreground/60 text-sm">
@@ -562,7 +562,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                             </Badge>
                           </div>
 
-                          <h4 className="font-display text-lg font-semibold text-foreground mb-2">
+                          <h4 className="font-display text-lg font-normal text-foreground mb-2">
                             {addon.name}
                           </h4>
                           <p className="text-foreground/60 text-sm mb-4">
@@ -671,7 +671,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                   <Check className="h-3.5 w-3.5 text-gold" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-foreground mb-1">
+                  <h3 className="font-display font-normal text-foreground mb-1">
                     {item.title}
                   </h3>
                   <p className="text-foreground/60 text-sm leading-relaxed">
@@ -739,7 +739,7 @@ export default function PricingClient({ modules, websiteAddons, landingPageAddon
                 <div className="flex gap-4">
                   <HelpCircle className="h-5 w-5 text-gold flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-display font-semibold text-foreground mb-2">
+                    <h3 className="font-display font-normal text-foreground mb-2">
                       {item.question}
                     </h3>
                     <p className="text-foreground/70 leading-relaxed">

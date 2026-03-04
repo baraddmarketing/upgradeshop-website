@@ -24,7 +24,7 @@ export default function TermsOfUsePage() {
               <div className="space-y-8 text-foreground/80">
                 {/* Introduction */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     1. Acceptance of Terms
                   </h2>
                   <p className="leading-relaxed">
@@ -42,7 +42,7 @@ export default function TermsOfUsePage() {
 
                 {/* Description of Service */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     2. Description of Service
                   </h2>
                   <p className="leading-relaxed">
@@ -66,11 +66,11 @@ export default function TermsOfUsePage() {
 
                 {/* Account Registration */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     3. Account Registration and Security
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     3.1 Account Creation
                   </h3>
                   <p className="leading-relaxed">
@@ -84,7 +84,7 @@ export default function TermsOfUsePage() {
                     <li>Have the authority to enter into these Terms on behalf of your business</li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     3.2 Account Security
                   </h3>
                   <p className="leading-relaxed">
@@ -104,11 +104,11 @@ export default function TermsOfUsePage() {
 
                 {/* Subscription and Payment */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     4. Subscription and Payment Terms
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     4.1 Subscription Plans
                   </h3>
                   <p className="leading-relaxed">
@@ -117,7 +117,7 @@ export default function TermsOfUsePage() {
                     your chosen plan.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     4.2 Billing and Payments
                   </h3>
                   <ul className="list-disc list-inside space-y-2 mt-3 ml-4">
@@ -143,7 +143,7 @@ export default function TermsOfUsePage() {
                     </li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     4.3 Cancellation and Refunds
                   </h3>
                   <ul className="list-disc list-inside space-y-2 mt-3 ml-4">
@@ -155,7 +155,7 @@ export default function TermsOfUsePage() {
                     </li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     4.4 Free Trials
                   </h3>
                   <p className="leading-relaxed">
@@ -167,7 +167,7 @@ export default function TermsOfUsePage() {
 
                 {/* Acceptable Use */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     5. Acceptable Use Policy
                   </h2>
                   <p className="leading-relaxed">
@@ -218,11 +218,11 @@ export default function TermsOfUsePage() {
 
                 {/* Content and Intellectual Property */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     6. Content and Intellectual Property
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     6.1 Your Content
                   </h3>
                   <p className="leading-relaxed">
@@ -241,7 +241,7 @@ export default function TermsOfUsePage() {
                     except for content cached or archived in our systems.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     6.2 Your Responsibilities
                   </h3>
                   <p className="leading-relaxed">
@@ -254,7 +254,7 @@ export default function TermsOfUsePage() {
                     <li>You are responsible for obtaining necessary licenses or permissions</li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     6.3 Our Intellectual Property
                   </h3>
                   <p className="leading-relaxed">
@@ -268,7 +268,7 @@ export default function TermsOfUsePage() {
                     <li>Remove or alter any copyright or proprietary notices</li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     6.4 AI-Generated Content
                   </h3>
                   <p className="leading-relaxed">
@@ -285,7 +285,7 @@ export default function TermsOfUsePage() {
 
                 {/* Third-Party Integrations */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     7. Third-Party Integrations
                   </h2>
                   <p className="leading-relaxed">
@@ -319,7 +319,7 @@ export default function TermsOfUsePage() {
 
                 {/* Data and Privacy */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     8. Data and Privacy
                   </h2>
                   <p className="leading-relaxed">
@@ -333,7 +333,7 @@ export default function TermsOfUsePage() {
                     . By using our Services, you consent to such collection and use.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     8.1 Data Security
                   </h3>
                   <p className="leading-relaxed">
@@ -346,7 +346,7 @@ export default function TermsOfUsePage() {
                     <li>You are responsible for maintaining secure backups of critical data</li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     8.2 Data Backup and Recovery
                   </h3>
                   <p className="leading-relaxed">
@@ -358,7 +358,7 @@ export default function TermsOfUsePage() {
 
                 {/* Disclaimers and Warranties */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     9. Disclaimers and Warranties
                   </h2>
                   <p className="leading-relaxed uppercase font-semibold">
@@ -382,7 +382,7 @@ export default function TermsOfUsePage() {
 
                 {/* Limitation of Liability */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     10. Limitation of Liability
                   </h2>
                   <p className="leading-relaxed uppercase font-semibold">
@@ -403,7 +403,7 @@ export default function TermsOfUsePage() {
 
                 {/* Indemnification */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     11. Indemnification
                   </h2>
                   <p className="leading-relaxed">
@@ -421,11 +421,11 @@ export default function TermsOfUsePage() {
 
                 {/* Termination */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     12. Termination
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     12.1 Termination by You
                   </h3>
                   <p className="leading-relaxed">
@@ -434,7 +434,7 @@ export default function TermsOfUsePage() {
                     current billing period.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     12.2 Termination by Us
                   </h3>
                   <p className="leading-relaxed">
@@ -448,7 +448,7 @@ export default function TermsOfUsePage() {
                     <li>We discontinue the Services (with reasonable notice)</li>
                   </ul>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     12.3 Effect of Termination
                   </h3>
                   <p className="leading-relaxed">
@@ -465,11 +465,11 @@ export default function TermsOfUsePage() {
 
                 {/* Dispute Resolution */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     13. Dispute Resolution
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     13.1 Informal Resolution
                   </h3>
                   <p className="leading-relaxed">
@@ -483,7 +483,7 @@ export default function TermsOfUsePage() {
                     to attempt to resolve the dispute informally.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     13.2 Arbitration
                   </h3>
                   <p className="leading-relaxed">
@@ -495,11 +495,11 @@ export default function TermsOfUsePage() {
 
                 {/* General Provisions */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     14. General Provisions
                   </h2>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.1 Governing Law
                   </h3>
                   <p className="leading-relaxed">
@@ -508,7 +508,7 @@ export default function TermsOfUsePage() {
                     law principles.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.2 Modifications to Terms
                   </h3>
                   <p className="leading-relaxed">
@@ -518,7 +518,7 @@ export default function TermsOfUsePage() {
                     Terms.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.3 Severability
                   </h3>
                   <p className="leading-relaxed">
@@ -526,7 +526,7 @@ export default function TermsOfUsePage() {
                     remaining provisions shall remain in full force and effect.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.4 Entire Agreement
                   </h3>
                   <p className="leading-relaxed">
@@ -534,7 +534,7 @@ export default function TermsOfUsePage() {
                     between you and The Upgrade Shop regarding the Services.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.5 Waiver
                   </h3>
                   <p className="leading-relaxed">
@@ -542,7 +542,7 @@ export default function TermsOfUsePage() {
                     constitute a waiver of that right or provision.
                   </p>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 mt-6">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3 mt-6">
                     14.6 Assignment
                   </h3>
                   <p className="leading-relaxed">
@@ -553,7 +553,7 @@ export default function TermsOfUsePage() {
 
                 {/* Contact Information */}
                 <section>
-                  <h2 className="font-display text-2xl font-semibold text-foreground mb-4">
+                  <h2 className="font-display text-2xl font-normal text-foreground mb-4">
                     15. Contact Information
                   </h2>
                   <p className="leading-relaxed">

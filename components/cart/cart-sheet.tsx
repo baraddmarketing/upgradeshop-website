@@ -67,7 +67,7 @@ export function CartSheet() {
                     className="flex items-start gap-4 p-4 bg-card rounded-xl"
                   >
                     <div className="flex-1">
-                      <h4 className="font-display font-semibold text-foreground">
+                      <h4 className="font-display font-normal text-foreground">
                         {item.product.name}
                       </h4>
                       <p className="text-foreground/60 text-sm mt-0.5">

@@ -33,7 +33,7 @@ export function SolutionSection({ sections }: SolutionSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Decorative gold accent */}
       <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-gold/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
 
@@ -50,7 +50,7 @@ export function SolutionSection({ sections }: SolutionSectionProps) {
               {getEditableText(sections, "solution", "p", "The Third Option", 1)}
             </div>
 
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6 leading-tight" data-field-id={getFieldId(sections, "solution", "h2", 0) || undefined}>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6 leading-tight" data-field-id={getFieldId(sections, "solution", "h2", 0) || undefined}>
               {getEditableText(
                 sections,
                 "solution",
@@ -116,7 +116,7 @@ export function SolutionSection({ sections }: SolutionSectionProps) {
                     <benefit.icon className="h-6 w-6 text-gold-dark" />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-semibold text-foreground mb-2" data-field-id={getFieldId(sections, "solution", "h3", index) || undefined}>
+                    <h3 className="font-display text-xl font-normal text-foreground mb-2" data-field-id={getFieldId(sections, "solution", "h3", index) || undefined}>
                       {getEditableText(sections, "solution", "h3", benefit.title, index)}
                     </h3>
                     <p className="text-foreground leading-relaxed" data-field-id={getFieldId(sections, "solution", "p", index + 2) || undefined}>

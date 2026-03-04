@@ -245,7 +245,7 @@ export default function ProductPageClient({
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="bg-card rounded-2xl p-6 border-2 transition-all border-transparent hover:border-gold/30"
                 >
-                  <h3 className="font-display text-xl font-semibold mb-1">
+                  <h3 className="font-display text-xl font-normal mb-1">
                     {tier.name}
                   </h3>
                   <p className="text-sm text-foreground/60 mb-4">
@@ -311,7 +311,7 @@ export default function ProductPageClient({
                   <div className="h-10 w-10 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
                     <FeatureIcon className="h-5 w-5 text-gold" />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  <h3 className="font-display text-lg font-normal text-foreground mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-foreground/60 text-sm leading-relaxed">
@@ -331,7 +331,7 @@ export default function ProductPageClient({
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-16 max-w-3xl mx-auto"
             >
-              <h3 className="font-display text-2xl font-semibold text-foreground mb-6 text-center">
+              <h3 className="font-display text-2xl font-normal text-foreground mb-6 text-center">
                 Every Website Includes
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -378,7 +378,7 @@ export default function ProductPageClient({
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10"
               >
-                <h3 className="font-display text-xl font-semibold mb-3">
+                <h3 className="font-display text-xl font-normal mb-3">
                   {useCase.title}
                 </h3>
                 <p className="text-primary-foreground/70 leading-relaxed">

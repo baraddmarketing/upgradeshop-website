@@ -39,7 +39,7 @@ export function ProductCard({ product, index = 0, exchangeRates }: ProductCardPr
     >
       {/* Header */}
       <div className="text-center mb-6">
-        <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
+        <h3 className="font-display text-2xl font-normal text-foreground mb-2">
           {product.name}
         </h3>
         <p className="text-foreground/60 text-sm">

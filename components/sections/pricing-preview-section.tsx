@@ -70,7 +70,7 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
 
   return (
     <section
-      className="py-24 md:py-32 bg-sand/50 relative overflow-hidden"
+      className="py-24 md:py-24 bg-sand/50 relative overflow-hidden"
       data-section-id={sectionId}
       data-section-key={sectionKey}
     >
@@ -87,7 +87,7 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
           <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
             Transparent Pricing
           </div>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
             Pay only for what you need.
             <br />
             <span className="text-gold">Everything works together.</span>

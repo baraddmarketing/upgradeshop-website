@@ -66,7 +66,7 @@ export function WebsiteCalloutSection({ sections }: WebsiteCalloutSectionProps) 
 
   return (
     <section
-      className="py-24 md:py-32 bg-foreground text-primary-foreground relative overflow-hidden"
+      className="py-24 md:py-24 bg-foreground text-primary-foreground relative overflow-hidden"
       data-section-id={sectionId}
       data-section-key={sectionKey}
     >
@@ -86,7 +86,7 @@ export function WebsiteCalloutSection({ sections }: WebsiteCalloutSectionProps) 
             <Star className="h-4 w-4 text-gold fill-gold" />
             <span className="text-sm font-medium text-gold">Flagship Product</span>
           </div>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 leading-tight">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal mb-6 leading-tight">
             Your website, built by{" "}
             <span className="text-gold">real developers.</span>
           </h2>

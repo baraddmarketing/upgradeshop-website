@@ -48,7 +48,7 @@ export function TestimonialsSection({ sections }: TestimonialsSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Decorative quote marks */}
       <div className="absolute top-20 left-10 opacity-5">
         <Quote className="h-48 w-48 text-foreground" />
@@ -70,7 +70,7 @@ export function TestimonialsSection({ sections }: TestimonialsSectionProps) {
             {getEditableText(sections, "testimonials", "p", "Real Stories", 1)}
           </div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "testimonials", "h2", 0) || undefined}>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "testimonials", "h2", 0) || undefined}>
             {getEditableText(
               sections,
               "testimonials",

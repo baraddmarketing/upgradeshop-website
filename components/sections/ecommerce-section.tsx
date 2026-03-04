@@ -42,7 +42,7 @@ export function EcommerceSection() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/4 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
 
       <Container className="relative z-10">
@@ -59,7 +59,7 @@ export function EcommerceSection() {
               For E-Commerce Brands
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
             You&apos;re already paying for all of this.
             <br />
             <span className="text-gold">Separately.</span>

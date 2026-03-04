@@ -55,14 +55,14 @@ function SuccessContent() {
           {/* Order Number */}
           <div className="inline-block bg-card rounded-xl px-6 py-3 mb-8">
             <p className="text-foreground/60 text-sm mb-1">Order Number</p>
-            <p className="font-display text-xl font-semibold text-foreground">
+            <p className="font-display text-xl font-normal text-foreground">
               {orderNumber}
             </p>
           </div>
 
           {/* What's Next - different content for paid vs pending */}
           <div className="bg-card rounded-2xl p-8 mb-8 text-left">
-            <h2 className="font-display text-xl font-semibold text-foreground mb-6 text-center">
+            <h2 className="font-display text-xl font-normal text-foreground mb-6 text-center">
               What Happens Next?
             </h2>
 
@@ -116,7 +116,7 @@ function SuccessContent() {
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground">
+                    <h3 className="font-display font-normal text-foreground">
                       {item.title}
                     </h3>
                     <p className="text-foreground/60 text-sm mt-1">

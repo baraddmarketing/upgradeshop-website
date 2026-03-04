@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Container } from "./container";
 import { Button } from "@/components/ui/button";
@@ -38,13 +39,15 @@ export function Header() {
       <Container>
         <nav className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gold rounded-lg flex items-center justify-center group-hover:bg-gold-dark transition-colors">
-              <span className="text-foreground font-bold text-sm">U</span>
-            </div>
-            <span className="font-display text-xl font-semibold text-foreground hidden sm:inline">
-              The Upgrade Shop
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/brand/logo/logo_webp/upgrade_shop_logo_black_on_cream-_no_bg.webp"
+              alt="The Upgrade Shop"
+              width={844}
+              height={378}
+              className="h-14 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

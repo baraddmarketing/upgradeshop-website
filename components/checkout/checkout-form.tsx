@@ -568,7 +568,7 @@ export function CheckoutForm() {
 
                 {/* Contact Summary */}
                 <div className="bg-card rounded-xl p-6">
-                  <h3 className="font-display font-semibold text-foreground mb-4">
+                  <h3 className="font-display font-normal text-foreground mb-4">
                     {currency === 'ILS' ? 'פרטי יצירת קשר' : 'Contact Details'}
                   </h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
@@ -610,7 +610,7 @@ export function CheckoutForm() {
 
                 {/* Order Summary */}
                 <div className="bg-card rounded-xl p-6">
-                  <h3 className="font-display font-semibold text-foreground mb-4">
+                  <h3 className="font-display font-normal text-foreground mb-4">
                     {currency === 'ILS' ? 'סיכום הזמנה' : 'Order Summary'}
                   </h3>
                   <ul className="space-y-3 mb-4">
@@ -629,7 +629,7 @@ export function CheckoutForm() {
                     ))}
                   </ul>
                   <div className="border-t border-foreground/10 pt-4 flex justify-between">
-                    <span className="font-display font-semibold text-foreground">
+                    <span className="font-display font-normal text-foreground">
                       {currency === 'ILS' ? 'סכום חודשי' : 'Monthly Total'}
                     </span>
                     <span className="font-display text-xl font-bold text-gold">

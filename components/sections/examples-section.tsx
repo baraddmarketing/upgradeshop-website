@@ -44,7 +44,7 @@ export function ExamplesSection({ sections }: ExamplesSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Subtle texture */}
       <div className="absolute inset-0 bg-noise opacity-30" />
 
@@ -61,7 +61,7 @@ export function ExamplesSection({ sections }: ExamplesSectionProps) {
             {getEditableText(sections, "examples", "p", "Our Work", 1)}
           </div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6" data-field-id={getFieldId(sections, "examples", "h2", 0) || undefined}>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6" data-field-id={getFieldId(sections, "examples", "h2", 0) || undefined}>
             {getEditableText(
               sections,
               "examples",
@@ -122,7 +122,7 @@ export function ExamplesSection({ sections }: ExamplesSectionProps) {
                 <div className="inline-block px-2 py-1 bg-sand text-xs font-medium text-foreground rounded mb-3" data-field-id={getFieldId(sections, "examples", "p", index + 3) || undefined}>
                   {getEditableText(sections, "examples", "p", example.industry, index + 3)}
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground mb-2" data-field-id={getFieldId(sections, "examples", "h3", index) || undefined}>
+                <h3 className="font-display text-lg font-normal text-foreground mb-2" data-field-id={getFieldId(sections, "examples", "h3", index) || undefined}>
                   {getEditableText(sections, "examples", "h3", example.title, index)}
                 </h3>
                 <p className="text-sm text-foreground leading-relaxed" data-field-id={getFieldId(sections, "examples", "p", index + 6) || undefined}>

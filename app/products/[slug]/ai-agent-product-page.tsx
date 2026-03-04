@@ -135,7 +135,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               The Problem
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Your customers are talking.{" "}
               <span className="text-gold">Is anyone listening?</span>
             </h2>
@@ -156,7 +156,7 @@ export default function AiAgentProductPage({
                   <div className="h-12 w-12 rounded-xl bg-gold/10 flex items-center justify-center mb-5">
                     <Icon className="h-6 w-6 text-gold" />
                   </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                  <h3 className="font-display text-xl font-normal text-foreground mb-3">
                     {card.title}
                   </h3>
                   <p className="text-foreground/70 leading-relaxed">
@@ -184,7 +184,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Simple Process
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               From signup to{" "}
               <span className="text-gold">fully operational.</span>
             </h2>
@@ -211,7 +211,7 @@ export default function AiAgentProductPage({
                     <div className="p-4 bg-sand rounded-xl w-fit mb-6 mt-2">
                       <StepIcon className="h-8 w-8 text-gold-dark" />
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                    <h3 className="font-display text-xl font-normal text-foreground mb-3">
                       {step.title}
                     </h3>
                     <p className="text-foreground/70 leading-relaxed">
@@ -257,7 +257,7 @@ export default function AiAgentProductPage({
               <Sparkles className="h-4 w-4" />
               See It In Action
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal mb-6">
               Real conversations.{" "}
               <span className="text-gold">Real results.</span>
             </h2>
@@ -359,7 +359,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Everything Included
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Not a chatbot.{" "}
               <span className="text-gold">A real partner for your customers.</span>
             </h2>
@@ -384,7 +384,7 @@ export default function AiAgentProductPage({
                   <div className="h-10 w-10 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
                     <FeatureIcon className="h-5 w-5 text-gold" />
                   </div>
-                  <h3 className="font-display text-base font-semibold text-foreground mb-2">
+                  <h3 className="font-display text-base font-normal text-foreground mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-foreground/60 text-sm leading-relaxed">
@@ -410,7 +410,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Module Integration
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               One AI agent.{" "}
               <span className="text-gold">Every module.</span>
             </h2>
@@ -438,7 +438,7 @@ export default function AiAgentProductPage({
                       <ModIcon className="h-5 w-5 text-gold" />
                     </div>
                     <div>
-                      <h3 className="font-display text-base font-semibold text-foreground mb-1">
+                      <h3 className="font-display text-base font-normal text-foreground mb-1">
                         {mod.name}
                       </h3>
                       <p className="text-foreground/60 text-sm leading-relaxed">
@@ -469,7 +469,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               Credits
             </div>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Included base credits.{" "}
               <span className="text-gold">More when you need them.</span>
             </h2>
@@ -560,7 +560,7 @@ export default function AiAgentProductPage({
                       Most Popular
                     </div>
                   )}
-                  <p className="font-display text-base font-semibold text-foreground mb-1">{pkg.name}</p>
+                  <p className="font-display text-base font-normal text-foreground mb-1">{pkg.name}</p>
                   <p className="text-foreground/50 text-sm mb-4">{pkg.credits.toLocaleString()} credits</p>
                   <div className="flex items-baseline gap-1 mb-1">
                     <span className="font-display text-3xl font-bold text-foreground">${pkg.price}</span>
@@ -610,7 +610,7 @@ export default function AiAgentProductPage({
             <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
               How They Work Together
             </div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl font-normal text-foreground mb-6">
               Two agents.{" "}
               <span className="text-gold">Two jobs.</span>
             </h2>
@@ -633,7 +633,7 @@ export default function AiAgentProductPage({
                   <Bot className="h-5 w-5 text-gold" />
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground">
+                  <h3 className="font-display text-xl font-normal text-foreground">
                     {maxVsAgent.agent.title}
                   </h3>
                   <p className="text-sm text-foreground/60">
@@ -668,7 +668,7 @@ export default function AiAgentProductPage({
                   <MessageCircle className="h-5 w-5 text-gold" />
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground">
+                  <h3 className="font-display text-xl font-normal text-foreground">
                     {maxVsAgent.max.title}
                   </h3>
                   <p className="text-sm text-foreground/60">
@@ -718,7 +718,7 @@ export default function AiAgentProductPage({
                 <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
                   FAQ
                 </div>
-                <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-6">
+                <h2 className="font-display text-3xl md:text-4xl font-normal text-foreground mb-6">
                   Common questions
                 </h2>
                 <p className="text-lg text-foreground/70 mb-8">
@@ -769,7 +769,7 @@ export default function AiAgentProductPage({
                       )}
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <h3 className="font-display text-lg font-semibold text-foreground">
+                        <h3 className="font-display text-lg font-normal text-foreground">
                           {faq.question}
                         </h3>
                         <ChevronDown
@@ -811,7 +811,7 @@ export default function AiAgentProductPage({
             transition={{ duration: 0.6 }}
             className="text-center max-w-2xl mx-auto"
           >
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
               Every account starts with{" "}
               <span className="text-gold">its own agent.</span>
             </h2>
