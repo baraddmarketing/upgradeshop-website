@@ -70,7 +70,7 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
 
   return (
     <section
-      className="py-24 md:py-24 bg-sand/50 relative overflow-hidden"
+      className="py-24 md:py-24 bg-background relative overflow-hidden"
       data-section-id={sectionId}
       data-section-key={sectionKey}
     >

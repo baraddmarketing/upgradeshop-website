@@ -5,7 +5,7 @@ import { AlertCircle } from "lucide-react";
 
 export default function PaymentPageNotFound() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <Card className="max-w-md w-full">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">

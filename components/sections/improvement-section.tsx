@@ -33,7 +33,7 @@ export function ImprovementSection({ sections }: ImprovementSectionProps) {
   ];
 
   return (
-    <section className="py-24 md:py-24 bg-sand/50 relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
+    <section className="py-24 md:py-24 bg-background relative overflow-hidden" data-section-id={sectionId} data-section-key={sectionKey}>
       {/* Subtle texture */}
       <div className="absolute inset-0 bg-noise opacity-30" />
 

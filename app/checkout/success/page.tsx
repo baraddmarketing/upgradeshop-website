@@ -45,8 +45,8 @@ function SuccessContent() {
 
           {/* Pending Payment Notice */}
           {pendingPayment && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
-              <p className="text-amber-900 text-sm">
+            <div className="bg-sand border border-border rounded-xl p-4 mb-6 text-left">
+              <p className="text-foreground text-sm">
                 <strong>Payment Pending:</strong> We'll send you a secure payment link via email within the hour.
               </p>
             </div>

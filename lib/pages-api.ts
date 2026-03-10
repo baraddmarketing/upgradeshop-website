@@ -46,6 +46,7 @@ export interface PageSection {
 
 export interface PageSectionsResponse {
   found: boolean;
+  preview?: boolean;
   pageTitle?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -57,14 +58,18 @@ export interface PageSectionsResponse {
  * Uses ISR with 60-second revalidation for optimal performance
  */
 export async function fetchPageSections(
-  slug: string
+  slug: string,
+  previewToken?: string
 ): Promise<PageSectionsResponse> {
   try {
     const url = new URL(`${PLATFORM_URL}/api/public/pages/${slug}`);
     url.searchParams.set("domain", DOMAIN);
+    if (previewToken) {
+      url.searchParams.set("preview", previewToken);
+    }
 
     const response = await fetch(url.toString(), {
-      next: { revalidate: 60 },
+      ...(previewToken ? { cache: "no-store" as const } : { next: { revalidate: 60 } }),
     });
 
     if (!response.ok) {
@@ -143,6 +148,30 @@ export function getEditableText(
  * Returns raw HTML for use with dangerouslySetInnerHTML
  */
 export function getEditableHtml(
+  sections: PageSection[],
+  sectionKey: string,
+  fieldType: string,
+  fallback: string,
+  index: number = 0
+): string {
+  const section = getSection(sections, sectionKey);
+  if (!section || !section.fields || section.fields.length === 0) {
+    return fallback;
+  }
+
+  const fieldsOfType = section.fields.filter((f) => f.fieldType === fieldType);
+  if (fieldsOfType.length > index) {
+    return fieldsOfType[index].fieldContent ?? fallback;
+  }
+
+  return fallback;
+}
+
+/**
+ * Helper to get rich text content (preserves HTML for rendering)
+ * Falls back to the fallback string if no DB content found
+ */
+export function getEditableRichText(
   sections: PageSection[],
   sectionKey: string,
   fieldType: string,

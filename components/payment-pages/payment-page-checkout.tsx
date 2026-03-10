@@ -503,7 +503,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                 return (
                   <div key={item.product.id} className="flex gap-4">
                     {imageUrl && (
-                      <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                      <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-sand">
                         <Image src={imageUrl} alt={item.product.name} fill className="object-cover" />
                       </div>
                     )}

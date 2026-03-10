@@ -1,4 +1,5 @@
 import { fetchPageSections } from "@/lib/pages-api";
+import { PreviewBanner } from "@/components/preview-banner";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ProblemSection } from "@/components/sections/problem-section";
 import { SolutionSection } from "@/components/sections/solution-section";
@@ -16,13 +17,16 @@ import { FinalCTASection } from "@/components/sections/final-cta-section";
 // ISR: Revalidate every 60 seconds
 export const revalidate = 60;
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
+  const { preview } = await searchParams;
   // Fetch page sections from CMS with fallback
-  const data = await fetchPageSections("home");
+  const data = await fetchPageSections("home", preview);
   const sections = data?.sections || [];
 
   return (
     <main>
+      {data?.preview && preview && <PreviewBanner token={preview} />}
+
       {/* Hero - Immediate emotional connection + core promise */}
       <HeroSection sections={sections} />
 
