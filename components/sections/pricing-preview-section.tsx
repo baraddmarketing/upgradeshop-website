@@ -5,7 +5,7 @@ import { ArrowRight, Bot } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import { PageSection, getSection } from "@/lib/pages-api";
+import { PageSection, getSection, getEditableText, getFieldId } from "@/lib/pages-api";
 
 interface PricingPreviewSectionProps {
   sections: PageSection[];
@@ -17,55 +17,14 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
   const sectionKey = pricingPreviewSection?.sectionKey;
 
   const modules = [
-    {
-      name: "Website",
-      price: "from $170",
-      period: "/mo",
-      note: "Starter — 3 pages, setup included",
-      highlight: true,
-    },
-    {
-      name: "Landing Page",
-      price: "$89",
-      period: "/mo",
-      note: "Single conversion page",
-    },
-    {
-      name: "CRM",
-      price: "$19",
-      period: "/mo",
-      note: "Pipeline + up to 5 users",
-    },
-    {
-      name: "Email Marketing",
-      price: "$16",
-      period: "/mo",
-      note: "5,000 sends/month",
-    },
-    {
-      name: "WhatsApp",
-      price: "$30",
-      period: "/mo",
-      note: "Business API + automation",
-    },
-    {
-      name: "Facebook & Instagram",
-      price: "$30",
-      period: "/mo",
-      note: "DMs, comments, lead capture",
-    },
-    {
-      name: "Project Management",
-      price: "$25",
-      period: "/mo",
-      note: "Tasks + up to 5 users",
-    },
-    {
-      name: "SEO Management",
-      price: "Soon",
-      period: "",
-      note: "Automated optimization",
-    },
+    { name: "Website", price: "from $170", period: "/mo", note: "Starter — 3 pages, setup included", highlight: true },
+    { name: "Landing Page", price: "$89", period: "/mo", note: "Single conversion page" },
+    { name: "CRM", price: "$19", period: "/mo", note: "Pipeline + up to 5 users" },
+    { name: "Email Marketing", price: "$16", period: "/mo", note: "5,000 sends/month" },
+    { name: "WhatsApp", price: "$30", period: "/mo", note: "Business API + automation" },
+    { name: "Facebook & Instagram", price: "$30", period: "/mo", note: "DMs, comments, lead capture" },
+    { name: "Project Management", price: "$25", period: "/mo", note: "Tasks + up to 5 users" },
+    { name: "SEO Management", price: "Soon", period: "", note: "Automated optimization" },
   ];
 
   return (
@@ -84,17 +43,20 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6">
-            Transparent Pricing
+          <div className="inline-block px-3 py-1 bg-gold/10 text-gold-dark text-sm font-medium rounded-full mb-6" data-field-id={getFieldId(sections, "pricing-preview", "p", 0) || undefined}>
+            {getEditableText(sections, "pricing-preview", "p", "Transparent Pricing", 0)}
           </div>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-normal text-foreground mb-6">
-            Pay only for what you need.
+            <span data-field-id={getFieldId(sections, "pricing-preview", "h2", 0) || undefined}>
+              {getEditableText(sections, "pricing-preview", "h2", "Pay only for what you need.", 0)}
+            </span>
             <br />
-            <span className="text-gold">Everything works together.</span>
+            <span className="text-gold" data-field-id={getFieldId(sections, "pricing-preview", "h2", 1) || undefined}>
+              {getEditableText(sections, "pricing-preview", "h2", "Everything works together.", 1)}
+            </span>
           </h2>
-          <p className="text-lg text-foreground">
-            Each module stands alone or integrates with the others. Start small.
-            Add more as your business grows. No long-term contracts.
+          <p className="text-lg text-foreground" data-field-id={getFieldId(sections, "pricing-preview", "p", 1) || undefined}>
+            {getEditableText(sections, "pricing-preview", "p", "Each module stands alone or integrates with the others. Start small. Add more as your business grows. No long-term contracts.", 1)}
           </p>
         </motion.div>
 
@@ -110,15 +72,14 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
               <Bot className="h-5 w-5 text-gold" />
             </div>
             <div className="flex-1 min-w-0">
-              <span className="text-gold text-xs font-bold uppercase tracking-wider">
-                Included free with every subscription
+              <span className="text-gold text-xs font-bold uppercase tracking-wider" data-field-id={getFieldId(sections, "pricing-preview", "p", 2) || undefined}>
+                {getEditableText(sections, "pricing-preview", "p", "Included free with every subscription", 2)}
               </span>
-              <p className="font-semibold text-primary-foreground mt-0.5">
-                Your own personal AI agent — named by you, from day one.
+              <p className="font-semibold text-primary-foreground mt-0.5" data-field-id={getFieldId(sections, "pricing-preview", "p", 3) || undefined}>
+                {getEditableText(sections, "pricing-preview", "p", "Your own personal AI agent — named by you, from day one.", 3)}
               </p>
-              <p className="text-sm text-primary-foreground/55 mt-0.5">
-                200 credits/month included. Manages your platform internally.
-                Extend it to serve your customers when you&apos;re ready.
+              <p className="text-sm text-primary-foreground/55 mt-0.5" data-field-id={getFieldId(sections, "pricing-preview", "p", 4) || undefined}>
+                {getEditableText(sections, "pricing-preview", "p", "200 credits/month included. Manages your platform internally. Extend it to serve your customers when you're ready.", 4)}
               </p>
             </div>
           </div>
@@ -140,20 +101,22 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
               }`}
             >
               {mod.highlight && (
-                <span className="text-xs font-semibold text-gold-dark uppercase tracking-wide">
-                  Flagship
+                <span className="text-xs font-semibold text-gold-dark uppercase tracking-wide" data-field-id={getFieldId(sections, "pricing-preview", "p", 5) || undefined}>
+                  {getEditableText(sections, "pricing-preview", "p", "Flagship", 5)}
                 </span>
               )}
-              <p className={`font-semibold text-foreground ${mod.highlight ? "mt-1" : ""}`}>
-                {mod.name}
+              <p className={`font-semibold text-foreground ${mod.highlight ? "mt-1" : ""}`} data-field-id={getFieldId(sections, "pricing-preview", "h3", i) || undefined}>
+                {getEditableText(sections, "pricing-preview", "h3", mod.name, i)}
               </p>
               <p className="font-display text-2xl font-bold text-foreground mt-1">
-                {mod.price}
-                <span className="text-sm font-normal text-foreground/50">
-                  {mod.period}
+                <span data-field-id={getFieldId(sections, "pricing-preview", "p", i + 6) || undefined}>
+                  {getEditableText(sections, "pricing-preview", "p", mod.price, i + 6)}
                 </span>
+                <span className="text-sm font-normal text-foreground/50">{mod.period}</span>
               </p>
-              <p className="text-xs text-foreground/45 mt-1">{mod.note}</p>
+              <p className="text-xs text-foreground/45 mt-1" data-field-id={getFieldId(sections, "pricing-preview", "p", i + 14) || undefined}>
+                {getEditableText(sections, "pricing-preview", "p", mod.note, i + 14)}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -166,16 +129,16 @@ export function PricingPreviewSection({ sections }: PricingPreviewSectionProps) 
           transition={{ delay: 0.3 }}
           className="text-center"
         >
-          <p className="text-foreground/50 text-sm mb-5">
-            Free CRM and basic email included with every subscription. Website
-            add-ons (e-commerce, booking, blog) available separately.
+          <p className="text-foreground/50 text-sm mb-5" data-field-id={getFieldId(sections, "pricing-preview", "p", 22) || undefined}>
+            {getEditableText(sections, "pricing-preview", "p", "Free CRM and basic email included with every subscription. Website add-ons (e-commerce, booking, blog) available separately.", 22)}
           </p>
           <Button
             asChild
             className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+            data-field-id={getFieldId(sections, "pricing-preview", "button", 0) || undefined}
           >
             <Link href="/pricing">
-              View Full Pricing & Add-Ons{" "}
+              {getEditableText(sections, "pricing-preview", "button", "View Full Pricing & Add-Ons", 0)}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

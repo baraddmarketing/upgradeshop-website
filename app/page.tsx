@@ -40,7 +40,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <WebsiteCalloutSection sections={sections} />
 
       {/* E-commerce - Stack consolidation ROI story */}
-      <EcommerceSection />
+      <EcommerceSection sections={sections} />
 
       {/* Capabilities - Show the full ecosystem */}
       <CapabilitiesSection sections={sections} />
