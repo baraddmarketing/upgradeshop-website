@@ -225,6 +225,7 @@ export function SumitPayment({
             orderId,
             singleUseToken: token,
             domain: "upgradeshop.ai",
+            country,
           }),
         });
 
@@ -260,6 +261,7 @@ export function SumitPayment({
           orderNumber,
           amount: total,
           currency,
+          country,
           customer,
           items,
         };

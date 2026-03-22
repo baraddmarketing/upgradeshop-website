@@ -7,6 +7,7 @@ interface ChargeRequest {
   orderId: string;
   amount: number;
   currency?: string;
+  country?: string;
   customer: {
     name: string;
     email: string;
@@ -27,10 +28,9 @@ interface ChargeRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: ChargeRequest = await request.json();
-    const { token, orderId, amount, currency = "USD", customer, items } = body;
+    const { token, orderId, amount, currency = "USD", country, customer, items } = body;
 
-    console.log("[Charge Proxy] Request received:", { orderId, amount, currency });
-    console.log("[Charge Proxy] Currency type:", typeof currency, "| value:", currency);
+    console.log("[Charge Proxy] Request received:", { orderId, amount, currency, country });
 
     if (!token || !orderId || !amount) {
       return NextResponse.json(
@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
       orderId,
       amount,
       currency,
+      country,
       customer,
       items,
     };
