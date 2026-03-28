@@ -408,6 +408,90 @@ const productContent: Record<string, ProductPageContent> = {
     relatedSlugs: ["test-onetime-10ils"],
   },
 
+  "founder-launch": {
+    slug: "founder-launch",
+    tagline: "Full platform setup — zero friction, zero technical work",
+    icon: "Rocket",
+    overviewTitle: "Everything configured. Everything migrated. Everything ready.",
+    overviewParagraphs: [
+      "Founder Launch is a done-for-you onboarding service where an Upgrade Shop expert handles your entire platform setup from start to finish. We interview you about your business, then configure every module — CRM, email, WhatsApp, AI agent, automations, and your website — so everything works together the moment we hand it over.",
+      "Your AI-built website goes live as part of the package. We pre-train your AI agent on your services, pricing, FAQs, and brand voice, then build your first automations so leads are captured and followed up with immediately. For businesses switching from multiple disconnected tools, we migrate your contacts, deal history, and content into the platform cleanly.",
+      "Ideal for founders who want zero technical involvement and businesses that need to be operational quickly. The full setup takes 3–5 business days. You get a kick-off call, a handoff walkthrough, and 72 hours of post-launch human review to catch anything that needs adjustment.",
+    ],
+    detailedFeatures: [
+      { icon: "Search", title: "Business Discovery", description: "A structured kick-off call where we learn your business model, target customers, services, pricing, and goals. Everything we need to configure your platform correctly the first time." },
+      { icon: "Settings", title: "Full Module Configuration", description: "Every module you've subscribed to is configured for your specific workflow. CRM pipeline stages, email templates, booking services, product catalog — all set up and ready to use." },
+      { icon: "Bot", title: "AI Agent Pre-Training", description: "Your AI agent is trained on your business before launch. We feed it your services, pricing, FAQs, policies, and brand voice so it handles customer inquiries accurately from day one." },
+      { icon: "Database", title: "Data Migration", description: "We import your existing contacts, deal history, and product data from spreadsheets, previous CRMs, or other platforms. You don't lose your history when you switch." },
+      { icon: "Zap", title: "Automations Built", description: "Your first automation workflows are built during setup — lead capture sequences, appointment reminders, follow-up emails, and WhatsApp responses. Not templates. Actual working automations for your business." },
+      { icon: "MessageCircle", title: "WhatsApp Handoff", description: "Your WhatsApp Business number is connected, message templates are created and submitted for Meta approval, and your AI agent is live on WhatsApp before we hand over." },
+      { icon: "Globe", title: "AI-Built Website", description: "A professionally structured AI-built website goes live as part of Founder Launch. Your homepage, services pages, and contact form are live and linked to your platform." },
+      { icon: "Shield", title: "72hr Human Review", description: "After handoff, our team monitors your platform for 72 hours. We catch edge cases in your automations, adjust AI agent responses based on real conversations, and fix anything before you rely on it fully." },
+    ],
+    useCases: [
+      { title: "Switching from Multiple Tools", description: "You're currently using separate tools for CRM, email, scheduling, and customer support. Founder Launch consolidates everything into one platform and migrates your data so the switch doesn't cost you momentum." },
+      { title: "Zero Technical Involvement", description: "You're a business owner, not a developer. You don't want to spend weeks in settings menus. Founder Launch means you show up to the kick-off call and come back to a fully working platform." },
+      { title: "Quick Launch", description: "You need to be operational in days, not months. Whether you're launching a new business or finally getting your systems in order, Founder Launch gets everything live and tested in under a week." },
+    ],
+    relatedSlugs: ["pro-website-marketing", "crm", "email-marketing"],
+  },
+
+  "pro-website-marketing": {
+    slug: "pro-website-marketing",
+    tagline: "Custom branded website built by a developer — not a template fill",
+    icon: "Globe",
+    overviewTitle: "A genuinely premium web presence for your business",
+    overviewParagraphs: [
+      "Pro Website Marketing is a developer-built site using our custom template system — not a drag-and-drop builder and not a generic theme you'd find on any competitor. A real developer designs and builds your site to your brand, then connects it to your Upgrade Shop platform so your AI agent can update content and your CRM captures every lead.",
+      "Every site includes your homepage, about page, services pages, and contact page as standard. Blog is included if you want to publish content for SEO. All pages are database-connected through our visual editor, which means your AI agent can make updates in plain language without anyone touching the code.",
+      "The process starts with a brand consultation — we look at your visual identity, your competitors, and what you want visitors to feel when they land on your site. From there we design, build, and launch, typically within 5–10 business days from the consultation call.",
+    ],
+    detailedFeatures: [
+      { icon: "Palette", title: "Custom Branded Design", description: "Your site is designed to your brand — your colors, fonts, logo, and visual identity. No picking from preset themes. A developer creates a design system specifically for you." },
+      { icon: "Database", title: "Database-Connected Sections", description: "Every content section is connected to our visual editor. Text, images, CTAs — all editable through the dashboard without touching code. Your AI agent can make updates on your behalf." },
+      { icon: "Layers", title: "Brand Template Library", description: "Once your design system is built, every new page you add inherits it automatically. Your brand stays consistent as your site grows — no need to redesign every time you add content." },
+      { icon: "Bot", title: "AI Agent Managed", description: "Your AI agent can update your website content in response to a WhatsApp message from you. Change your headline, swap an image, or update pricing — just tell your agent." },
+      { icon: "FileText", title: "Blog Included", description: "A full blog section is included at no extra cost. Publish SEO content, case studies, and updates. Your AI agent can help draft and publish posts on your schedule." },
+      { icon: "CreditCard", title: "Payment Gateway", description: "A payment gateway is connected if you want to sell services, packages, or deposit payments directly from your website. No separate checkout setup needed." },
+      { icon: "Smartphone", title: "Mobile Optimized", description: "Your site is built and tested for mobile from the start — not an afterthought. Every page looks and works correctly on phones, tablets, and desktop." },
+      { icon: "Lock", title: "SSL Certificate", description: "HTTPS security is included and configured from launch. Your visitors see the lock icon, their data is encrypted, and your site is trusted by search engines." },
+    ],
+    useCases: [
+      { title: "Premium Brand Presence", description: "You're a consultant, agency, or professional service provider and your website needs to instantly communicate quality and credibility. A developer-built site does that — a template doesn't." },
+      { title: "Service Businesses", description: "You offer services, not products, and your website's job is to explain what you do, build trust, and get visitors to book or contact you. Pro Website Marketing is built specifically for this conversion path." },
+      { title: "Upgrade from AI-Built", description: "You launched with an AI-built site and it served its purpose, but now you need something that matches the quality of your brand. Pro Website Marketing is the natural upgrade." },
+    ],
+    relatedSlugs: ["pro-website-ecommerce", "founder-launch", "booking-system"],
+  },
+
+  "pro-website-ecommerce": {
+    slug: "pro-website-ecommerce",
+    tagline: "Custom e-commerce website with full Shopify migration included",
+    icon: "ShoppingBag",
+    overviewTitle: "A complete online store — built by a developer, managed by your AI agent",
+    overviewParagraphs: [
+      "Pro Website Ecommerce includes everything in Pro Website Marketing plus a full e-commerce storefront. Product catalog, cart, checkout, order management, inventory tracking, abandoned cart recovery — all custom-built to your brand and connected to your Upgrade Shop platform. No third-party e-commerce platform, no revenue share, no monthly Shopify fees.",
+      "Shopify and WooCommerce migration is included. We export your product catalog, customer data, and order history and import it into your new store cleanly. Your product URLs, SEO rankings, and customer accounts are preserved where possible. You switch platforms without losing what you've built.",
+      "Once live, your AI agent generates on-brand product descriptions for new additions, manages inventory updates on request, and handles customer inquiries about orders, shipping, and returns through WhatsApp. Your store is genuinely managed — not just hosted.",
+    ],
+    detailedFeatures: [
+      { icon: "ShoppingBag", title: "Full Store Infrastructure", description: "Complete e-commerce functionality: product catalog, collections, variants, cart, secure checkout, order management, and customer accounts — all custom-built to your brand." },
+      { icon: "ArrowRight", title: "Shopify/WooCommerce Migration", description: "We handle the full migration from Shopify or WooCommerce. Products, customer data, order history, SEO metadata — imported cleanly so you don't start from scratch." },
+      { icon: "Palette", title: "Custom Brand Templates", description: "Your store design is unique to your brand. Product pages, collection pages, and checkout flow are designed as part of your brand system — not a modified template." },
+      { icon: "Bot", title: "AI Product Pages", description: "Your AI agent generates product descriptions in your brand voice for new products. Ask it to write, update, or optimize any product page through a simple WhatsApp message." },
+      { icon: "ShoppingCart", title: "Cart & Checkout", description: "A fast, conversion-optimized checkout with guest checkout, saved addresses, multiple payment methods, and clear order summaries. Reduces friction at the most critical step." },
+      { icon: "BarChart3", title: "Abandoned Cart Recovery", description: "Automatic email sequences recover customers who left items in their cart. Customizable timing and messaging with real performance analytics to measure recovery rate." },
+      { icon: "Globe", title: "Everything in Marketing Build", description: "All the features of Pro Website Marketing are included: custom design, blog, database-connected sections, AI agent content management, SSL, and mobile optimization." },
+      { icon: "Zap", title: "Cross-Platform Automation", description: "Order confirmations, shipping updates, and review requests are sent automatically via email and WhatsApp. Your post-purchase experience runs on autopilot." },
+    ],
+    useCases: [
+      { title: "Shopify Replacement", description: "You're paying Shopify fees, app fees, and transaction fees that add up to hundreds of dollars a month. Pro Website Ecommerce replaces Shopify entirely with a one-time build and your Upgrade Shop subscription." },
+      { title: "Growing E-commerce Brands", description: "You've outgrown basic store solutions and need a website that matches your brand quality, integrates with your CRM and email marketing, and gives your AI agent real control over store content." },
+      { title: "WooCommerce Migration", description: "Your WooCommerce site is slow, needs constant plugin updates, or has become too technically complex to manage. We migrate everything and rebuild it on a modern, managed stack." },
+    ],
+    relatedSlugs: ["pro-website-marketing", "founder-launch", "whatsapp"],
+  },
+
   "test-onetime-10ils": {
     slug: "test-onetime-10ils",
     tagline: "Test product for SUMIT payment gateway",
