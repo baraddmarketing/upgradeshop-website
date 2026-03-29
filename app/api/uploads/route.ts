@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
     const apiKey = formData.get("apiKey") as string;
     const destination = formData.get("destination") as string | null;
     const path = formData.get("path") as string | null;
+    const overwrite = formData.get("overwrite") === "true";
 
     console.log("[Upload API] Request received - file:", file?.name, "path:", path, "destination:", destination);
 
@@ -135,19 +136,21 @@ export async function POST(request: NextRequest) {
     // Check if file exists and find unique filename
     let filename = sanitizedName;
     let savePath = join(dirPath, filename);
-    let counter = 1;
 
-    // If file exists, add number suffix
-    while (true) {
-      try {
-        await access(savePath, constants.F_OK);
-        // File exists, try next number
-        filename = `${sanitizedBaseName}-${counter}.${finalExt}`;
-        savePath = join(dirPath, filename);
-        counter++;
-      } catch {
-        // File doesn't exist, we can use this name
-        break;
+    // If overwrite=true, skip deduplication and use the original filename (re-import case)
+    if (!overwrite) {
+      let counter = 1;
+      while (true) {
+        try {
+          await access(savePath, constants.F_OK);
+          // File exists, try next number
+          filename = `${sanitizedBaseName}-${counter}.${finalExt}`;
+          savePath = join(dirPath, filename);
+          counter++;
+        } catch {
+          // File doesn't exist, we can use this name
+          break;
+        }
       }
     }
 

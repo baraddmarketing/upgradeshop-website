@@ -10,10 +10,10 @@ const navLinks = [
 ];
 
 const productLinks = [
-  { href: "/pricing#website", label: "Website Builder" },
-  { href: "/pricing#crm", label: "CRM" },
-  { href: "/pricing#email", label: "Email Marketing" },
-  { href: "/pricing#whatsapp", label: "WhatsApp Integration" },
+  { href: "/pricing#website", label: "Website" },
+  { href: "/pricing#modules", label: "Platform Modules" },
+  { href: "/pricing#ai-agent", label: "AI Agent" },
+  { href: "/pricing#setup", label: "Founder Launch" },
 ];
 
 export function Footer() {

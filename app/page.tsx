@@ -4,7 +4,6 @@ import { HeroSection } from "@/components/sections/hero-section";
 import { ProblemSection } from "@/components/sections/problem-section";
 import { SolutionSection } from "@/components/sections/solution-section";
 import { WebsiteCalloutSection } from "@/components/sections/website-callout-section";
-import { EcommerceSection } from "@/components/sections/ecommerce-section";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
 import { ImprovementSection } from "@/components/sections/improvement-section";
 import { HowItWorksSection } from "@/components/sections/how-it-works-section";
@@ -36,11 +35,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       {/* Solution - Introduce The Upgrade Shop as the third option */}
       <SolutionSection sections={sections} />
 
-      {/* Website Callout - Full website product showcase with tiers & add-ons */}
+      {/* Website Callout - Two tracks, no editor, AI-managed */}
       <WebsiteCalloutSection sections={sections} />
-
-      {/* E-commerce - Stack consolidation ROI story */}
-      <EcommerceSection sections={sections} />
 
       {/* Capabilities - Show the full ecosystem */}
       <CapabilitiesSection sections={sections} />

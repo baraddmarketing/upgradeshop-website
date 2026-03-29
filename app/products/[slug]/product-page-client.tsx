@@ -16,7 +16,8 @@ import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/pricing/product-card";
 import { useCart } from "@/lib/cart-context";
 import { useCurrency } from "@/lib/use-currency";
-import { Product, WebsiteTier } from "@/lib/products";
+import { Product } from "@/lib/products";
+type WebsiteTier = { key: string; name: string; maxPages: number | null; monthlyPrice: number; description: string };
 import { ProductPageContent } from "@/lib/product-content";
 
 function getIcon(name: string): LucideIcons.LucideIcon {
@@ -98,7 +99,7 @@ export default function ProductPageClient({
                 variant="outline"
                 className="mb-4 border-gold/30 text-gold-dark"
               >
-                {product?.category === "addon"
+                {product?.category === "website-addon"
                   ? "Website Add-on"
                   : isWebsiteService
                   ? "Managed Service"
@@ -470,7 +471,7 @@ export default function ProductPageClient({
               </div>
             )}
 
-            {product?.category === "addon" && (
+            {product?.category === "website-addon" && (
               <p className="text-foreground/50 text-sm mt-4">
                 Requires a{" "}
                 <Link href="/products/website" className="text-gold hover:text-gold-dark underline">

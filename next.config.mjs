@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  allowedDevOrigins: ['staging.upgradeshop.ai'],
   async headers() {
     return [
       {

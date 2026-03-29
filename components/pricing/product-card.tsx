@@ -53,7 +53,7 @@ export function ProductCard({ product, index = 0, exchangeRates }: ProductCardPr
           <p className="text-foreground/60 text-sm mb-1">{product.pricePrefix}</p>
         )}
         <div className="flex items-baseline justify-center gap-1">
-          <span className="text-4xl font-display font-bold text-foreground">
+          <span className="text-4xl font-bold text-foreground">
             {priceDisplay.symbol}{priceDisplay.amount}
           </span>
           <span className="text-foreground/60">{priceDisplay.periodLabel}</span>

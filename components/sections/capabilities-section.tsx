@@ -6,7 +6,7 @@ import {
   Users,
   Mail,
   MessageCircle,
-  Facebook,
+  MessagesSquare,
   FolderKanban,
   BarChart3,
   Zap,
@@ -36,9 +36,9 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
     },
     {
       icon: Globe,
-      title: "Website & Landing Pages",
+      title: "Website & Funnels",
       description:
-        "Professional websites built by developers, not DIY templates. Managed updates through conversation.",
+        "AI-built website included with any subscription. Add funnels and landing pages to convert visitors into customers.",
       highlight: false,
     },
     {
@@ -63,7 +63,7 @@ export function CapabilitiesSection({ sections }: CapabilitiesSectionProps) {
       highlight: false,
     },
     {
-      icon: Facebook,
+      icon: MessagesSquare,
       title: "Facebook & Instagram",
       description:
         "Social presence managed. Content scheduling, engagement tracking, ad integration.",

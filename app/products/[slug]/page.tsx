@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchProductsFromDB, fetchWebsiteVariantsFromDB } from "@/lib/db-products";
+import { fetchProductsFromDB } from "@/lib/db-products";
 import { enrichWithStaticData } from "@/lib/fetch-products";
-import { allProducts, websiteService } from "@/lib/products";
+import { allProducts } from "@/lib/products";
 import { getAllProductSlugs, getProductContent } from "@/lib/product-content";
 import ProductPageClient from "./product-page-client";
 import WebsiteProductPage from "./website-product-page";
@@ -28,13 +28,11 @@ export async function generateMetadata({
   }
 
   const name = slug === "website"
-    ? websiteService.name
+    ? "Professional Website"
     : slug === "ai-agent"
     ? "AI Agent"
     : (product?.name || slug);
-  const description = slug === "website"
-    ? websiteService.description
-    : slug === "ai-agent"
+  const description = slug === "ai-agent"
     ? content.overviewParagraphs[0]
     : (product?.description || content.overviewParagraphs[0]);
 
@@ -78,7 +76,7 @@ export default async function ProductPage({
   // Dedicated AI Agent product page
   if (slug === "ai-agent") {
     const aiAgentProduct = enrichedProducts.find(
-      (p) => p.category === "ai-agent"
+      (p) => p.slug === "ai-agent"
     ) || product || null;
 
     return <AiAgentProductPage aiAgentProduct={aiAgentProduct} />;
@@ -86,19 +84,14 @@ export default async function ProductPage({
 
   // Dedicated Website product page
   if (slug === "website") {
-    const [websiteVariants] = await Promise.all([
-      fetchWebsiteVariantsFromDB(),
-    ]);
-
-    // Get website addon products with DB prices
     const addonProducts = enrichedProducts.filter(
-      (p) => (p.category === "addon" || p.category === "website-addon") && p.requires === "website"
+      (p) => p.category === "website-addon"
     );
 
     return (
       <WebsiteProductPage
         addonProducts={addonProducts}
-        websiteVariants={websiteVariants}
+        websiteVariants={[]}
       />
     );
   }

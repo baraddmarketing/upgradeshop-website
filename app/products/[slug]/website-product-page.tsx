@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ContactModal } from "@/components/modals/contact-modal";
 import { useCurrency } from "@/lib/use-currency";
 import { Product } from "@/lib/products";
-import { WebsiteVariant } from "@/lib/db-products";
+type WebsiteVariant = { id: string; title: string; sku: string; price: number; prices: Record<string, number> | null };
 import {
   problemCards,
   howItWorksSteps,
