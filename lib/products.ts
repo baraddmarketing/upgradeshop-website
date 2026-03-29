@@ -1,18 +1,18 @@
 /**
  * Product data for UpgradeShop pricing page
  *
- * Terminology:
- * - MODULES: Standalone products purchasable independently (CRM, AI Agents, Email Marketing, etc.)
- * - WEBSITE: Fully managed website SERVICE with tiered pricing by page count (NOT a builder)
- * - LANDING_PAGE: Separate product for single high-converting pages (price from database)
- * - ADDONS: Extensions for specific modules (e.g., Digital Courses for Website)
- * - FEATURES: Free toggles inside modules (no pricing, just visibility flags)
+ * Terminology (updated March 2026):
+ * - MODULES: Standalone products purchasable independently (CRM, Email, WhatsApp, Funnels, etc.)
+ * - WEBSITE: Two tracks — AI-Built (included with any sub) or Professional Build (one-time service)
+ * - ADDONS: Extensions for the website module (Booking, Events, Community, Courses integration)
+ * - AI_ACTIONS: Credit packages for AI agent usage
+ * - SERVICES: One-time products (Founder Launch, Professional Website Builds)
  *
- * These products match the store.products table in the database.
- * The product IDs are used when creating orders through the checkout API.
+ * The database is the source of truth for prices. Static definitions here provide
+ * features/descriptions as fallback when the DB doesn't have them.
  */
 
-export type ProductCategory = "module" | "addon" | "website-addon" | "landing-addon" | "ai-agent" | "ai-agent-type" | "landing-page" | "website" | "test";
+export type ProductCategory = "module" | "website-addon" | "ai-actions" | "service" | "bundle" | "subscription-tier";
 
 export interface Product {
   id: string;
@@ -21,14 +21,14 @@ export interface Product {
   shortDescription: string;
   description: string;
   price: number;
-  pricePrefix?: string; // e.g., "Starting from"
+  pricePrefix?: string;
   compareAtPrice?: number;
-  prices?: Record<string, number> | null; // Multi-currency prices from database
-  billingCycle: "monthly" | "yearly";
+  prices?: Record<string, number> | null;
+  billingCycle: "monthly" | "yearly" | "one-time";
   features: string[];
   isBundle?: boolean;
   category: ProductCategory;
-  requires?: string; // For addons, which module they require (e.g., "website")
+  requires?: string;
 }
 
 export interface CartItem {
@@ -36,45 +36,92 @@ export interface CartItem {
   quantity: number;
 }
 
+// =============================================================================
+// SUBSCRIPTION TIERS
+// =============================================================================
+
+export interface SubscriptionTier {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  price: number;
+  highlight?: boolean;
+  badge?: string;
+  includes: string[];
+  extras?: string[];
+  extrasLabel?: string;
+}
+
+export const subscriptionTiers: SubscriptionTier[] = [
+  {
+    id: "6a12b6b0-c7aa-4c3f-82e0-f969a558901c",
+    slug: "starter",
+    name: "Starter",
+    tagline: "For services, local businesses, coaches & consultants",
+    price: 170,
+    includes: [
+      "AI-built website — 72hr human review before going live",
+      "Full CRM — contacts, workflow automation",
+      "Email Marketing — up to 1,000 sends/month included",
+      "Automations — cross-module workflows, conversationally built",
+      "Personal AI agent — named by you, from day one",
+      "Up to 2 website rebuilds if you're not happy",
+      "Human ticket support",
+    ],
+  },
+  {
+    id: "1c51a467-d33d-4032-afa1-8d62a3577991",
+    slug: "ecommerce",
+    name: "Ecommerce",
+    tagline: "For businesses with a product catalog",
+    price: 260,
+    highlight: true,
+    badge: "Best for online stores",
+    includes: [
+      "Everything in Starter",
+      "Full store module — catalog, inventory, variants, shipping",
+      "Tax automation & order management",
+      "Abandoned cart recovery",
+      "AI generates product pages from your catalog",
+      "Higher base AI credit allocation",
+      "Shopify / WooCommerce migration available",
+    ],
+    extrasLabel: "The $90 difference covers the store infrastructure and the higher AI usage that running a store naturally generates.",
+  },
+];
+
 // Product IDs from the database (store.products where customer_id = UpgradeShop)
 export const PRODUCT_IDS = {
   // Modules
   crm: "25b9954a-85a9-4525-96ee-17ff8b8dd7c0",
   emailMarketing: "61f757fb-52cc-44f5-826e-44d6ffd10cfa",
   whatsapp: "b63888a8-2b23-49b4-8215-1eaf29b8f9c0",
-  aiAgent: "a9faff03-c67f-4f5b-8548-ca096558cb49",
-  employeeManagement: "4486566d-3325-4a93-9cd8-73686904bc93",
-  projectTaskManagement: "fde46275-5d68-4ce6-9039-78dbd2021d22",
-  blog: "79265e22-c181-444c-b41f-920a25c43e8b",
-  communityForum: "42cf6eaf-dcc7-483d-8f85-5860921e1000",
   facebookInstagram: "e74360ec-35c2-45ad-baaf-2865d889611f",
-  salesFunnel: "661dc637-29d5-4797-b695-1e818a109fc5",
-  // Website Addons (require website module)
-  digitalCourse: "027e1552-5e7d-4958-bdf4-05daabbfe46e",
+  projectTaskManagement: "fde46275-5d68-4ce6-9039-78dbd2021d22",
+  funnels: "97b09694-fb0b-443e-85b1-854c5351635f",
+  digitalCourses: "a7d49a5d-bc11-4d42-bd16-b5ee7ecc4a6c",
+  crmEmailBundle: "9fb28c2e-8e6f-48bf-a685-bb54ad05460a",
+  community: "857bbe5f-6adc-4ba4-9843-f61f04217b49",
+  // Website Addons
   bookingSystem: "a51a650f-c187-4af8-a61b-bfd2392c4833",
   eventsManagement: "759670a3-0b9c-4889-b9cb-4b97c61433e9",
-  storeSimple: "c329a518-9cb4-47a3-a432-78dfdb3c65ab",
-  storeFull: "7499fd04-9510-4ed5-a0cb-d0398cffe9eb",
-  abTesting: "e54e6b54-3a37-4fa3-8628-64e64f47ca39",
-  additionalLanguage: "8fcb3248-8188-44d0-ac1a-1706dc111cf4",
-  liveStreamingPlatform: "bdc5779f-8a83-4fc7-b125-a38c31d867ec",
-  videoLibraryVOD: "322da23e-cb85-47d8-92ef-24b6ec259f16",
-  // Landing Page Addons (require landing page)
-  landingBooking: "ec0ebedd-132c-486e-b814-e1fc91fea906",
-  landingPaymentGateway: "84eb6204-9e1c-430d-b458-3839eb50a7ca",
-  // AI Agents
-  aiShiftManager: "0e3eb157-5351-4831-9981-d18ec05e327a",
-  aiOnboarding: "102c07e1-2fb1-426c-b6fd-0321df3a6769",
-  aiClaimsManager: "ac351af6-6d09-429c-8267-6aa3ac7b433c",
-  aiComplaintManager: "c8340426-7b40-4b08-8cea-ee8e5c25cb79",
-  customAIAgent: "92353e90-9ee4-4735-a24e-d29716e1788b",
-  // Test Products (for SUMIT gateway testing)
-  testSubscription: "f0658690-01ee-4d08-aca1-421ba77cd42c",
-  testOneTime: "ec938382-a54f-452c-94a9-6dd85ce86c7d",
+  digitalCourseIntegration: "027e1552-5e7d-4958-bdf4-05daabbfe46e",
+  // AI Actions (separate subscription products per tier)
+  aiActionsStarter: "72e94130-2f55-47ab-87ee-1e93c9d1a99a",
+  aiActionsGrowth: "efe5e83f-872e-4b98-ad79-970e13713f45",
+  aiActionsPro: "fa201e93-50aa-4805-9df7-1e8fa6dd2f05",
+  aiActionsScale: "f590964c-1a69-4aa4-89a5-21aa3042aad0",
+  // Services (one-time)
+  founderLaunch: "deae375e-f805-47d4-af2e-3e7996221de6",
+  proWebsiteMarketing: "49c09e23-8547-4a50-9184-f2be02f7027a",
+  proWebsiteEcommerce: "50f88414-c9e5-40cf-8e23-f37709624d02",
+  // Built-in (not purchasable separately)
+  aiAgent: "a9faff03-c67f-4f5b-8548-ca096558cb49",
 } as const;
 
 // =============================================================================
-// MODULES - Standalone products purchasable independently
+// MODULES — Standalone products purchasable independently
 // =============================================================================
 
 export const modules: Product[] = [
@@ -82,92 +129,54 @@ export const modules: Product[] = [
     id: PRODUCT_IDS.crm,
     slug: "crm",
     name: "CRM",
-    shortDescription: "Lead tracking & pipeline",
-    description:
-      "Lead tracking, pipeline management, contact history, and custom fields.",
-    price: 19,
+    shortDescription: "Customer relationships, managed",
+    description: "Full CRM with custom fields, workflow automation, activity tracking, and team collaboration. Configured for your business during onboarding.",
+    price: 29,
     billingCycle: "monthly",
     category: "module",
     features: [
-      "Lead tracking",
-      "Pipeline management",
-      "Contact history",
-      "Custom fields",
-      "Activity timeline",
-      "Team collaboration",
+      "Contact management & sales tracking",
+      "Custom fields & tags",
+      "Workflow automation",
+      "Activity tracking & notes",
+      "Up to 5 users included",
+      "AI agent for CRM management",
     ],
   },
   {
     id: PRODUCT_IDS.emailMarketing,
     slug: "email-marketing",
     name: "Email Marketing",
-    shortDescription: "Templates & analytics",
-    description:
-      "Beautiful templates, smart segmentation, and detailed analytics.",
-    price: 17,
+    shortDescription: "Campaigns, sequences & analytics",
+    description: "AI-powered email campaigns, automated sequences, segmentation, and analytics. Tell your agent what you want to say, it handles the rest.",
+    price: 25,
     billingCycle: "monthly",
     category: "module",
     features: [
-      "5,000 emails/month included",
-      "Email templates",
-      "Smart segmentation",
+      "5,000 sends/month included",
+      "Unlimited campaigns & sequences",
+      "Smart segmentation with CRM",
       "A/B testing",
-      "Analytics dashboard",
-      "Automation sequences",
+      "Analytics & reporting",
+      "AI agent writes & sends",
     ],
   },
   {
     id: PRODUCT_IDS.whatsapp,
     slug: "whatsapp",
-    name: "WhatsApp Marketing",
-    shortDescription: "Campaigns & automation",
-    description: "WhatsApp broadcast messaging, marketing campaigns, and automated responses.",
-    price: 25,
+    name: "WhatsApp Integration",
+    shortDescription: "Messaging, bots & automation",
+    description: "WhatsApp Business API integration for messaging, automation, and customer communication. Flows, welcome message, and auto-replies configured during onboarding.",
+    price: 45,
     billingCycle: "monthly",
     category: "module",
     features: [
+      "WhatsApp Business API",
+      "Automated messaging & chatbots",
       "Broadcast messaging",
-      "Message templates",
-      "Campaign analytics",
-      "Auto-responses",
-      "Contact lists",
-      "Marketing automation",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.employeeManagement,
-    slug: "employee-management",
-    name: "Employee Management",
-    shortDescription: "Scheduling & time tracking",
-    description: "Employee scheduling, shift management, time tracking, and availability management.",
-    price: 19,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Shift scheduling",
-      "Time tracking",
-      "Availability management",
-      "Team calendar",
-      "Schedule templates",
-      "Mobile access",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.projectTaskManagement,
-    slug: "project-task-management",
-    name: "Project Management",
-    shortDescription: "Projects, tasks & time tracking",
-    description: "Complete project planning, task tracking, team collaboration, and time logging system.",
-    price: 25,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Project planning",
-      "Task management",
-      "Labels & filters",
-      "Team collaboration",
-      "Time tracking",
-      "Comments & discussions",
+      "CRM integration (auto-create contacts)",
+      "Conversation analytics",
+      "AI agent for automation",
     ],
   },
   {
@@ -175,8 +184,8 @@ export const modules: Product[] = [
     slug: "social-media",
     name: "Facebook & Instagram",
     shortDescription: "Social media automation",
-    description: "Instagram DM automation, Facebook Messenger automation, comment auto-replies, lead capture to CRM",
-    price: 30,
+    description: "Instagram DM automation, Facebook Messenger automation, comment auto-replies, lead capture to CRM, chatbot flows, review management. Direct Meta API integration.",
+    price: 45,
     billingCycle: "monthly",
     category: "module",
     features: [
@@ -184,519 +193,314 @@ export const modules: Product[] = [
       "Facebook Messenger automation",
       "Comment auto-replies",
       "Lead capture to CRM",
-      "Template messages",
-      "Analytics dashboard",
+      "Review management & responses",
+      "AI agent for social automation",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.funnels,
+    slug: "funnels",
+    name: "Funnels",
+    shortDescription: "AI-built conversion pages & flows",
+    description: "AI-powered funnel and landing page builder. Give the agent a brief, a Google doc, or a product — it builds a polished, high-converting page. Lead, Service, Course, and Product funnels. Fully integrated with CRM and order management.",
+    price: 35,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "AI builds pages from your brief",
+      "Lead & product funnels",
+      "Multi-step sequences",
+      "Forms wire to CRM automatically",
+      "Payment integration built-in",
+      "Conversion analytics",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.digitalCourses,
+    slug: "digital-courses",
+    name: "Digital Courses",
+    shortDescription: "Sell courses, manage students",
+    description: "Standalone course platform for creators, coaches, and educators. Public storefront at courses.upgradeshop.ai. Payment gateway included — keep 100% of revenue. With Website module, courses embed into your own domain.",
+    price: 39,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Unlimited courses & lessons",
+      "Student management & progress tracking",
+      "Quizzes & certificates",
+      "Public storefront included",
+      "Payment gateway — keep 100% revenue",
+      "AI agent for course creation",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.community,
+    slug: "community",
+    name: "Community",
+    shortDescription: "Member community for creators & businesses",
+    description: "A branded member community — for course creators, membership businesses, or customer communities. Spaces, discussions, member profiles, gamification, and an AI agent that moderates, welcomes, and keeps members engaged.",
+    price: 39,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Discussion spaces & threaded conversations",
+      "Member profiles, badges & leaderboards",
+      "Free, paid & tiered membership access",
+      "CRM integration — every member is a contact",
+      "WhatsApp & email notifications",
+      "AI agent moderates & welcomes members",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.projectTaskManagement,
+    slug: "project-task-management",
+    name: "Projects & Tasks",
+    shortDescription: "Planning, tracking & collaboration",
+    description: "Project planning, task tracking, team collaboration, and workflow management. Integrates with CRM to auto-create tasks from customer actions.",
+    price: 39,
+    billingCycle: "monthly",
+    category: "module",
+    features: [
+      "Unlimited projects & tasks",
+      "Team collaboration",
+      "Deadline & progress tracking",
+      "CRM integration (auto-create tasks)",
+      "Up to 5 users included",
+      "AI agent for project management",
     ],
   },
 ];
 
-
 // =============================================================================
-// LANDING PAGE - Separate product for single high-converting pages
+// BUNDLE
 // =============================================================================
 
-export const landingPageProduct: Product = {
-  id: "6da65c79-276f-48a8-a091-c5f02a94dff0",
-  slug: "landing-page",
-  name: "Landing Page",
-  shortDescription: "Single high-converting page",
-  description: "Single high-converting page perfect for campaigns, lead generation, product launches, and promotions.",
-  price: 89,
+export const crmEmailBundle: Product = {
+  id: PRODUCT_IDS.crmEmailBundle,
+  slug: "crm-email-bundle",
+  name: "CRM + Email Bundle",
+  shortDescription: "CRM + Email Marketing — save $5/mo",
+  description: "Full CRM with custom fields and workflow automation — plus Email Marketing with 5,000 sends/month, sequences, segmentation, and A/B testing.",
+  price: 49,
   billingCycle: "monthly",
-  category: "module",
+  category: "bundle",
+  isBundle: true,
   features: [
-    "1 professionally designed page",
-    "Built by human developers",
-    "Max AI for content updates",
-    "Responsive & mobile-optimized",
-    "SEO optimized",
-    "SSL certificate included",
-    "24/7 ticket support",
+    "Everything in CRM ($29/mo)",
+    "Everything in Email Marketing ($25/mo)",
+    "Save $5/month",
+    "Single subscription",
+    "Cross-module automation",
+    "AI agent manages both",
   ],
 };
 
 // =============================================================================
-// WEBSITE SERVICE - Tiered pricing by page count
+// WEBSITE — Two tracks (not subscription tiers)
 // =============================================================================
 
-export interface WebsiteTier {
+export interface WebsiteTrack {
   key: string;
   name: string;
-  maxPages: number | null; // null for enterprise/custom
-  monthlyPrice: number;
+  tagline: string;
   description: string;
+  price: number | null; // null = included
+  priceLabel: string;
+  features: string[];
+  cta: string;
 }
 
-export const websiteTiers: WebsiteTier[] = [
+export const websiteTracks: WebsiteTrack[] = [
   {
-    key: "starter",
-    name: "Starter",
-    maxPages: 3,
-    monthlyPrice: 170,
-    description: "Small business, getting started",
-  },
-  {
-    key: "standard",
-    name: "Standard",
-    maxPages: 10,
-    monthlyPrice: 260,
-    description: "Perfect for most businesses",
+    key: "ai-built",
+    name: "AI-Built Website",
+    tagline: "Fast, professional, included",
+    description: "The AI agent builds your website from a conversational brief. Standard pages, forms connected to CRM, blog and payment gateway included. Human developer reviews before going live.",
+    price: null,
+    priceLabel: "Included with any subscription",
+    features: [
+      "Conversational setup — describe your business",
+      "Home, About, Contact, Services pages",
+      "Forms automatically connected to CRM",
+      "Blog included — AI writes & publishes",
+      "Payment gateway included",
+      "SSL, mobile-optimized, responsive",
+      "Human review before going live (72hr)",
+      "AI agent manages ongoing updates",
+    ],
+    cta: "Included",
   },
   {
     key: "professional",
-    name: "Professional",
-    maxPages: 20,
-    monthlyPrice: 350,
-    description: "Established businesses",
-  },
-  {
-    key: "enterprise",
-    name: "Enterprise",
-    maxPages: null,
-    monthlyPrice: 0, // Custom pricing
-    description: "Complex sites, custom pricing",
+    name: "Professional Developer Build",
+    tagline: "Custom branded, database-connected",
+    description: "A human developer builds your website from scratch on our template system. Every section database-connected. Brand-specific templates created for your business. The premium web presence.",
+    price: 1700,
+    priceLabel: "From $1,700 one-time",
+    features: [
+      "Custom branded site by a developer",
+      "Brand-specific section template library",
+      "Every section database-connected",
+      "Unlimited pages via template system",
+      "Blog & payment gateway included",
+      "E-commerce build: $2,600 — includes Shopify/WooCommerce migration",
+      "AI agent manages ongoing updates",
+      "Developer access via ticket system",
+    ],
+    cta: "Get a Quote",
   },
 ];
 
-export const websiteService = {
-  slug: "website",
-  name: "Professional Website",
-  tagline: "Built by developers, managed by Max AI",
-  description: "Custom-designed website built by our development team. Max AI handles all your content updates and changes. This is a fully managed website SERVICE, not a website builder.",
-  tiers: websiteTiers,
-  features: [
-    "Built by human developers",
-    "Max AI for content updates",
-    "24/7 ticket system to developers",
-    "Responsive & mobile-optimized",
-    "SEO optimized",
-    "SSL certificate included",
-    "Affordable alternative to agencies",
-    "Higher quality than DIY tools",
-  ],
-};
-
 // =============================================================================
-// WEBSITE ADDONS - Extensions that require the Website module
+// WEBSITE ADDONS — Extensions that apply to both website tracks
 // =============================================================================
 
 export const websiteAddons: Product[] = [
   {
-    id: PRODUCT_IDS.digitalCourse,
-    slug: "digital-course-platform",
-    name: "Digital Course Platform",
-    shortDescription: "Create and sell online courses",
-    description: "Create, host, and sell unlimited online courses with our comprehensive digital course platform. Perfect for educators, coaches, and content creators.",
-    price: 49,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Unlimited courses",
-      "Student management",
-      "Video hosting",
-      "Quiz & assessments",
-      "Certificate generation",
-      "Progress tracking",
-    ],
-  },
-  {
     id: PRODUCT_IDS.bookingSystem,
     slug: "booking-system",
     name: "Booking System",
-    shortDescription: "Calendly-style appointment scheduling",
-    description: "Smart appointment scheduling with Google Calendar integration. Let clients book appointments 24/7 with automated reminders and calendar sync.",
-    price: 19,
+    shortDescription: "Appointment scheduling & reminders",
+    description: "Appointment scheduling with calendar sync, automated reminders, and payment collection.",
+    price: 25,
     billingCycle: "monthly",
-    category: "addon",
+    category: "website-addon",
     requires: "website",
     features: [
       "Google Calendar sync",
       "Automated reminders",
+      "Payment collection",
       "Custom availability",
       "Multiple time zones",
-      "Email notifications",
-      "Booking page customization",
+      "AI agent manages bookings",
     ],
   },
   {
     id: PRODUCT_IDS.eventsManagement,
     slug: "events-management",
-    name: "Events Management",
-    shortDescription: "Manage events, registrations, and tickets",
-    description: "Complete events management system for conferences, workshops, webinars, and community events. Manage registrations, tickets, schedules, and attendees.",
-    price: 35,
+    name: "Events System",
+    shortDescription: "Listings, tickets & registration",
+    description: "Event listings, ticketing, registration management, and attendee tracking.",
+    price: 20,
     billingCycle: "monthly",
-    category: "addon",
+    category: "website-addon",
     requires: "website",
     features: [
-      "Event creation",
-      "Registration management",
-      "Ticket sales",
+      "Event creation & management",
+      "Registration & ticketing",
       "Attendee tracking",
       "Event schedules",
       "Email notifications",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.storeSimple,
-    slug: "simple-store",
-    name: "Simple Store",
-    shortDescription: "Accept payments and sell products",
-    description: "Start selling online with a simple, easy-to-manage store. Perfect for small businesses with up to 25 products.",
-    price: 25,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Up to 25 products",
-      "Accept payments",
-      "Basic checkout",
-      "Order management",
-      "Product pages",
-      "Inventory tracking",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.storeFull,
-    slug: "full-ecommerce",
-    name: "Full E-commerce",
-    shortDescription: "Complete online store solution",
-    description: "Unlimited products, inventory tracking, variants, abandoned cart recovery, shipping calculator, tax automation",
-    price: 50,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Unlimited products",
-      "Inventory tracking",
-      "Product variants",
-      "Abandoned cart recovery",
-      "Shipping calculator",
-      "Tax automation",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.abTesting,
-    slug: "ab-testing",
-    name: "A/B Testing",
-    shortDescription: "Test multiple page versions",
-    description: "Test multiple versions of your landing page. Split traffic automatically, track conversions, find what works best",
-    price: 19,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Split traffic testing",
-      "Automatic routing",
-      "Conversion tracking",
-      "Statistical analysis",
-      "Winner detection",
-      "Multi-variant testing",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.additionalLanguage,
-    slug: "additional-language",
-    name: "Additional Language",
-    shortDescription: "Add another language",
-    description: "Add another language to your website ($17/mo per language)",
-    price: 17,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Full language support",
-      "Translation management",
-      "Language switcher",
-      "SEO for each language",
-      "Localized URLs",
-      "RTL support",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.liveStreamingPlatform,
-    slug: "live-streaming-platform",
-    name: "Live Streaming Platform",
-    shortDescription: "Complete live streaming solution",
-    description: "Complete live streaming solution with OBS integration, real-time chat, automatic recording, and comprehensive analytics.",
-    price: 119,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "OBS Studio RTMP integration",
-      "CDN delivery (Bunny.net, Mux)",
-      "Real-time viewer chat",
-      "Automatic session recording",
-      "Live analytics",
-      "Privacy controls",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.videoLibraryVOD,
-    slug: "video-library-vod",
-    name: "Video Library (VOD)",
-    shortDescription: "Video-on-demand platform",
-    description: "Complete video-on-demand platform with searchable archive, embedded player, and engagement analytics.",
-    price: 69,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "CDN-powered video hosting",
-      "Searchable archive",
-      "DRM-protected player",
-      "View counts & analytics",
-      "Threaded comments",
-      "Playlists and collections",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.blog,
-    slug: "blog",
-    name: "Blog",
-    shortDescription: "Full blog functionality",
-    description: "Full blog functionality with post management, categories, tags, RSS feed",
-    price: 9,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Unlimited blog posts",
-      "Categories & tags",
-      "RSS feed",
-      "SEO optimization",
-      "Comment system",
-      "Media management",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.communityForum,
-    slug: "community-forum",
-    name: "Community/Forum",
-    shortDescription: "Member area & discussion forums",
-    description: "Member area, discussion forums, user profiles, moderation tools",
-    price: 30,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Discussion forums",
-      "User profiles",
-      "Member directory",
-      "Moderation tools",
-      "Private messaging",
-      "Topic subscriptions",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.salesFunnel,
-    slug: "sales-funnel",
-    name: "Sales Funnel",
-    shortDescription: "Complete conversion flow",
-    description: "Complete conversion flow: Opt-in landing page for lead capture, sales page, booking integration, and downsell pages",
-    price: 149,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "website",
-    features: [
-      "Opt-in landing page",
-      "Sales page builder",
-      "Booking integration",
-      "Downsell pages",
-      "A/B testing",
-      "Conversion tracking",
+      "AI agent for event management",
     ],
   },
 ];
 
 // =============================================================================
-// LANDING PAGE ADDONS - Extensions for the Landing Page product
+// AI ACTIONS — Credit packages
 // =============================================================================
 
-export const landingPageAddons: Product[] = [
-  {
-    id: PRODUCT_IDS.landingBooking,
-    slug: "landing-booking",
-    name: "Booking System (Landing Page)",
-    shortDescription: "Add appointment scheduling",
-    description: "Add appointment scheduling to your landing page. Calendar sync, automated reminders, payment collection",
-    price: 25,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "landing-page",
-    features: [
-      "Calendar sync",
-      "Automated reminders",
-      "Payment collection",
-      "Timezone support",
-      "Availability management",
-      "Email notifications",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.landingPaymentGateway,
-    slug: "landing-payment-gateway",
-    name: "Payment Gateway",
-    shortDescription: "Accept payments on landing page",
-    description: "Accept payments directly on your landing page. Stripe/PayPal integration, checkout forms, and order management",
-    price: 25,
-    billingCycle: "monthly",
-    category: "addon",
-    requires: "landing-page",
-    features: [
-      "Stripe integration",
-      "PayPal support",
-      "Checkout forms",
-      "Order management",
-      "Payment receipts",
-      "Secure processing",
-    ],
-  },
+export interface AiActionsPlan {
+  id: string;
+  slug: string;
+  name: string;
+  credits: number;
+  price: number;
+  perAction: string;
+  saving: string;
+  highlight?: boolean;
+}
+
+export const aiActionsPlans: AiActionsPlan[] = [
+  { id: PRODUCT_IDS.aiActionsStarter, slug: "ai-actions-starter", name: "Starter", credits: 500, price: 29, perAction: "$0.058", saving: "", highlight: false },
+  { id: PRODUCT_IDS.aiActionsGrowth, slug: "ai-actions-growth", name: "Growth", credits: 2000, price: 59, perAction: "$0.030", saving: "48%", highlight: true },
+  { id: PRODUCT_IDS.aiActionsPro, slug: "ai-actions-pro", name: "Pro", credits: 6000, price: 149, perAction: "$0.025", saving: "57%", highlight: false },
+  { id: PRODUCT_IDS.aiActionsScale, slug: "ai-actions-scale", name: "Scale", credits: 20000, price: 349, perAction: "$0.017", saving: "70%", highlight: false },
 ];
 
 // =============================================================================
-// AI AGENTS - Specialized AI agent products
+// SERVICES — One-time products
 // =============================================================================
 
-export const aiAgents: Product[] = [
+export const services: Product[] = [
   {
-    id: PRODUCT_IDS.aiShiftManager,
-    slug: "ai-shift-manager-agent",
-    name: "Shift Manager Agent",
-    shortDescription: "AI-powered shift scheduling",
-    description: "AI agent that collects employee availability via WhatsApp and manages shift preferences",
-    price: 17,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "WhatsApp integration",
-      "Availability collection",
-      "Shift preference tracking",
-      "Automated reminders",
-      "Calendar integration",
-      "Team scheduling",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.aiOnboarding,
-    slug: "ai-onboarding-agent",
-    name: "Onboarding Agent",
-    shortDescription: "Automated customer onboarding",
-    description: "AI agent that guides new customers through onboarding, answers questions, and collects required information",
-    price: 35,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Automated onboarding flow",
-      "Information collection",
-      "Progress tracking",
-      "Multi-channel support",
-      "Custom workflows",
-      "Integration with CRM",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.aiClaimsManager,
-    slug: "ai-claims-manager-agent",
-    name: "Claims Manager Agent",
-    shortDescription: "AI-powered claims processing",
-    description: "AI agent that handles insurance claims, documentation, and status updates",
-    price: 25,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Claims intake",
-      "Document collection",
-      "Status updates",
-      "Automated notifications",
-      "Integration with systems",
-      "Compliance tracking",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.aiComplaintManager,
-    slug: "ai-complaint-manager-agent",
-    name: "Complaint Manager Agent",
-    shortDescription: "AI-powered complaint handling",
-    description: "AI agent that manages customer complaints, tracks resolution, and maintains service quality",
-    price: 15,
-    billingCycle: "monthly",
-    category: "module",
-    features: [
-      "Complaint intake",
-      "Priority classification",
-      "Resolution tracking",
-      "Escalation management",
-      "Customer communication",
-      "Analytics & reporting",
-    ],
-  },
-  {
-    id: PRODUCT_IDS.customAIAgent,
-    slug: "custom-ai-agent",
-    name: "Custom AI Agent",
-    shortDescription: "Fully custom AI agent",
-    description: "Custom-built AI agent tailored to your specific business needs and workflows",
+    id: PRODUCT_IDS.founderLaunch,
+    slug: "founder-launch",
+    name: "Founder Launch",
+    shortDescription: "Full-service assisted setup",
+    description: "A human expert handles everything — business discovery, full module configuration, AI agent training, data migration, first automations, and a complete handoff walkthrough. No developer website included — uses your AI-built website.",
     price: 800,
-    billingCycle: "monthly",
-    category: "module",
+    pricePrefix: "From",
+    billingCycle: "one-time",
+    category: "service",
     features: [
-      "Custom AI logic",
-      "Tailored workflows",
-      "Integration with systems",
-      "Training on your data",
-      "Dedicated support",
-      "Ongoing optimization",
+      "Deep-dive business discovery",
+      "Full module configuration",
+      "AI agent pre-trained on your business",
+      "Data migration from existing tools",
+      "First automations built & tested",
+      "Handoff walkthrough via WhatsApp",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.proWebsiteMarketing,
+    slug: "pro-website-marketing",
+    name: "Professional Website — Marketing",
+    shortDescription: "Developer-built marketing website",
+    description: "Custom branded marketing website built by a developer on our template system. Home, About, Contact, Services pages, blog, and payment gateway.",
+    price: 1700,
+    pricePrefix: "From",
+    billingCycle: "one-time",
+    category: "service",
+    features: [
+      "Custom branded design",
+      "Full section template library",
+      "Database-connected sections",
+      "Blog & payment gateway",
+      "SSL, mobile-optimized",
+      "AI agent manages ongoing",
+    ],
+  },
+  {
+    id: PRODUCT_IDS.proWebsiteEcommerce,
+    slug: "pro-website-ecommerce",
+    name: "Professional Website — E-commerce",
+    shortDescription: "Developer-built e-commerce website",
+    description: "Everything in the Marketing build plus shop pages, product templates, cart and checkout flow, full store infrastructure. Includes Shopify and WooCommerce migration.",
+    price: 2600,
+    pricePrefix: "From",
+    billingCycle: "one-time",
+    category: "service",
+    features: [
+      "Everything in Marketing build",
+      "Shop & product page templates",
+      "Cart & checkout flow",
+      "Full store infrastructure",
+      "Inventory & order management",
+      "AI agent manages ongoing",
     ],
   },
 ];
 
 // =============================================================================
-// COMBINED EXPORTS FOR BACKWARDS COMPATIBILITY
+// COMBINED EXPORTS
 // =============================================================================
 
-// All products (modules + landing page, excluding website addons for now)
-export const products: Product[] = [...modules];
-
-// All products including addons (but not individual AI agent products - they're internal only)
 export const allProducts: Product[] = [
   ...modules,
-  landingPageProduct,
-  ...landingPageAddons,
+  crmEmailBundle,
   ...websiteAddons,
+  ...services,
 ];
 
-// Helper to find product by ID
 export function getProductById(id: string): Product | undefined {
   return allProducts.find((p) => p.id === id);
 }
 
-// Helper to find product by slug
 export function getProductBySlug(slug: string): Product | undefined {
   return allProducts.find((p) => p.slug === slug);
 }
 
-// Get only modules (standalone products)
-export function getModules(): Product[] {
-  return allProducts.filter((p) => p.category === "module");
-}
-
-// Get only addons
-export function getAddons(): Product[] {
-  return allProducts.filter((p) => p.category === "addon");
-}
-
-// Get addons for a specific parent module
-export function getAddonsForModule(moduleSlug: string): Product[] {
-  return allProducts.filter((p) => p.category === "addon" && p.requires === moduleSlug);
-}
-
-// Calculate total for cart items
 export function calculateCartTotal(items: CartItem[]): number {
   return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
 }
-
-// UpgradeShop store customer ID (Tenant #1)
-export const UPGRADESHOP_CUSTOMER_ID = "00000000-0000-0000-0000-000000000001";
