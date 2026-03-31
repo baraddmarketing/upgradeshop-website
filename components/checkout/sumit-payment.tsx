@@ -69,6 +69,10 @@ interface SumitPaymentProps {
   onCancel?: () => void;
   onError?: (error: string) => void;
   isTest?: boolean;
+  showCVV?: boolean;
+  requireCVV?: boolean;
+  showCitizenID?: boolean;
+  requireCitizenID?: boolean;
 }
 
 export function SumitPayment({
@@ -86,6 +90,10 @@ export function SumitPayment({
   onCancel,
   onError,
   isTest = false,
+  showCVV = true,
+  requireCVV = false,
+  showCitizenID = false,
+  requireCitizenID = false,
 }: SumitPaymentProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -397,7 +405,7 @@ export function SumitPayment({
           </div>
 
           {/* Expiry and CVV Row */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className={`grid gap-4 ${showCVV ? 'grid-cols-3' : 'grid-cols-2'}`}>
             {/* Expiry Month */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
@@ -444,26 +452,28 @@ export function SumitPayment({
               </select>
             </div>
 
-            {/* CVV */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                CVV
-              </label>
-              <input
-                type="text"
-                data-og="cvv"
-                placeholder="123"
-                maxLength={4}
-                className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
-                required
-                autoComplete="cc-csc"
-                dir="ltr"
-              />
-            </div>
+            {/* CVV — controlled by showCVV setting */}
+            {showCVV && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  CVV
+                </label>
+                <input
+                  type="text"
+                  data-og="cvv"
+                  placeholder="123"
+                  maxLength={4}
+                  className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
+                  required={requireCVV}
+                  autoComplete="cc-csc"
+                  dir="ltr"
+                />
+              </div>
+            )}
           </div>
 
-          {/* ID Number (required for Israeli credit cards) */}
-          {country === "IL" && (
+          {/* ID Number — controlled by showCitizenID setting */}
+          {showCitizenID && (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
                 ID Number
@@ -474,12 +484,15 @@ export function SumitPayment({
                 placeholder="Enter your ID number"
                 maxLength={9}
                 className="w-full px-4 py-3 bg-background border border-foreground/20 rounded-xl focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors text-right"
+                required={requireCitizenID}
                 autoComplete="off"
                 dir="ltr"
               />
-              <p className="text-xs text-foreground/50">
-                Required for Israeli credit cards
-              </p>
+              {requireCitizenID && (
+                <p className="text-xs text-foreground/50">
+                  Required for Israeli credit cards
+                </p>
+              )}
             </div>
           )}
 

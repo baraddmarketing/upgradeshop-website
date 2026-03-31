@@ -822,7 +822,7 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                       </div>
 
                       {/* Expiry + CVV */}
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className={`grid gap-3 ${(sumitConfig?.showCVV ?? true) ? 'grid-cols-3' : 'grid-cols-2'}`}>
                         <div className="space-y-1">
                           <Label>{t.expiryMonth}</Label>
                           <select
@@ -851,33 +851,39 @@ export function PaymentPageCheckout({ paymentPage, slug }: PaymentPageCheckoutPr
                             })}
                           </select>
                         </div>
-                        <div className="space-y-1">
-                          <Label>{t.cvv}</Label>
-                          <input
-                            type="text"
-                            data-og="cvv"
-                            placeholder="123"
-                            maxLength={4}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            autoComplete="cc-csc"
-                            dir="ltr"
-                          />
-                        </div>
+                        {(sumitConfig?.showCVV ?? true) && (
+                          <div className="space-y-1">
+                            <Label>{t.cvv}</Label>
+                            <input
+                              type="text"
+                              data-og="cvv"
+                              placeholder="123"
+                              maxLength={4}
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                              required={sumitConfig?.requireCVV ?? false}
+                              autoComplete="cc-csc"
+                              dir="ltr"
+                            />
+                          </div>
+                        )}
                       </div>
 
-                      {/* ID Number */}
-                      <div className="space-y-1">
-                        <Label>{t.idNumber}</Label>
-                        <input
-                          type="text"
-                          data-og="citizenid"
-                          maxLength={9}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                          autoComplete="off"
-                          dir="ltr"
-                        />
-                        <p className="text-xs text-muted-foreground">{t.idNumberHint}</p>
-                      </div>
+                      {/* ID Number — controlled by showCitizenID setting */}
+                      {(sumitConfig?.showCitizenID ?? false) && (
+                        <div className="space-y-1">
+                          <Label>{t.idNumber}</Label>
+                          <input
+                            type="text"
+                            data-og="citizenid"
+                            maxLength={9}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            required={sumitConfig?.requireCitizenID ?? false}
+                            autoComplete="off"
+                            dir="ltr"
+                          />
+                          <p className="text-xs text-muted-foreground">{t.idNumberHint}</p>
+                        </div>
+                      )}
 
                       {/* SUMIT error area */}
                       <div className="og-errors text-red-600 text-sm font-medium empty:hidden"></div>

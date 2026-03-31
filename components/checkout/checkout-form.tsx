@@ -100,6 +100,10 @@ export function CheckoutForm() {
     companyId: number;
     apiPublicKey: string;
     isTest: boolean;
+    showCVV?: boolean;
+    requireCVV?: boolean;
+    showCitizenID?: boolean;
+    requireCitizenID?: boolean;
   } | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -766,6 +770,10 @@ export function CheckoutForm() {
                 setError(error);
               }}
               isTest={sumitConfig.isTest}
+              showCVV={sumitConfig.showCVV ?? true}
+              requireCVV={sumitConfig.requireCVV ?? false}
+              showCitizenID={sumitConfig.showCitizenID ?? false}
+              requireCitizenID={sumitConfig.requireCitizenID ?? false}
             />
           </motion.div>
 
